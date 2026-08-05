@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Place a sound on the pleasant–eventful axes</title>
+<style>
+:root{
+  --paper:#faf7f0; --ink:#1e1b16; --ink-2:#4a463d; --ink-3:#7a7466;
+  --rule:#d9d1c0; --rule-2:#c8bfa9; --risk:#9a3b2e; --calm:#2f5d57;
+  --amber:#b07515; --card:#faf7f0; --dot:#9a3b2e;
+  --pleasant:#2f5d57; --annoy:#9a3b2e; --quad:#efe9dd;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#211e16; --ink:#ece6d8; --ink-2:#b8b1a0; --ink-3:#807a6b;
+    --rule:#332f24; --rule-2:#403a2c; --risk:#e0836f; --calm:#7db8ad;
+    --amber:#d5a04a; --card:#211e16; --dot:#e0836f;
+    --pleasant:#7db8ad; --annoy:#e0836f; --quad:#1c1a13;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0; padding:18px; background:var(--paper); color:var(--ink);
+  font-family:"Newsreader",Georgia,serif; font-size:15px; line-height:1.5}
+.label{font-family:"IBM Plex Mono",monospace; font-size:.6rem; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--risk); margin:0 0 .15rem}
+h4{font-family:"Fraunces",Georgia,serif; font-weight:500; margin:0 0 .9rem; font-size:1.18rem}
+.layout{display:flex; flex-wrap:wrap; gap:1.4rem 1.8rem; align-items:flex-start}
+.plot{flex:1 1 300px; min-width:280px; max-width:360px}
+.panel{flex:1 1 280px; min-width:260px}
+#circ{width:100%; height:auto; display:block}
+
+/* circumplex svg classes (theme-aware) */
+.ax{stroke:var(--rule-2); stroke-width:1}
+.ring{fill:none; stroke:var(--rule); stroke-width:1}
+.ring-out{fill:none; stroke:var(--rule-2); stroke-width:1.2}
+.quadfill{fill:var(--quad); opacity:.45}
+.attr{font-family:"IBM Plex Mono",monospace; font-size:9.5px; fill:var(--ink-3); letter-spacing:.02em}
+.axlab{font-family:"IBM Plex Mono",monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase}
+.axlab.pl{fill:var(--pleasant)} .axlab.an{fill:var(--annoy)} .axlab.ev,.axlab.un{fill:var(--ink-3)}
+.dot{fill:var(--dot); stroke:var(--card); stroke-width:2}
+.dotline{stroke:var(--dot); stroke-width:1; opacity:.4}
+
+/* sliders */
+.sliders{display:grid; grid-template-columns:1fr 1fr; gap:.55rem .9rem; margin:.2rem 0 0}
+.s{display:flex; flex-direction:column; gap:.15rem}
+.s label{font-family:"IBM Plex Mono",monospace; font-size:.62rem; letter-spacing:.03em;
+  text-transform:uppercase; color:var(--ink-3); display:flex; justify-content:space-between}
+.s label b{color:var(--ink); font-weight:500}
+.s input[type=range]{width:100%; accent-color:var(--risk); height:3px; cursor:pointer}
+
+.readout{margin:1rem 0 0; padding:.85rem 0; border-top:1px solid var(--rule); border-bottom:1px solid var(--rule);
+  display:flex; gap:1.5rem; flex-wrap:wrap}
+.stat .v{font-family:"Fraunces",serif; font-size:1.5rem; font-weight:600; line-height:1}
+.stat .v.p{color:var(--pleasant)} .stat .v.e{color:var(--ink)}
+.stat .k{font-family:"IBM Plex Mono",monospace; font-size:.58rem; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--ink-3); margin-top:.3rem}
+.interp{font-size:.95rem; color:var(--ink-2); margin:.7rem 0 0; min-height:2.6em}
+.interp b{color:var(--ink); font-weight:500}
+
+.presets{margin:.9rem 0 0}
+.presets .pl-label{font-family:"IBM Plex Mono",monospace; font-size:.6rem; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--ink-3); margin:0 0 .4rem}
+.chips{display:flex; flex-wrap:wrap; gap:.4rem}
+.chip{font-family:"Newsreader",serif; font-size:.82rem; padding:.3rem .7rem; background:transparent;
+  border:1px solid var(--rule-2); border-radius:14px; color:var(--ink-2); cursor:pointer}
+.chip:hover{border-color:var(--risk); color:var(--ink)}
+.chip.on{background:var(--risk); color:#fff; border-color:var(--risk)}
+
+.caveat{font-size:.76rem; color:var(--ink-3); margin:1rem 0 0; line-height:1.5;
+  border-top:1px dashed var(--rule-2); padding-top:.7rem}
+.src{font-family:"IBM Plex Mono",monospace; font-size:.64rem; color:var(--ink-3); margin-top:.5rem}
+</style>
+</head>
+<body>
+<p class="label">Interactive · computes on your input</p>
+<h4>Place a sound on the pleasant–eventful axes</h4>
+
+<div class="layout">
+  <div class="plot">
+    <svg id="circ" viewBox="0 0 340 360" role="img" aria-labelledby="ctitle">
+      <title id="ctitle">Soundscape circumplex: a point placed by eight perceptual-attribute ratings, in the pleasantness–eventfulness plane</title>
+    </svg>
+  </div>
+
+  <div class="panel">
+    <div class="sliders" id="sliders"></div>
+
+    <div class="readout">
+      <div class="stat"><div class="v p" id="pval">0.00</div><div class="k">ISO Pleasantness</div></div>
+      <div class="stat"><div class="v e" id="eval">0.00</div><div class="k">ISO Eventfulness</div></div>
+    </div>
+    <p class="interp" id="interp"></p>
+
+    <div class="presets">
+      <p class="pl-label">Illustrative example soundscapes</p>
+      <div class="chips" id="chips"></div>
+    </div>
+  </div>
+</div>
+
+<p class="caveat" id="caveat"></p>
+<p class="src" id="src"></p>
+
+<script>
+/* ============================================================
+   Soundscape circumplex — ISO/TS 12913-2 (Method A, eight
+   attributes) and ISO/TS 12913-3 (coordinate transformation).
+   The reader rates the eight attributes; the tool computes the
+   ISO Pleasantness / Eventfulness coordinates and plots them.
+   This is the STANDARD's forward direction (ratings -> coordinate);
+   we do not invert a dragged point into eight attributes, which
+   would fabricate data the projection cannot recover.
+   ============================================================ */
+
+// attribute order and circumplex angles (degrees, standard layout)
+var ATTR = [
+  {k:'pleasant',   a:0},
+  {k:'vibrant',    a:45},
+  {k:'eventful',   a:90},
+  {k:'chaotic',    a:135},
+  {k:'annoying',   a:180},
+  {k:'monotonous', a:225},
+  {k:'uneventful', a:270},
+  {k:'calm',       a:315}
+];
+var COS45 = Math.SQRT1_2;          // cos 45° = sin 45°
+var NORM  = 4 + Math.sqrt(32);     // 9.6569 → normalises coordinates to [−1, 1]
+
+// ratings state (1..5), start neutral
+var v = {pleasant:3,vibrant:3,eventful:3,chaotic:3,annoying:3,monotonous:3,uneventful:3,calm:3};
+
+// illustrative preset profiles (NOT measured survey data)
+var PRESETS = {
+  'Park with a fountain': {pleasant:5,calm:5,vibrant:3,eventful:2,uneventful:3,monotonous:2,annoying:1,chaotic:1},
+  'Busy market square':   {vibrant:5,eventful:5,pleasant:4,chaotic:3,calm:1,annoying:2,monotonous:1,uneventful:1},
+  'Motorway drone':       {monotonous:5,annoying:4,uneventful:3,pleasant:1,calm:2,eventful:2,chaotic:2,vibrant:1},
+  'Nightclub street':     {chaotic:5,eventful:5,annoying:4,vibrant:2,pleasant:1,calm:1,monotonous:1,uneventful:1},
+  'Library reading room': {calm:5,uneventful:4,pleasant:4,monotonous:2,eventful:1,vibrant:1,annoying:1,chaotic:1}
+};
+var activePreset = null;
+
+function isoCoords(v){
+  var P = ((v.pleasant - v.annoying) + COS45*((v.calm + v.vibrant) - (v.chaotic + v.monotonous))) / NORM;
+  var E = ((v.eventful - v.uneventful) + COS45*((v.chaotic + v.vibrant) - (v.monotonous + v.calm))) / NORM;
+  return {P:P, E:E};
+}
+
+/* ---------- build sliders ---------- */
+var sl = document.getElementById('sliders');
+ATTR.forEach(function(at){
+  var wrap = document.createElement('div'); wrap.className='s';
+  wrap.innerHTML =
+    '<label>'+at.k+' <b id="lab-'+at.k+'">3</b></label>'+
+    '<input type="range" id="in-'+at.k+'" min="1" max="5" step="1" value="3">';
+  sl.appendChild(wrap);
+  wrap.querySelector('input').addEventListener('input', function(e){
+    v[at.k] = +e.target.value;
+    document.getElementById('lab-'+at.k).textContent = e.target.value;
+    activePreset = null; syncChips(); update();
+  });
+});
+
+/* ---------- build preset chips ---------- */
+var chips = document.getElementById('chips');
+Object.keys(PRESETS).forEach(function(name){
+  var b = document.createElement('button'); b.className='chip'; b.textContent=name;
+  b.addEventListener('click', function(){
+    var p = PRESETS[name];
+    ATTR.forEach(function(at){
+      v[at.k] = p[at.k];
+      document.getElementById('in-'+at.k).value = p[at.k];
+      document.getElementById('lab-'+at.k).textContent = p[at.k];
+    });
+    activePreset = name; syncChips(); update();
+  });
+  chips.appendChild(b);
+});
+function syncChips(){
+  [].forEach.call(chips.children, function(c){ c.classList.toggle('on', c.textContent===activePreset); });
+}
+
+/* ---------- static circumplex ---------- */
+var cx=170, cy=160, R=118;
+function polar(ang, r){ // degrees, standard math angle; screen y inverted
+  var rad = ang*Math.PI/180;
+  return {x: cx + r*Math.cos(rad), y: cy - r*Math.sin(rad)};
+}
+function drawStatic(){
+  var g='';
+  // quadrant fills (subtle) — vibrant/chaotic/monotonous/calm diagonals
+  g += '<circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" class="quadfill"/>';
+  // rings
+  g += '<circle cx="'+cx+'" cy="'+cy+'" r="'+(R*0.5).toFixed(1)+'" class="ring"/>';
+  g += '<circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" class="ring-out"/>';
+  // axes
+  g += '<line x1="'+(cx-R)+'" y1="'+cy+'" x2="'+(cx+R)+'" y2="'+cy+'" class="ax"/>';
+  g += '<line x1="'+cx+'" y1="'+(cy-R)+'" x2="'+cx+'" y2="'+(cy+R)+'" class="ax"/>';
+  // diagonal guides (45°)
+  var d1a=polar(45,R), d1b=polar(225,R), d2a=polar(135,R), d2b=polar(315,R);
+  g += '<line x1="'+d1a.x.toFixed(1)+'" y1="'+d1a.y.toFixed(1)+'" x2="'+d1b.x.toFixed(1)+'" y2="'+d1b.y.toFixed(1)+'" class="ax" stroke-dasharray="2 3"/>';
+  g += '<line x1="'+d2a.x.toFixed(1)+'" y1="'+d2a.y.toFixed(1)+'" x2="'+d2b.x.toFixed(1)+'" y2="'+d2b.y.toFixed(1)+'" class="ax" stroke-dasharray="2 3"/>';
+  // attribute labels at their angles
+  ATTR.forEach(function(at){
+    var p = polar(at.a, R+20);
+    var anchor = Math.abs(p.x-cx)<4 ? 'middle' : (p.x>cx ? 'start' : 'end');
+    g += '<text x="'+p.x.toFixed(1)+'" y="'+(p.y+3).toFixed(1)+'" text-anchor="'+anchor+'" class="attr">'+at.k+'</text>';
+  });
+  // axis pole labels
+  g += '<text x="'+(cx+R+2)+'" y="'+(cy-5)+'" text-anchor="end" class="axlab pl">pleasant →</text>';
+  g += '<text x="'+(cx-R-2)+'" y="'+(cy-5)+'" text-anchor="start" class="axlab an">← annoying</text>';
+  g += '<text x="'+cx+'" y="'+(cy-R-8)+'" text-anchor="middle" class="axlab ev">eventful ↑</text>';
+  g += '<text x="'+cx+'" y="'+(cy+R+16)+'" text-anchor="middle" class="axlab un">↓ uneventful</text>';
+  // caption under plot
+  g += '<text x="'+cx+'" y="'+(cy+R+40)+'" text-anchor="middle" class="attr">P = pleasantness · E = eventfulness (ISO 12913-3, normalised −1…+1)</text>';
+  // moving dot + guide lines (updated later)
+  g += '<line id="gx" class="dotline" x1="'+cx+'" y1="'+cy+'" x2="'+cx+'" y2="'+cy+'"/>';
+  g += '<line id="gy" class="dotline" x1="'+cx+'" y1="'+cy+'" x2="'+cx+'" y2="'+cy+'"/>';
+  g += '<circle id="pt" class="dot" cx="'+cx+'" cy="'+cy+'" r="6"/>';
+  document.getElementById('circ').innerHTML = g;
+}
+
+/* ---------- nearest descriptor ---------- */
+function nearest(P,E){
+  var mag = Math.sqrt(P*P+E*E);
+  if(mag < 0.10) return {name:null, mag:mag};
+  var ang = Math.atan2(E,P)*180/Math.PI; if(ang<0) ang+=360;
+  var best=null, bd=999;
+  ATTR.forEach(function(at){
+    var d = Math.abs(((ang-at.a+540)%360)-180);
+    if(d<bd){bd=d; best=at.k;}
+  });
+  return {name:best, mag:mag};
+}
+var PHRASE = {
+  pleasant:'pleasant', annoying:'annoying (unpleasant)',
+  eventful:'eventful', uneventful:'uneventful',
+  vibrant:'vibrant — both pleasant and eventful',
+  chaotic:'chaotic — eventful but unpleasant',
+  monotonous:'monotonous — both unpleasant and uneventful',
+  calm:'calm — both pleasant and uneventful'
+};
+
+/* ---------- update ---------- */
+function update(){
+  var c = isoCoords(v), P=c.P, E=c.E;
+  document.getElementById('pval').textContent = (P>=0?'+':'')+P.toFixed(2);
+  document.getElementById('eval').textContent = (E>=0?'+':'')+E.toFixed(2);
+
+  var px = cx + R*P, py = cy - R*E;
+  document.getElementById('pt').setAttribute('cx', px.toFixed(1));
+  document.getElementById('pt').setAttribute('cy', py.toFixed(1));
+  var gx=document.getElementById('gx'), gy=document.getElementById('gy');
+  gx.setAttribute('x1',px.toFixed(1)); gx.setAttribute('y1',cy); gx.setAttribute('x2',px.toFixed(1)); gx.setAttribute('y2',py.toFixed(1));
+  gy.setAttribute('x1',cx); gy.setAttribute('y1',py.toFixed(1)); gy.setAttribute('x2',px.toFixed(1)); gy.setAttribute('y2',py.toFixed(1));
+
+  var n = nearest(P,E);
+  var lead = activePreset ? ('<b>'+activePreset+'</b> — this profile ') : 'This sound ';
+  if(n.name===null){
+    document.getElementById('interp').innerHTML = lead+'sits near the centre of the circumplex: a perceptually <b>ambivalent</b> soundscape, neither strongly pleasant nor strongly eventful.';
+  } else {
+    var strength = n.mag>0.55 ? 'strongly' : (n.mag>0.28 ? 'clearly' : 'weakly');
+    document.getElementById('interp').innerHTML = lead+'falls '+strength+' in the <b>'+PHRASE[n.name]+'</b> region.';
+  }
+}
+
+/* ---------- static text ---------- */
+document.getElementById('caveat').innerHTML =
+  'The eight attributes are rated on 5-point scales (ISO/TS 12913-2, Method A) and projected onto the pleasantness–eventfulness plane by the ISO/TS 12913-3 transformation. The example profiles are <b>illustrative</b> — plausible ratings to show how different sounds land in different regions — not measured survey data. Two sounds of similar loudness (a fountain and a motorway drone) can sit at opposite ends of the pleasantness axis: that gap is what the decibel alone cannot represent.';
+document.getElementById('src').textContent =
+  'Source · ISO/TS 12913-2:2018 (Method A); ISO/TS 12913-3:2019 (coordinate transformation); attribute model after Axelsson, Nilsson & Berglund (2010).';
+
+drawStatic();
+update();
+</script>
+</body>
+</html>

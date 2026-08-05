@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The cost of noise</title>
+<style>
+/* Noise and Risk · Ch. 10 widget — cost-of-noise calculator.
+   WHO exposure-response band model (annoyance, sleep, IHD) -> DALYs -> euro.
+   Self-contained; project palette/fonts; theme-sync + self-resize. */
+:root{
+  --bg:#f7f4ee; --panel:#fffdf8; --ink:#23201c; --muted:#6b6459; --line:#d9d2c4;
+  --risk:#6f2331; --calm:#2c6e6a; --amber:#b8823f; --wash:#efe9dc; --track:#e7e0d2;
+  --shadow:0 1px 2px rgba(0,0,0,.05),0 6px 18px rgba(0,0,0,.045);
+  --fd:"Fraunces",Georgia,serif; --fb:"Newsreader",Georgia,serif;
+  --fm:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#1a1815; --panel:#232019; --ink:#ece6da; --muted:#9d968a; --line:#37322a;
+  --risk:#e0788a; --calm:#6fb7b0; --amber:#d8ab6d; --wash:#2b2720; --track:#2e2a22;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.32);
+}}
+:root[data-theme="dark"]{
+  --bg:#1a1815; --panel:#232019; --ink:#ece6da; --muted:#9d968a; --line:#37322a;
+  --risk:#e0788a; --calm:#6fb7b0; --amber:#d8ab6d; --wash:#2b2720; --track:#2e2a22;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.32);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fb)}
+.wrap{max-width:700px;margin:0 auto;padding:18px 16px 22px}
+.frame{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:20px 20px 16px}
+h1{font-family:var(--fd);font-weight:600;font-size:1.18rem;margin:0 0 3px}
+.sub{color:var(--muted);font-size:.86rem;margin:0 0 14px}
+.presets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.presets button{font-family:var(--fm);font-size:.76rem;background:var(--wash);color:var(--ink);border:1px solid var(--line);
+  border-radius:6px;padding:5px 10px;cursor:pointer}
+.presets button:hover{border-color:var(--calm)}
+.kick{font-family:var(--fm);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:6px 0 8px}
+.bands{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;margin-bottom:6px}
+@media(max-width:520px){.bands{grid-template-columns:1fr}}
+.band{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:8px}
+.band label{font-size:.84rem;white-space:nowrap;font-family:var(--fm)}
+.band input{width:100%;font-family:var(--fm);font-size:.86rem;padding:4px 6px;background:var(--bg);
+  color:var(--ink);border:1px solid var(--line);border-radius:5px}
+.result{margin-top:16px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:14px 15px}
+.big{font-family:var(--fm);font-size:1.9rem;line-height:1;color:var(--risk)}
+.big small{font-size:.9rem;color:var(--muted)}
+.sub2{font-size:.82rem;color:var(--muted);margin-top:3px}
+.stack{display:flex;height:22px;border-radius:5px;overflow:hidden;margin:12px 0 6px;border:1px solid var(--line)}
+.stack div{height:100%}
+.sA{background:var(--calm)}.sS{background:var(--risk)}.sI{background:var(--amber)}
+.leg{display:flex;gap:14px;flex-wrap:wrap;font-size:.76rem;color:var(--muted)}
+.leg span{display:inline-flex;align-items:center;gap:5px}
+.leg i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.ctrls{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;margin-top:14px}
+@media(max-width:520px){.ctrls{grid-template-columns:1fr}}
+.ctrl label{font-size:.8rem;display:flex;justify-content:space-between}
+.ctrl label b{font-family:var(--fm);color:var(--calm);font-weight:500}
+.ctrl input[type=range]{width:100%;accent-color:var(--risk)}
+.prop{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+.prop .v{font-family:var(--fm);font-size:1.1rem;color:var(--ink)}
+.bench{margin-top:12px;font-size:.78rem;color:var(--muted);background:var(--wash);border-radius:7px;padding:9px 11px;line-height:1.45}
+.note{font-size:.78rem;color:var(--muted);margin-top:12px;line-height:1.45}
+.note b{color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="frame">
+  <h1>What a city's noise costs, per year</h1>
+  <p class="sub">Enter how many residents live in each day-evening-night band. The calculator applies the World Health Organization's exposure-response functions to estimate the annual health cost, in healthy years lost and in euro.</p>
+
+  <div class="presets">
+    <button id="p-bcn">Barcelona (real data)</button>
+    <button id="p-clear">Clear</button>
+  </div>
+
+  <div class="kick">Residents exposed, by L<sub>den</sub> band (thousands)</div>
+  <div class="bands">
+    <div class="band"><label>55&ndash;60</label><input id="b0" type="number" min="0" step="1" value="264"></div>
+    <div class="band"><label>60&ndash;65</label><input id="b1" type="number" min="0" step="1" value="242"></div>
+    <div class="band"><label>65&ndash;70</label><input id="b2" type="number" min="0" step="1" value="210"></div>
+    <div class="band"><label>70&ndash;75</label><input id="b3" type="number" min="0" step="1" value="145"></div>
+    <div class="band"><label>&ge;&nbsp;75</label><input id="b4" type="number" min="0" step="1" value="6"></div>
+  </div>
+
+  <div class="result">
+    <div class="big" id="euro">&euro;717M<small> / year</small></div>
+    <div class="sub2" id="daly">9,760 healthy life-years (DALYs) lost each year</div>
+    <div class="stack" id="stack"><div class="sA" style="width:37%"></div><div class="sS" style="width:48%"></div><div class="sI" style="width:15%"></div></div>
+    <div class="leg">
+      <span><i class="sA"></i>Annoyance <b id="lA" style="font-family:var(--fm)"></b></span>
+      <span><i class="sS"></i>Sleep disturbance <b id="lS" style="font-family:var(--fm)"></b></span>
+      <span><i class="sI"></i>Heart disease <b id="lI" style="font-family:var(--fm)"></b></span>
+    </div>
+  </div>
+
+  <div class="ctrls">
+    <div class="ctrl"><label>Value of a healthy life-year <b id="v-daly">&euro;73,500</b></label>
+      <input id="daly-eur" type="range" min="40000" max="110000" step="500" value="73500"></div>
+    <div class="ctrl"><label>Mean dwelling value <b id="v-home">&euro;300,000</b></label>
+      <input id="home" type="range" min="80000" max="800000" step="10000" value="300000"></div>
+  </div>
+
+  <div class="prop">
+    <div class="kick" style="margin:0 0 5px">Separately &mdash; capital, not annual flow</div>
+    <span class="v" id="prop">&euro;4.7bn</span>
+    <span style="font-size:.8rem;color:var(--muted)"> in housing value discounted by noise (0.5% per dB above 55, after the hedonic literature). A one-off stock, not added to the annual cost above.</span>
+  </div>
+
+  <div class="bench" id="bench"></div>
+
+  <p class="note"><b>Method.</b> Highly-annoyed and highly-sleep-disturbed shares from the WHO road-traffic exposure-response functions; heart-disease burden apportioned from the European agency's outcome split. Disability weights 0.02 (annoyance) and 0.07 (sleep). The three outcomes shown are the best-established; the agency's fuller figure adds diabetes, cognitive and other effects, which is why its Europe-wide total runs higher. Health cost = healthy years lost &times; the value per year set above.</p>
+</div></div>
+
+<script>
+var BANDS=[57.5,62.5,67.5,72.5,77.5];
+var OFF=6.4, DW_HA=0.02, DW_HSD=0.07, IHD_R=0.175, NDI=0.005, THR=55, HH=2.5;
+var PRESET_BCN=[264,242,210,145,6]; // thousands (Barcelona city, MES 2022, Total Lden)
+function pHA(l){return Math.max(0,Math.min(100,78.9270-3.1162*l+0.0342*l*l));}
+function pHSD(ln){return Math.max(0,Math.min(100,19.4312-0.9336*ln+0.0126*ln*ln));}
+function fmtE(x){ // euro, adaptive
+  if(x>=1e9) return '&euro;'+(x/1e9).toFixed(1)+'bn';
+  if(x>=1e6) return '&euro;'+(x/1e6).toFixed(0)+'M';
+  if(x>=1e3) return '&euro;'+(x/1e3).toFixed(0)+'k';
+  return '&euro;'+Math.round(x);
+}
+function fmtN(x){return Math.round(x).toLocaleString('en-GB');}
+var ids=['b0','b1','b2','b3','b4'];
+function getPop(){return ids.map(function(id){return (parseFloat(document.getElementById(id).value)||0)*1000;});}
+function compute(){
+  var pop=getPop();
+  var HA=0,HSD=0;
+  for(var i=0;i<5;i++){ HA+=pop[i]*pHA(BANDS[i])/100*DW_HA; HSD+=pop[i]*pHSD(BANDS[i]-OFF)/100*DW_HSD; }
+  var IHD=IHD_R*(HA+HSD);
+  var daly=HA+HSD+IHD;
+  var eurPer=parseFloat(document.getElementById('daly-eur').value);
+  var eur=daly*eurPer;
+  // property capital
+  var home=parseFloat(document.getElementById('home').value);
+  var cap=0;
+  for(var i=0;i<5;i++){ var dw=pop[i]/HH; cap+=dw*home*NDI*Math.max(0,BANDS[i]-THR); }
+  return {HA:HA,HSD:HSD,IHD:IHD,daly:daly,eur:eur,cap:cap,tot:pop.reduce(function(a,b){return a+b;},0)};
+}
+function render(){
+  var r=compute();
+  document.getElementById('euro').innerHTML=fmtE(r.eur)+'<small> / year</small>';
+  document.getElementById('daly').textContent=fmtN(r.daly)+' healthy life-years (DALYs) lost each year';
+  var s=r.daly||1;
+  document.querySelector('#stack .sA').style.width=(100*r.HA/s)+'%';
+  document.querySelector('#stack .sS').style.width=(100*r.HSD/s)+'%';
+  document.querySelector('#stack .sI').style.width=(100*r.IHD/s)+'%';
+  document.getElementById('lA').innerHTML=' '+fmtN(r.HA);
+  document.getElementById('lS').innerHTML=' '+fmtN(r.HSD);
+  document.getElementById('lI').innerHTML=' '+fmtN(r.IHD);
+  document.getElementById('prop').innerHTML=fmtE(r.cap);
+  document.getElementById('v-daly').innerHTML='&euro;'+fmtN(parseFloat(document.getElementById('daly-eur').value));
+  document.getElementById('v-home').innerHTML='&euro;'+fmtN(parseFloat(document.getElementById('home').value));
+  var perc = r.tot? Math.round(r.eur/r.tot) : 0;
+  document.getElementById('bench').innerHTML='<b>'+fmtN(r.tot)+'</b> residents above 55 dB &middot; about <b>&euro;'+fmtN(perc)+
+    '</b> per exposed resident per year. &nbsp;For comparison, the European Environment Agency puts the EU-wide cost of transport noise at &euro;95.6&nbsp;billion a year (1.3 million DALYs), including outcomes beyond the three modelled here.';
+  fit();
+}
+ids.concat(['daly-eur','home']).forEach(function(id){document.getElementById(id).addEventListener('input',render);});
+document.getElementById('p-bcn').addEventListener('click',function(){ids.forEach(function(id,i){document.getElementById(id).value=PRESET_BCN[i];});render();});
+document.getElementById('p-clear').addEventListener('click',function(){ids.forEach(function(id){document.getElementById(id).value=0;});render();});
+
+window.addEventListener('message',function(e){var d=e.data||{};
+  if(d&&d.type==='theme'&&(d.theme==='light'||d.theme==='dark')){document.documentElement.setAttribute('data-theme',d.theme);}});
+function fit(){var h=Math.ceil(document.querySelector('.wrap').getBoundingClientRect().height)+4;
+  if(window.parent&&window.parent!==window)window.parent.postMessage({type:'resize',frame:'ch10-cost-calculator',height:h},'*');}
+window.addEventListener('load',render);window.addEventListener('resize',fit);
+render();
+</script>
+</body>
+</html>

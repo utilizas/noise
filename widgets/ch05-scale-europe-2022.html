@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The scale of it — Europe, 2022</title>
+<style>
+:root{
+  --paper:#faf7f0; --ink:#1e1b16; --ink-2:#4a463d; --ink-3:#7a7466;
+  --rule:#d9d1c0; --rule-2:#c8bfa9; --card:#f3eee2; --track:#e7e0cf;
+  --road:#9a3b2e; --rail:#2f6f6a; --air:#b07515; --accent:#9a3b2e;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#211e16; --ink:#ece6d8; --ink-2:#b8b1a0; --ink-3:#807a6b;
+    --rule:#332f24; --rule-2:#403a2c; --card:#2a261c; --track:#332f24;
+    --road:#e0836f; --rail:#5fb4ac; --air:#d5a04a; --accent:#e0836f;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0; padding:18px; background:var(--paper); color:var(--ink);
+  font-family:"Newsreader",Georgia,serif; font-size:16px; line-height:1.55}
+.label{font-family:"IBM Plex Mono",monospace; font-size:.62rem; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--accent); margin:0 0 .1rem}
+h4{font-family:"Fraunces","Georgia",serif; font-weight:500; margin:0 0 .9rem; font-size:1.22rem}
+.toggle{display:inline-flex; border:1px solid var(--rule-2); border-radius:8px; overflow:hidden; margin-bottom:1rem}
+.toggle button{font-family:"IBM Plex Mono",monospace; font-size:.66rem; letter-spacing:.03em;
+  text-transform:uppercase; padding:.5rem .8rem; border:0; background:transparent; color:var(--ink-3);
+  cursor:pointer; transition:background .15s,color .15s}
+.toggle button.on{background:var(--accent); color:var(--paper)}
+.head{display:flex; align-items:baseline; gap:.6rem; flex-wrap:wrap; margin:.1rem 0 .2rem}
+.head .big{font-family:"Fraunces",serif; font-size:2.5rem; font-weight:600; line-height:1; color:var(--ink)}
+.head .pct{font-size:.98rem; color:var(--ink-2)}
+.period{font-family:"IBM Plex Mono",monospace; font-size:.66rem; letter-spacing:.04em;
+  text-transform:uppercase; color:var(--ink-3); margin:.1rem 0 1rem}
+.bars{margin:.3rem 0 .2rem}
+.bar{margin:.55rem 0}
+.bar .top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:.25rem}
+.bar .name{font-family:"IBM Plex Mono",monospace; font-size:.68rem; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-2)}
+.bar .val{font-family:"Fraunces",serif; font-size:1.05rem; font-weight:600}
+.bar .track{height:12px; background:var(--track); border-radius:6px; overflow:hidden}
+.bar .fill{height:100%; border-radius:6px; width:0; transition:width .35s ease}
+.bar.road .val{color:var(--road)} .bar.road .fill{background:var(--road)}
+.bar.rail .val{color:var(--rail)} .bar.rail .fill{background:var(--rail)}
+.bar.air  .val{color:var(--air)}  .bar.air  .fill{background:var(--air)}
+.axis{font-family:"IBM Plex Mono",monospace; font-size:.58rem; color:var(--ink-3); text-align:right; margin-top:.1rem}
+.whonote{font-size:.9rem; color:var(--ink-2); margin:.9rem 0 0; padding:.7rem .85rem;
+  background:var(--card); border-left:3px solid var(--accent); border-radius:0 6px 6px 0}
+.burden{display:flex; gap:1.4rem; flex-wrap:wrap; margin:1rem 0 0; padding-top:.9rem; border-top:1px solid var(--rule)}
+.burden .item{min-width:104px}
+.burden .v{font-family:"Fraunces",serif; font-size:1.35rem; font-weight:600; line-height:1; color:var(--ink)}
+.burden .k{font-family:"IBM Plex Mono",monospace; font-size:.58rem; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-3); margin-top:.3rem; line-height:1.4}
+.src{font-family:"IBM Plex Mono",monospace; font-size:.64rem; color:var(--ink-3); margin-top:1rem; line-height:1.55;
+  border-top:1px dashed var(--rule-2); padding-top:.7rem}
+</style>
+</head>
+<body>
+<p class="label">Interactive · Europe, 2022 · real reported data</p>
+<h4>The scale of transport noise in Europe</h4>
+
+<div class="toggle" role="group" aria-label="Exposure period">
+  <button id="btn-lden" class="on" onclick="setPeriod('lden')">Day–evening–night</button>
+  <button id="btn-lnight" onclick="setPeriod('lnight')">Night</button>
+</div>
+
+<div class="head">
+  <span class="big" id="total">—</span>
+  <span class="pct" id="pct">—</span>
+</div>
+<div class="period" id="period">—</div>
+
+<div class="bars" id="bars">
+  <div class="bar road"><div class="top"><span class="name">Road</span><span class="val" id="v-road">—</span></div><div class="track"><div class="fill" id="f-road"></div></div></div>
+  <div class="bar rail"><div class="top"><span class="name">Rail</span><span class="val" id="v-rail">—</span></div><div class="track"><div class="fill" id="f-rail"></div></div></div>
+  <div class="bar air"><div class="top"><span class="name">Aircraft</span><span class="val" id="v-air">—</span></div><div class="track"><div class="fill" id="f-air"></div></div></div>
+  <div class="axis">scale · 0 to 100 million people</div>
+</div>
+
+<p class="whonote" id="whonote">—</p>
+
+<div class="burden">
+  <div class="item"><div class="v">66,000</div><div class="k">premature deaths / year</div></div>
+  <div class="item"><div class="v">50,000</div><div class="k">new heart-disease cases / year</div></div>
+  <div class="item"><div class="v">22,000</div><div class="k">new type-2 diabetes cases / year</div></div>
+  <div class="item"><div class="v">€95.6 bn</div><div class="k">annual cost · ≈0.6% of GDP</div></div>
+</div>
+
+<p class="src" id="src"></p>
+
+<script>
+/* ============================================================
+   Europe 2022 — people exposed to harmful transport noise,
+   by source and period, as reported under the Environmental
+   Noise Directive and compiled in the EEA's "Environmental
+   noise in Europe 2025". All figures are reported/estimated
+   real data (2022 round, gap-filled ~84% complete):
+
+     Day-evening-night (Lden >= 55 dB): road 92, rail 18, air 2.6 (million)
+     Night (Lnight >= 50 dB):           road 58, rail 13, air <1  (million)
+     Total: >110 million (>20% pop.) at END thresholds;
+            ~150 million (>30%) at the stricter WHO levels (Lden).
+   Annual burden: ~66,000 premature deaths, ~50,000 new CVD cases,
+   ~22,000 new type-2 diabetes cases; cost >= EUR 95.6 bn (~0.6% GDP).
+   ============================================================ */
+var AXMAX = 100; // million, shared bar scale
+var DATA = {
+  lden: {
+    period: 'Day–evening–night · L\u2091\u2099 \u2265 55 dB',
+    total: '110M+', pct: 'more than 20% of the EU-27 population',
+    road:{v:92,txt:'92M'}, rail:{v:18,txt:'18M'}, air:{v:2.6,txt:'2.6M'},
+    who: 'At the WHO\u2019s stricter recommended levels, the day\u2013evening\u2013night figure rises to about <b>150 million</b> \u2014 more than 30% of the population. Health effects begin below the END threshold.'
+  },
+  lnight: {
+    period: 'Night · L\u2099\u1d62\u2098\u2095\u209c \u2265 50 dB',
+    total: '~72M', pct: 'exposed above the night-noise threshold',
+    road:{v:58,txt:'58M'}, rail:{v:13,txt:'13M'}, air:{v:0.8,txt:'<1M'},
+    who: 'Night exposure is where sleep is lost. The WHO night guidelines are stricter still \u2014 45 dB for road, 44 for rail, 40 for aircraft \u2014 so the population at risk is larger than the END count shown here.'
+  }
+};
+
+function setPeriod(p){
+  document.getElementById('btn-lden').classList.toggle('on', p==='lden');
+  document.getElementById('btn-lnight').classList.toggle('on', p==='lnight');
+  render(p);
+}
+
+function render(p){
+  var d = DATA[p];
+  document.getElementById('total').textContent = d.total;
+  document.getElementById('pct').textContent = d.pct;
+  document.getElementById('period').textContent = d.period;
+  ['road','rail','air'].forEach(function(m){
+    document.getElementById('v-'+m).textContent = d[m].txt;
+    document.getElementById('f-'+m).style.width = Math.min(100, d[m].v/AXMAX*100) + '%';
+  });
+  document.getElementById('whonote').innerHTML = d.who;
+  document.getElementById('src').textContent =
+    'Source · European Environment Agency, Environmental noise in Europe 2025 (2022 reporting round under Directive 2002/49/EC). Figures are reported/estimated real data; the 2022 dataset is ~84% complete with gap-filling. Accessed 2026-07-13.';
+  fitFrame();
+}
+
+/* Self-fit: match the parent iframe to content height (same-origin only). */
+function fitFrame(){
+  try{ var f=window.frameElement; if(f){ f.style.height=(document.documentElement.scrollHeight+4)+'px'; } }catch(e){}
+}
+window.addEventListener('load', fitFrame);
+window.addEventListener('resize', fitFrame);
+if(document.fonts && document.fonts.ready){ document.fonts.ready.then(fitFrame); }
+
+render('lden');
+</script>
+</body>
+</html>

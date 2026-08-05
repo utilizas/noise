@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The map, by the rules — modelled façade level</title>
+<style>
+:root{
+  --paper:#faf7f0; --ink:#1e1b16; --ink-2:#4a463d; --ink-3:#7a7466;
+  --rule:#d9d1c0; --rule-2:#c8bfa9; --risk:#9a3b2e; --calm:#2f6f6a;
+  --floor:#8a8474; --floor-bg:#ece6d6; --card:#faf7f0;
+  --b55:#d8a53f; --b60:#d3853a; --b65:#c8633a; --b70:#ac3f2e; --b75:#822c26;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#211e16; --ink:#ece6d8; --ink-2:#b8b1a0; --ink-3:#807a6b;
+    --rule:#332f24; --rule-2:#403a2c; --risk:#e0836f; --calm:#5fb4ac;
+    --floor:#6b6556; --floor-bg:#2a271d; --card:#211e16;
+    --b55:#d8a53f; --b60:#dd8c42; --b65:#d76f45; --b70:#c85141; --b75:#b23f38;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0; padding:18px; background:var(--paper); color:var(--ink);
+  font-family:"Newsreader",Georgia,serif; font-size:16px; line-height:1.55}
+.label{font-family:"IBM Plex Mono",monospace; font-size:.62rem; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--risk); margin:0 0 .1rem}
+h4{font-family:"Fraunces","Georgia",serif; font-weight:500; margin:0 0 1rem; font-size:1.22rem}
+.controls{display:flex; flex-wrap:wrap; gap:1rem 1.7rem; align-items:flex-end; margin-bottom:.4rem}
+.ctl{flex:1; min-width:190px}
+.ctl label{display:block; font-family:"IBM Plex Mono",monospace; font-size:.66rem;
+  letter-spacing:.05em; text-transform:uppercase; color:var(--ink-3); margin-bottom:.5rem}
+input[type=range]{width:100%; accent-color:var(--risk); height:4px; cursor:pointer}
+.segrow{display:flex; flex-wrap:wrap; gap:.7rem 1.3rem; margin:.3rem 0 1rem}
+.segwrap label{display:block; font-family:"IBM Plex Mono",monospace; font-size:.6rem;
+  letter-spacing:.05em; text-transform:uppercase; color:var(--ink-3); margin-bottom:.35rem}
+.seg{display:inline-flex; border:1px solid var(--rule-2); border-radius:5px; overflow:hidden}
+.seg button{font-family:"Newsreader",serif; font-size:.84rem; padding:.36rem .7rem;
+  background:transparent; border:0; color:var(--ink-2); cursor:pointer; border-right:1px solid var(--rule-2)}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--risk); color:#fff}
+.readout{display:flex; gap:1.4rem; flex-wrap:wrap; align-items:baseline;
+  margin:.1rem 0 .8rem; padding:.85rem 0; border-top:1px solid var(--rule); border-bottom:1px solid var(--rule)}
+.stat{min-width:120px}
+.stat .v{font-family:"Fraunces",serif; font-size:1.95rem; font-weight:600; color:var(--risk); line-height:1}
+.stat .k{font-family:"IBM Plex Mono",monospace; font-size:.6rem; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--ink-3); margin-top:.35rem}
+.chip{font-family:"IBM Plex Mono",monospace; font-size:.72rem; letter-spacing:.03em;
+  padding:.3rem .6rem; border-radius:4px; color:#fff; white-space:nowrap; display:inline-block}
+#dsvg{width:100%; height:auto; display:block; margin:.2rem 0}
+.interp{font-size:.96rem; color:var(--ink-2); margin:.5rem 0 0; min-height:3.1em}
+.interp b{color:var(--ink); font-weight:500}
+.caveat{font-size:.78rem; color:var(--ink-3); margin:.9rem 0 0; line-height:1.5;
+  border-top:1px dashed var(--rule-2); padding-top:.7rem}
+.src{font-family:"IBM Plex Mono",monospace; font-size:.64rem; color:var(--ink-3); margin-top:.5rem; line-height:1.5}
+</style>
+</head>
+<body>
+<p class="label">Interactive · computes on your input</p>
+<h4>The map, by the rules: a modelled façade level</h4>
+
+<div class="controls">
+  <div class="ctl">
+    <label for="lref">Source level at 10 m · <span id="lrefval">68</span> dB(A)</label>
+    <input type="range" id="lref" min="45" max="80" value="68" step="1" oninput="update()">
+  </div>
+  <div class="ctl">
+    <label for="dist">Distance source → façade · <span id="distval">25</span> m</label>
+    <input type="range" id="dist" min="5" max="200" value="25" step="1" oninput="update()">
+  </div>
+  <div class="ctl">
+    <label for="hgt">Receiver height · <span id="hgtval">4.0</span> m</label>
+    <input type="range" id="hgt" min="1.5" max="10" value="4" step="0.5" oninput="update()">
+  </div>
+</div>
+
+<div class="segrow">
+  <div class="segwrap">
+    <label>Source type</label>
+    <div class="seg" id="segType">
+      <button class="on" data-t="road" onclick="setType('road')">Road (line)</button>
+      <button data-t="point" onclick="setType('point')">Machine (point)</button>
+    </div>
+  </div>
+  <div class="segwrap">
+    <label>Ground</label>
+    <div class="seg" id="segGround">
+      <button class="on" data-g="hard" onclick="setGround('hard')">Hard (paved)</button>
+      <button data-g="soft" onclick="setGround('soft')">Soft (grass)</button>
+    </div>
+  </div>
+  <div class="segwrap">
+    <label>Façade reflection</label>
+    <div class="seg" id="segFac">
+      <button class="on" data-f="1" onclick="setFac(1)">+3 dB</button>
+      <button data-f="0" onclick="setFac(0)">Off</button>
+    </div>
+  </div>
+</div>
+
+<div class="readout">
+  <div class="stat">
+    <div class="v" id="lval">—</div>
+    <div class="k">Modelled L<sub>den</sub> at façade</div>
+  </div>
+  <div><span class="chip" id="band">—</span></div>
+</div>
+
+<svg id="dsvg" viewBox="0 0 520 250" role="img" aria-labelledby="dtitle">
+  <title id="dtitle">Modelled level against distance from the source, with the 55 dB reporting floor below which a receiver is not shown on the strategic map</title>
+</svg>
+
+<p class="interp" id="interp"></p>
+<p class="caveat" id="caveat"></p>
+<p class="src" id="src"></p>
+
+<script>
+/* ============================================================
+   "The map, by the rules." A strategic noise map is not measured
+   but COMPUTED: a source term propagated to a receiver through a
+   chain of assumptions. This tool applies a simplified outdoor
+   propagation — geometric divergence and atmospheric absorption
+   after ISO 9613-2:1996, plus toggleable ground and façade terms —
+   to a reference source level, and reports the modelled Lden at the
+   receiver together with the END band it falls into. Below 55 dB
+   Lden the strategic map, by regulation, does not report the point
+   at all: the receiver is not "safe", it is simply uncounted.
+   This is an ILLUSTRATIVE model, not a CNOSSOS-grade computation.
+   ============================================================ */
+var DREF = 10, FLOOR = 55;
+var type='road', ground='hard', fac=1;
+
+function log10(x){ return Math.log(x)/Math.LN10; }
+function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+
+/* modelled level at distance d for the current settings */
+function level(d, Lref){
+  var Adiv = (type==='road' ? 10 : 20) * log10(d/DREF);     // divergence
+  var Aatm = 0.005 * (d - DREF);                            // ~5 dB/km
+  var Agr  = ground==='soft' ? clamp(4.8 - 0.8*(+document.getElementById('hgt').value), 0, 4.8) : 0;
+  var Afac = fac ? 3 : 0;
+  return Lref - Adiv - Aatm - Agr + Afac;
+}
+
+var BANDS = [
+  {lo:75, name:'≥ 75 dB · L\u2091', col:'--b75'},
+  {lo:70, name:'70–74 dB', col:'--b70'},
+  {lo:65, name:'65–69 dB', col:'--b65'},
+  {lo:60, name:'60–64 dB', col:'--b60'},
+  {lo:55, name:'55–59 dB', col:'--b55'},
+  {lo:-Infinity, name:'below floor · unmapped', col:'--floor'}
+];
+function bandOf(L){ for(var i=0;i<BANDS.length;i++){ if(L>=BANDS[i].lo) return BANDS[i]; } return BANDS[BANDS.length-1]; }
+function cssv(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+
+function setType(t){ type=t; document.querySelectorAll('#segType button').forEach(function(b){b.classList.toggle('on',b.dataset.t===t);}); update(); }
+function setGround(g){ ground=g; document.querySelectorAll('#segGround button').forEach(function(b){b.classList.toggle('on',b.dataset.g===g);}); update(); }
+function setFac(f){ fac=f; document.querySelectorAll('#segFac button').forEach(function(b){b.classList.toggle('on',+b.dataset.f===f);}); update(); }
+
+function update(){
+  var Lref=+document.getElementById('lref').value;
+  var d=+document.getElementById('dist').value;
+  var h=+document.getElementById('hgt').value;
+  document.getElementById('lrefval').textContent=Lref;
+  document.getElementById('distval').textContent=d;
+  document.getElementById('hgtval').textContent=h.toFixed(1);
+
+  var L=level(d,Lref), b=bandOf(L);
+  document.getElementById('lval').textContent=L.toFixed(1)+' dB';
+  var chip=document.getElementById('band');
+  chip.textContent=b.name; chip.style.background=cssv(b.col);
+
+  var below = L < FLOOR;
+  if(below){
+    document.getElementById('interp').innerHTML=
+      'At <b>'+d+' m</b> the model returns <b>'+L.toFixed(1)+' dB</b> L<sub>den</sub> — <b>below the 55 dB reporting floor</b>. '+
+      'On a strategic map this receiver is blank: not shown as safe, simply <b>not counted</b>. Move the façade closer, or raise the receiver, to bring it onto the map.';
+  } else {
+    document.getElementById('interp').innerHTML=
+      'At <b>'+d+' m</b> the modelled level is <b>'+L.toFixed(1)+' dB</b> L<sub>den</sub> ('+b.name+'). '+
+      'Nothing about the sound changed — try switching the receiver height (the END places it at 4 m) or the ground to watch the <i>mapped</i> value move with the model\u2019s assumptions.';
+  }
+
+  document.getElementById('caveat').innerHTML=
+    'A strategic noise map is computed, not measured: a source level carried to a façade through assumed propagation, a fixed receiver height and a reporting floor. '+
+    'This is an illustrative propagation (divergence + air absorption, with toggleable ground and façade terms), not a CNOSSOS-grade calculation. Line sources fall off more slowly than point sources — a tonal machine drops below the floor far sooner than a road.';
+  document.getElementById('src').textContent=
+    'Source · divergence and atmospheric-absorption terms after ISO 9613-2:1996; 55/65/75 dB Lden bands and the 55 dB reporting floor per Directive 2002/49/EC; CNOSSOS-EU common method per Commission Directive (EU) 2015/996. Illustrative model. Accessed 2026-07-13.';
+
+  draw(Lref,d,L,below);
+  fitFrame();
+}
+
+function draw(Lref,dSel,Lsel,below){
+  var W=520,H=250, padL=48,padR=14,padT=16,padB=40, x0=5,x1=200;
+  var risk=cssv('--risk'), faint=cssv('--rule'), ink3=cssv('--ink-3'),
+      calm=cssv('--calm'), floor=cssv('--floor'), floorbg=cssv('--floor-bg'), card=cssv('--card');
+  /* y-range from the current curve */
+  var top=level(x0,Lref), bot=level(x1,Lref);
+  var yMax=Math.max(top+2, 60), yMin=Math.min(bot-2, 50, FLOOR-3);
+  function X(v){ return padL+(v-x0)/(x1-x0)*(W-padL-padR); }
+  function Y(v){ return padT+(yMax-v)/(yMax-yMin)*(H-padT-padB); }
+
+  var g='';
+  /* y gridlines every 5 dB */
+  for(var t=Math.ceil(yMin/5)*5; t<=yMax; t+=5){
+    var yy=Y(t).toFixed(1);
+    g+='<line x1="'+padL+'" y1="'+yy+'" x2="'+(W-padR)+'" y2="'+yy+'" stroke="'+faint+'" stroke-width="1"/>';
+    g+='<text x="'+(padL-8)+'" y="'+(+yy+4)+'" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="10" fill="'+ink3+'">'+t+'</text>';
+  }
+  /* x ticks */
+  [5,25,50,100,150,200].forEach(function(xt){
+    g+='<text x="'+X(xt).toFixed(1)+'" y="'+(H-padB+18)+'" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="'+ink3+'">'+xt+'</text>';
+  });
+
+  /* shaded "unmapped" zone below the 55 dB floor */
+  if(FLOOR>yMin){
+    var yF=Y(FLOOR).toFixed(1);
+    g+='<rect x="'+padL+'" y="'+yF+'" width="'+(W-padL-padR).toFixed(1)+'" height="'+(Y(yMin)-Y(FLOOR)).toFixed(1)+'" fill="'+floorbg+'" opacity="0.7"/>';
+    g+='<line x1="'+padL+'" y1="'+yF+'" x2="'+(W-padR)+'" y2="'+yF+'" stroke="'+floor+'" stroke-width="1.3" stroke-dasharray="5 3"/>';
+    g+='<text x="'+(W-padR-4)+'" y="'+(+yF+14)+'" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="9" fill="'+floor+'">55 dB reporting floor — unmapped below</text>';
+  }
+
+  /* propagation curve */
+  var dpath='';
+  for(var v=x0; v<=x1+0.001; v+=2){
+    var Lv=level(v,Lref);
+    dpath+=(v===x0?'M':'L')+X(v).toFixed(1)+' '+Y(Lv).toFixed(1)+' ';
+  }
+  g+='<path d="'+dpath+'" fill="none" stroke="'+risk+'" stroke-width="2.4"/>';
+
+  /* selected receiver marker */
+  var px=X(dSel), py=Y(Lsel);
+  g+='<line x1="'+px.toFixed(1)+'" y1="'+padT+'" x2="'+px.toFixed(1)+'" y2="'+(H-padB)+'" stroke="'+ink3+'" stroke-width="1" opacity="0.4"/>';
+  g+='<circle cx="'+px.toFixed(1)+'" cy="'+py.toFixed(1)+'" r="5.5" fill="'+(below?floor:calm)+'" stroke="'+card+'" stroke-width="2"/>';
+
+  g+='<text x="'+((padL+W-padR)/2)+'" y="'+(H-6)+'" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="'+ink3+'">distance from source · metres</text>';
+  document.getElementById('dsvg').innerHTML=g;
+}
+
+/* Self-fit: match the parent iframe to content height so no inner
+   scrollbar appears. Same-origin only; fails silently otherwise. */
+function fitFrame(){
+  try{ var f=window.frameElement; if(f){ f.style.height=(document.documentElement.scrollHeight+4)+'px'; } }catch(e){}
+}
+window.addEventListener('load', fitFrame);
+window.addEventListener('resize', fitFrame);
+if(document.fonts && document.fonts.ready){ document.fonts.ready.then(fitFrame); }
+
+update();
+</script>
+</body>
+</html>

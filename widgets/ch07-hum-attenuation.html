@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How far a hum travels</title>
+<style>
+  :root {
+    --fg: #1f2430; --muted: #5b6472; --line: #d4d9e0; --panel: #f5f6f8;
+    --accent: #0f6f8f; --linear: #a8631f; --track: #d9dee5; --grid: #e4e7ec;
+  }
+  :root[data-theme="dark"] {
+    --fg: #e8eaee; --muted: #9aa3b0; --line: #3a4150; --panel: #232833;
+    --accent: #5fb7d4; --linear: #d99a55; --track: #3a4150; --grid: #2b313c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+      --fg: #e8eaee; --muted: #9aa3b0; --line: #3a4150; --panel: #232833;
+      --accent: #5fb7d4; --linear: #d99a55; --track: #3a4150; --grid: #2b313c;
+    }
+  }
+  html, body { margin: 0; padding: 0; background: transparent; color: var(--fg);
+    font: 15px/1.5 Georgia, 'Times New Roman', serif; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 4px 6px 10px; }
+  h2 { font-size: 1.15rem; margin: 0 0 2px; font-weight: 600; }
+  p.lead { margin: 0 0 12px; color: var(--muted); font-size: 0.92rem; }
+  .panel { background: var(--panel); border: 1px solid var(--line);
+    border-radius: 8px; padding: 12px 14px; margin: 0 0 12px; }
+  .result { background: transparent; border: 1px solid var(--accent);
+    border-left-width: 4px; border-radius: 8px; padding: 12px 14px; margin: 2px 0 12px; }
+  .result h3 { color: var(--accent); font-family: system-ui, sans-serif;
+    font-size: 0.82rem; letter-spacing: 0.06em; text-transform: uppercase; margin: 0 0 6px; }
+  .row { display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center; }
+  .ctrl { flex: 1 1 200px; min-width: 190px; }
+  label { display: block; font-family: system-ui, sans-serif; font-size: 0.78rem;
+    color: var(--muted); letter-spacing: 0.02em; }
+  label b { color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }
+  input[type=range] { width: 100%; accent-color: var(--accent); }
+  .readout { font-family: system-ui, sans-serif; font-size: 0.85rem; margin-top: 6px;
+    color: var(--fg); }
+  .readout b { font-variant-numeric: tabular-nums; }
+  svg text { font-family: system-ui, sans-serif; }
+  .note { font-size: 0.78rem; color: var(--muted); margin-top: 10px; }
+  .big { font-size: 1.05rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h2>How far a hum travels</h2>
+  <p class="lead">A data centre's hum is low and tonal. Two things follow, and this tool
+  lets you see both at once. First, low frequencies are barely absorbed by the air, so the
+  hum carries far while higher-pitched sound fades. Second, A-weighting — the filter behind
+  the ordinary decibel reading — discounts exactly those low frequencies, so the same tone
+  that reaches a distant house is quiet on the meter. Set a source and a distance and watch
+  the gap between what arrives and what the meter records.</p>
+
+  <div class="panel">
+    <div class="row">
+      <div class="ctrl"><label>Source sound power · <b id="lwVal"></b> dB</label>
+        <input type="range" id="lw" min="80" max="130" step="1" value="105"></div>
+      <div class="ctrl"><label>Hum frequency · <b id="fVal"></b> Hz</label>
+        <input type="range" id="f" min="40" max="2000" step="5" value="63"></div>
+      <div class="ctrl"><label>Distance to dwelling · <b id="dVal"></b> m</label>
+        <input type="range" id="d" min="50" max="2000" step="10" value="500"></div>
+    </div>
+    <svg id="chart" viewBox="0 0 720 280" width="100%" role="img"
+      aria-label="Level versus distance for the chosen tone, unweighted versus A-weighted"></svg>
+  </div>
+
+  <div class="result">
+    <h3>At the dwelling</h3>
+    <div class="readout big" id="out"></div>
+    <div class="readout" id="out2" style="margin-top:6px"></div>
+  </div>
+
+  <p class="note"><b>Model and assumptions.</b> A single tonal point source over reflective
+  ground. Level at the receiver = source sound power − geometric divergence (20·log₁₀
+  <i>d</i> + 11 − 10·log₁₀ Q, with Q = 2 for hemispherical radiation) − atmospheric
+  absorption (ISO 9613-1 analytical formula at 20 °C, 70 % relative humidity, 101.325 kPa).
+  The A-weighted value applies the IEC 61672-1 weighting at the tone's frequency. Ground
+  effect, screening, meteorological refraction and indoor transmission are omitted, so real
+  values vary; the frequency dependence the tool illustrates is robust to those omissions.
+  All arithmetic was verified in Node.js before publication.</p>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ================= theme: prefer host message, then luminance, then OS =====
+  var themeLocked = false;   // set once the host tells us, so fallbacks defer
+  function setTheme(dark) {
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    if (typeof update === 'function') update();
+  }
+  window.addEventListener('message', function (e) {
+    if (e.data && e.data.type === 'quarto-theme') {
+      themeLocked = true; setTheme(e.data.theme === 'dark');
+    }
+  });
+  function parseRGB(s) {
+    var m = s && s.match(/rgba?\(([^)]+)\)/); if (!m) return null;
+    var p = m[1].split(',').map(parseFloat);
+    if (p.length > 3 && p[3] === 0) return null; return p;
+  }
+  function hostIsDark() {
+    if (window.parent === window) return null;
+    try {
+      var pw = window.parent, doc = pw.document, p = null, c = [doc.body, doc.documentElement];
+      for (var i = 0; i < c.length && !p; i++) if (c[i]) p = parseRGB(pw.getComputedStyle(c[i]).backgroundColor);
+      if (!p) return null;
+      return (0.2126 * p[0] + 0.7152 * p[1] + 0.0722 * p[2]) / 255 < 0.5;
+    } catch (e) { return null; }
+  }
+  function fallbackTheme() {
+    if (themeLocked) return;
+    var dark = hostIsDark();
+    if (dark === null) dark = !!(window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+    setTheme(dark);
+  }
+
+  // ================= attenuation maths (Node-verified) =================
+  function aWeight(f) {
+    var f2 = f * f;
+    var ra = (Math.pow(12194, 2) * f2 * f2) /
+      ((f2 + Math.pow(20.6, 2)) *
+       Math.sqrt((f2 + Math.pow(107.7, 2)) * (f2 + Math.pow(737.9, 2))) *
+       (f2 + Math.pow(12194, 2)));
+    return 20 * Math.log10(ra) + 2.0;
+  }
+  function alphaISO(f) {
+    var pr = 101.325, T0 = 293.15, T = 293.15, T01 = 273.16, hrel = 70, pa = 101.325;
+    var psat = pr * Math.pow(10, -6.8346 * Math.pow(T01 / T, 1.261) + 4.6151);
+    var h = hrel * (psat / pr) / (pa / pr);
+    var frO = (pa / pr) * (24 + 4.04e4 * h * (0.02 + h) / (0.391 + h));
+    var frN = (pa / pr) * Math.pow(T / T0, -0.5) *
+      (9 + 280 * h * Math.exp(-4.170 * (Math.pow(T / T0, -1 / 3) - 1)));
+    var f2 = f * f;
+    var term1 = 1.84e-11 * Math.pow(pa / pr, -1) * Math.pow(T / T0, 0.5);
+    var termO = 0.01275 * Math.exp(-2239.1 / T) / (frO + f2 / frO);
+    var termN = 0.1068 * Math.exp(-3352.0 / T) / (frN + f2 / frN);
+    return 8.686 * f2 * (term1 + Math.pow(T / T0, -2.5) * (termO + termN)); // dB/m
+  }
+  function receiverLinear(Lw, f, d) {
+    var div = 20 * Math.log10(d) + 11 - 10 * Math.log10(2);
+    return Lw - div - alphaISO(f) * d;
+  }
+  function receiverdBA(Lw, f, d) { return receiverLinear(Lw, f, d) + aWeight(f); }
+
+  // ================= UI =================
+  var $ = function (id) { return document.getElementById(id); };
+  var css = function (n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); };
+  ['lw', 'f', 'd'].forEach(function (id) { $(id).addEventListener('input', update); });
+
+  function svgEl(tag, attrs, parent, text) {
+    var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (var k in attrs) el.setAttribute(k, attrs[k]);
+    if (text !== undefined) el.textContent = text;
+    parent.appendChild(el); return el;
+  }
+  function clear(s) { while (s.firstChild) s.removeChild(s.firstChild); }
+
+  function chart(Lw, f, dNow) {
+    var svg = $('chart'); clear(svg);
+    var W = 720, H = 280, mL = 44, mR = 14, mT = 16, mB = 34;
+    var dMax = 2000, yMin = 0, yMax = 90;
+    var sx = function (d) { return mL + (d / dMax) * (W - mL - mR); };
+    var sy = function (v) { return mT + (yMax - Math.min(Math.max(v, yMin), yMax)) / (yMax - yMin) * (H - mT - mB); };
+    for (var g = 0; g <= 90; g += 15) {
+      svgEl('line', { x1: mL, y1: sy(g), x2: W - mR, y2: sy(g), stroke: css('--grid'), 'stroke-width': 1 }, svg);
+      svgEl('text', { x: mL - 6, y: sy(g) + 4, 'text-anchor': 'end', 'font-size': 10, fill: css('--muted') }, svg, g);
+    }
+    svgEl('text', { x: 8, y: mT - 4, 'font-size': 10, fill: css('--muted') }, svg, 'level, dB');
+    // curves: unweighted (linear) and A-weighted, vs distance
+    var lin = [], dba = [];
+    for (var i = 0; i <= 200; i++) {
+      var d = 50 + (dMax - 50) * (i / 200);
+      lin.push(sx(d).toFixed(1) + ',' + sy(receiverLinear(Lw, f, d)).toFixed(1));
+      dba.push(sx(d).toFixed(1) + ',' + sy(receiverdBA(Lw, f, d)).toFixed(1));
+    }
+    svgEl('polyline', { points: lin.join(' '), fill: 'none', stroke: css('--linear'), 'stroke-width': 2.5 }, svg);
+    svgEl('polyline', { points: dba.join(' '), fill: 'none', stroke: css('--accent'), 'stroke-width': 2.5 }, svg);
+    // current distance marker
+    var x = sx(dNow);
+    svgEl('line', { x1: x, y1: mT, x2: x, y2: H - mB, stroke: css('--fg'), 'stroke-width': 1, 'stroke-dasharray': '3 3', 'stroke-opacity': 0.6 }, svg);
+    // axis ticks
+    [0, 500, 1000, 1500, 2000].forEach(function (d) {
+      svgEl('text', { x: sx(d), y: H - 8, 'text-anchor': 'middle', 'font-size': 10, fill: css('--muted') }, svg, d + 'm');
+    });
+    // legend
+    svgEl('rect', { x: W - 250, y: mT, width: 12, height: 3, fill: css('--linear') }, svg);
+    svgEl('text', { x: W - 234, y: mT + 5, 'font-size': 11, fill: css('--fg') }, svg, 'unweighted (linear dB)');
+    svgEl('rect', { x: W - 250, y: mT + 16, width: 12, height: 3, fill: css('--accent') }, svg);
+    svgEl('text', { x: W - 234, y: mT + 21, 'font-size': 11, fill: css('--fg') }, svg, 'A-weighted dB(A)');
+  }
+
+  function update() {
+    var Lw = +$('lw').value, f = +$('f').value, d = +$('d').value;
+    $('lwVal').textContent = Lw; $('fVal').textContent = f; $('dVal').textContent = d;
+    chart(Lw, f, d);
+    var lin = receiverLinear(Lw, f, d), dba = receiverdBA(Lw, f, d), gap = lin - dba;
+    $('out').innerHTML = 'The tone arrives at <b>' + lin.toFixed(1) +
+      ' dB</b> — but the meter reads <b>' + dba.toFixed(1) + ' dB(A)</b>.';
+    var atmLoss = alphaISO(f) * d;
+    $('out2').innerHTML = 'A-weighting alone removes <b>' + gap.toFixed(1) +
+      ' dB</b> at ' + f + ' Hz, and the air over ' + d + ' m removes only <b>' +
+      atmLoss.toFixed(1) + ' dB</b> of the low tone (a 2 kHz sound would lose <b>' +
+      (alphaISO(2000) * d).toFixed(1) + ' dB</b> the same way). The hum is engineered to ' +
+      'outlast distance and to slip past the number.';
+    fitFrame();
+  }
+
+  function fitFrame() {
+    var h = document.documentElement.scrollHeight;
+    try { if (window.frameElement) window.frameElement.style.height = (h + 8) + 'px'; } catch (e) {}
+    try { window.parent.postMessage({ type: 'fitFrame', height: h + 8 }, '*'); } catch (e) {}
+  }
+  window.addEventListener('resize', fitFrame);
+  if (window.matchMedia) matchMedia('(prefers-color-scheme: dark)').addEventListener('change', fallbackTheme);
+
+  // Ask the host for its theme; if no answer arrives, fall back shortly after.
+  try { window.parent.postMessage({ type: 'request-theme' }, '*'); } catch (e) {}
+  fallbackTheme();
+  setTimeout(fallbackTheme, 200);
+  update();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Soundscape augmentation demonstrator</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root{
+  --bg:#faf7f2; --fg:#211d18; --muted:#726a5f; --line:#e4dccf;
+  --card:#fffdf9; --card2:#f4efe6;
+  --risk:#7c2130; --calm:#1f6f6b; --accent:#1f6f6b;
+  --track:#e7dfd2; --thumb:#8a8177;
+  --shadow:0 1px 2px rgba(30,22,14,.05),0 6px 18px rgba(30,22,14,.05);
+}
+:root[data-theme="dark"]{
+  --bg:#141110; --fg:#ece6dc; --muted:#9a9084; --line:#2b2620;
+  --card:#1c1815; --card2:#211c18;
+  --risk:#cf6473; --calm:#63c0b9; --accent:#63c0b9;
+  --track:#2b2620; --thumb:#6f665c;
+  --shadow:0 1px 2px rgba(0,0,0,.30),0 6px 20px rgba(0,0,0,.28);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg)}
+body{
+  font-family:'Newsreader',Georgia,'Times New Roman',serif;
+  font-size:16px; line-height:1.5;
+  padding:20px 20px 22px;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:640px;margin:0 auto}
+
+h1{
+  font-family:'Fraunces',Georgia,serif; font-weight:600;
+  font-size:1.28rem; line-height:1.2; margin:0 0 2px;
+  letter-spacing:.1px;
+}
+.lede{color:var(--muted); font-size:.95rem; margin:0 0 18px}
+
+.panel{
+  background:var(--card); border:1px solid var(--line); border-radius:10px;
+  padding:15px 16px 17px; box-shadow:var(--shadow); margin-bottom:14px;
+}
+.panel-title{
+  font-family:'IBM Plex Mono',ui-monospace,monospace;
+  text-transform:uppercase; letter-spacing:.13em; font-size:.66rem;
+  color:var(--muted); margin:0 0 13px;
+}
+
+.field{margin-bottom:15px}
+.field:last-child{margin-bottom:0}
+.field-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:7px; gap:10px}
+.field-head label{font-weight:500; font-size:.96rem}
+.val{
+  font-family:'IBM Plex Mono',monospace; font-size:.9rem; font-weight:500;
+  color:var(--fg); white-space:nowrap;
+}
+.val small{color:var(--muted); font-weight:400}
+.hint{color:var(--muted); font-size:.8rem; margin-top:5px}
+
+input[type=range]{
+  -webkit-appearance:none; appearance:none; width:100%; height:4px;
+  background:var(--track); border-radius:4px; outline:none; margin:8px 0 2px;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none; appearance:none; width:18px; height:18px; border-radius:50%;
+  background:var(--fg); border:3px solid var(--card); box-shadow:0 0 0 1px var(--line); cursor:pointer;
+}
+input[type=range]::-moz-range-thumb{
+  width:18px; height:18px; border-radius:50%; background:var(--fg);
+  border:3px solid var(--card); box-shadow:0 0 0 1px var(--line); cursor:pointer;
+}
+input[type=range].risk::-webkit-slider-thumb{background:var(--risk)}
+input[type=range].risk::-moz-range-thumb{background:var(--risk)}
+input[type=range].calm::-webkit-slider-thumb{background:var(--calm)}
+input[type=range].calm::-moz-range-thumb{background:var(--calm)}
+
+.seg{display:flex; gap:6px; margin-top:2px}
+.seg button{
+  flex:1; font-family:'Newsreader',serif; font-size:.9rem; color:var(--muted);
+  background:var(--card2); border:1px solid var(--line); border-radius:7px;
+  padding:8px 6px; cursor:pointer; transition:.14s;
+}
+.seg button:hover{color:var(--fg)}
+.seg button[aria-pressed="true"]{
+  color:var(--fg); border-color:var(--calm);
+  box-shadow:inset 0 0 0 1px var(--calm); background:var(--card);
+}
+
+/* result band — accent-bordered, output not input */
+.result{
+  background:var(--card); border:1px solid var(--line);
+  border-left:4px solid var(--accent); border-radius:10px;
+  padding:16px 17px; box-shadow:var(--shadow); margin-bottom:14px;
+}
+.result-head{
+  display:flex; justify-content:space-between; align-items:baseline; gap:12px; margin-bottom:4px;
+}
+.result-label{
+  font-family:'IBM Plex Mono',monospace; text-transform:uppercase;
+  letter-spacing:.13em; font-size:.66rem; color:var(--muted);
+}
+.iso{
+  font-family:'IBM Plex Mono',monospace; font-weight:500;
+  font-size:2.1rem; line-height:1; letter-spacing:-.5px;
+}
+.iso-word{font-family:'Fraunces',serif; font-size:.95rem; color:var(--muted); font-style:italic}
+
+.gauge{position:relative; height:12px; border-radius:7px; margin:14px 0 6px;
+  background:linear-gradient(90deg,var(--risk) 0%, var(--card2) 50%, var(--calm) 100%);
+  border:1px solid var(--line);
+}
+.gauge-mid{position:absolute; left:50%; top:-4px; bottom:-4px; width:1px; background:var(--muted); opacity:.5}
+.gauge-marker{
+  position:absolute; top:50%; width:15px; height:15px; border-radius:50%;
+  background:var(--card); border:3px solid var(--fg);
+  transform:translate(-50%,-50%); transition:left .18s ease;
+}
+.gauge-ends{display:flex; justify-content:space-between; font-size:.72rem; color:var(--muted);
+  font-family:'IBM Plex Mono',monospace}
+
+.metrics{display:flex; gap:20px; margin:13px 0 0; padding-top:12px; border-top:1px solid var(--line); flex-wrap:wrap}
+.metric{min-width:96px}
+.metric .m-val{font-family:'IBM Plex Mono',monospace; font-weight:500; font-size:1.02rem}
+.metric .m-lab{font-size:.76rem; color:var(--muted); margin-top:1px}
+.metric .m-val.risk{color:var(--risk)}
+.metric .m-val.calm{color:var(--calm)}
+
+.verdict{margin:13px 0 0; font-size:.94rem; color:var(--fg)}
+.verdict b{font-weight:600}
+
+.method{font-size:.78rem; color:var(--muted); line-height:1.45; margin:2px 2px 0}
+.method code{font-family:'IBM Plex Mono',monospace; font-size:.94em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Composing over a drone</h1>
+  <p class="lede">Set a traffic drone at the window, add a natural masker beside it, and read the estimated soundscape pleasantness — the perceptual outcome, not the level.</p>
+
+  <div class="panel">
+    <p class="panel-title">Inputs · received at the fa&ccedil;ade (immission)</p>
+
+    <div class="field">
+      <div class="field-head">
+        <label for="traffic">Traffic drone</label>
+        <span class="val"><span id="trafficVal">60</span> <small>dB L<sub>Aeq</sub></small></span>
+      </div>
+      <input id="traffic" class="risk" type="range" min="45" max="75" step="1" value="60">
+      <p class="hint">The steady road or plant hum as heard indoors — an immission level, not the source's emission.</p>
+    </div>
+
+    <div class="field">
+      <div class="field-head"><label>Natural masker</label></div>
+      <div class="seg" id="typeSeg">
+        <button data-type="bird" aria-pressed="true">Birdsong</button>
+        <button data-type="water" aria-pressed="false">Fountain</button>
+        <button data-type="mix" aria-pressed="false">Water&nbsp;+&nbsp;birds</button>
+      </div>
+      <p class="hint" id="typeHint">Birdsong lifts pleasantness most; a fountain helps mainly against a steady drone.</p>
+    </div>
+
+    <div class="field">
+      <div class="field-head">
+        <label for="maskerLevel">Masker level</label>
+        <span class="val"><span id="maskerVal">30</span> <small>dB L<sub>Aeq</sub></small></span>
+      </div>
+      <input id="maskerLevel" class="calm" type="range" min="30" max="72" step="1" value="30">
+      <p class="hint">At 30&nbsp;dB the masker is effectively off. Raise it and watch where extra sound stops helping.</p>
+    </div>
+  </div>
+
+  <div class="result" id="result">
+    <div class="result-head">
+      <span class="result-label">Estimated soundscape pleasantness (ISO)</span>
+    </div>
+    <div style="display:flex; align-items:baseline; gap:12px">
+      <span class="iso" id="iso">&minus;0.66</span>
+      <span class="iso-word" id="isoWord">unpleasant</span>
+    </div>
+
+    <div class="gauge">
+      <div class="gauge-mid"></div>
+      <div class="gauge-marker" id="marker" style="left:17%"></div>
+    </div>
+    <div class="gauge-ends"><span>&minus;1 · annoying</span><span>0 · neutral</span><span>+1 · pleasant</span></div>
+
+    <div class="metrics">
+      <div class="metric"><div class="m-val" id="overall">60.0</div><div class="m-lab">overall L<sub>Aeq</sub> (dB)</div></div>
+      <div class="metric"><div class="m-val calm" id="dominance">1%</div><div class="m-lab">natural-sound dominance</div></div>
+      <div class="metric"><div class="m-val" id="ceiling">&minus;0.66</div><div class="m-lab">best this masker reaches</div></div>
+    </div>
+
+    <p class="verdict" id="verdict"></p>
+  </div>
+
+  <p class="method">Method · Pleasantness is estimated from the balance of perceived sound sources after the predictive model of Mitchell et&nbsp;al. (2021) and scaled to the ISO&nbsp;12913-3 range [&minus;1,&nbsp;+1]. Natural-sound dominance rises as the masker approaches the drone; a loudness term after De&nbsp;Coensel et&nbsp;al. (2011) penalises the higher overall level a masker adds, so past an optimum extra masker only costs pleasantness, and the drone still sets the ceiling. Coefficients are indicative, not a reproduction of the source regressions.</p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- 1 · theme: postMessage → luminance → OS ---------- */
+  function applyTheme(t){ document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light'); }
+  function detectTheme(){
+    try{
+      var pbg = getComputedStyle(parent.document.body).backgroundColor;
+      var m = pbg && pbg.match(/\d+/g);
+      if(m && m.length >= 3){
+        var lum = 0.2126*+m[0] + 0.7152*+m[1] + 0.0722*+m[2];
+        return lum < 128 ? 'dark' : 'light';
+      }
+    }catch(e){ /* cross-origin under file:// — fall through */ }
+    return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  }
+  window.addEventListener('message', function(ev){
+    var d = ev.data;
+    if(d && d.type === 'theme' && d.theme){ applyTheme(d.theme); fit(); }
+  });
+  applyTheme(detectTheme());
+  if(window.matchMedia){
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    (mq.addEventListener ? mq.addEventListener.bind(mq,'change') : mq.addListener.bind(mq))(function(){ applyTheme(detectTheme()); });
+  }
+
+  /* ---------- 2 · fitFrame auto-resize ---------- */
+  function fit(){
+    var h = Math.ceil(document.body.getBoundingClientRect().height) + 4;
+    parent.postMessage({ type:'resize', height:h, frame:'ch12-augmentation-demo' }, '*');
+  }
+  window.addEventListener('load', fit);
+  window.addEventListener('resize', fit);
+
+  /* ---------- 3 · model: source dominance → ISOPleasant ---------- */
+  var TYPE_W = { bird:1.00, mix:0.90, water:0.72 };
+  var W_TRAF = 0.75, ALPHA = 0.80, S_L = 0.012, L_COMF = 45, P0 = 0.10;
+
+  function sig(x){ return 1/(1+Math.exp(-x)); }
+  function isoSum(a,b){ return 10*Math.log10(Math.pow(10,a/10)+Math.pow(10,b/10)); }
+  function dNat(Lm,Lt){ return sig((Lm-Lt+2)/4); }          // natural dominance
+  function hIntr(Lm){ return 1 - 0.75*sig((Lm-58)/4); }     // a too-loud masker loses its own pleasantness
+
+  function pleasant(Lt,Lm,type){
+    var dn = dNat(Lm,Lt), dt = 1-dn;
+    var weff = TYPE_W[type]*hIntr(Lm);
+    var V = weff*dn - W_TRAF*dt;
+    var Ltot = isoSum(Lt,Lm);
+    var Lpen = S_L*Math.max(0, Ltot-L_COMF);
+    var P = ALPHA*V - Lpen + P0;
+    return Math.max(-1, Math.min(1, P));
+  }
+  // sweep the masker axis to find this drone+masker's ceiling and its optimum level
+  function envelope(Lt,type){
+    var best=-2, arg=30;
+    for(var L=30; L<=72; L++){ var p = pleasant(Lt,L,type); if(p>best){ best=p; arg=L; } }
+    return { ceiling:best, opt:arg };
+  }
+
+  function word(P){
+    if(P >=  0.45) return 'pleasant';
+    if(P >=  0.15) return 'calm';
+    if(P >  -0.15) return 'neutral';
+    if(P > -0.45) return 'unpleasant';
+    return 'annoying';
+  }
+  function fmt(P){ return (P>=0?'+':'\u2212') + Math.abs(P).toFixed(2); }
+
+  /* ---------- 4 · wiring ---------- */
+  var traffic = document.getElementById('traffic');
+  var masker  = document.getElementById('maskerLevel');
+  var seg     = document.getElementById('typeSeg');
+  var type    = 'bird';
+
+  var els = {
+    trafficVal: document.getElementById('trafficVal'),
+    maskerVal:  document.getElementById('maskerVal'),
+    iso:        document.getElementById('iso'),
+    isoWord:    document.getElementById('isoWord'),
+    marker:     document.getElementById('marker'),
+    overall:    document.getElementById('overall'),
+    dominance:  document.getElementById('dominance'),
+    ceiling:    document.getElementById('ceiling'),
+    verdict:    document.getElementById('verdict'),
+    typeHint:   document.getElementById('typeHint')
+  };
+  var TYPE_HINT = {
+    bird:  'Birdsong lifts pleasantness most, and does so without needing to be loud.',
+    water: 'A fountain reduces a steady drone but helps little against fluctuating traffic.',
+    mix:   'Water and birdsong together read as restorative, between the two alone.'
+  };
+
+  function render(){
+    var Lt = +traffic.value, Lm = +masker.value;
+    els.trafficVal.textContent = Lt;
+    els.maskerVal.textContent  = Lm;
+    els.typeHint.textContent   = TYPE_HINT[type];
+
+    var P    = pleasant(Lt,Lm,type);
+    var env  = envelope(Lt,type);
+    var Ltot = isoSum(Lt,Lm);
+    var dn   = dNat(Lm,Lt);
+
+    els.iso.innerHTML     = fmt(P);
+    els.isoWord.textContent = word(P);
+    els.marker.style.left = ((P+1)/2*100).toFixed(1) + '%';
+    els.overall.textContent   = Ltot.toFixed(1);
+    els.dominance.textContent = Math.round(dn*100) + '%';
+    els.ceiling.innerHTML     = fmt(env.ceiling);
+
+    // verdict — spells out the two honest features
+    var msg;
+    var maskerOn = Lm >= 34 && dn > 0.05;
+    if(env.ceiling < -0.05){
+      msg = '<b>The drone sets the ceiling.</b> Even at its most effective level (' + env.opt +
+            '&nbsp;dB) this masker only softens the source — a drone this loud can be made less unpleasant, not pleasant. The fix is a quieter source.';
+    } else if(!maskerOn){
+      msg = 'The drone alone reads <b>' + word(P) + '</b>. Add a masker to see how far composition can carry this street.';
+    } else if(Lm > env.opt + 1){
+      msg = '<b>Past the optimum.</b> Beyond about ' + env.opt +
+            '&nbsp;dB the masker mostly adds loudness — the overall level climbs to ' + Ltot.toFixed(0) +
+            '&nbsp;dB and the estimate falls. More sound is no longer more pleasantness.';
+    } else if(Math.abs(P - env.ceiling) < 0.03){
+      msg = '<b>About the best this masker can do</b> against a ' + Lt + '&nbsp;dB drone (' +
+            fmt(env.ceiling) + '). A different, quieter source would raise the ceiling further than any masker can.';
+    } else {
+      msg = 'The masker is still below its most effective level (~' + env.opt +
+            '&nbsp;dB); raising it a little more should help before the loudness cost takes over.';
+    }
+    els.verdict.innerHTML = msg;
+
+    fit();
+  }
+
+  traffic.addEventListener('input', render);
+  masker.addEventListener('input', render);
+  seg.addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    type = b.getAttribute('data-type');
+    Array.prototype.forEach.call(seg.querySelectorAll('button'), function(x){
+      x.setAttribute('aria-pressed', x === b ? 'true' : 'false');
+    });
+    render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

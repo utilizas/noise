@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The axes of a just soundscape</title>
+<style>
+/* Noise and Risk · Ch. 9 · conceptual figure for §5. Static (no hidden content),
+   self-contained, project palette/fonts, theme-sync + self-resize. This is an
+   explanatory diagram, not a simulator. */
+:root{
+  --bg:#f7f4ee; --panel:#fffdf8; --ink:#23201c; --muted:#6b6459; --line:#d9d2c4;
+  --risk:#6f2331; --risk2:#9c4a4a; --calm:#2c6e6a; --calm2:#4f9a8f; --neutral:#8a8172;
+  --wash:#efe9dc; --shadow:0 1px 2px rgba(0,0,0,.05),0 6px 18px rgba(0,0,0,.045);
+  --fd:"Fraunces",Georgia,serif; --fb:"Newsreader",Georgia,serif;
+  --fm:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#1a1815; --panel:#232019; --ink:#ece6da; --muted:#9d968a; --line:#37322a;
+  --risk:#e0788a; --risk2:#cf7d7d; --calm:#6fb7b0; --calm2:#8fc9bf; --neutral:#9d968a;
+  --wash:#2b2720; --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.32);
+}}
+:root[data-theme="dark"]{
+  --bg:#1a1815; --panel:#232019; --ink:#ece6da; --muted:#9d968a; --line:#37322a;
+  --risk:#e0788a; --risk2:#cf7d7d; --calm:#6fb7b0; --calm2:#8fc9bf; --neutral:#9d968a;
+  --wash:#2b2720; --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.32);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fb)}
+.wrap{max-width:720px;margin:0 auto;padding:18px 16px 22px}
+.frame{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:22px 22px 18px}
+h1{font-family:var(--fd);font-weight:600;font-size:1.24rem;line-height:1.25;margin:0 0 4px}
+.lede{color:var(--muted);font-size:.9rem;margin:0 0 20px;max-width:56ch}
+.kicker{font-family:var(--fm);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:22px 0 10px}
+/* rejected simplifications */
+.reject{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:520px){.reject{grid-template-columns:1fr}}
+.rej{background:var(--wash);border-left:3px solid var(--neutral);border-radius:0 6px 6px 0;padding:11px 13px}
+.rej b{font-family:var(--fd);font-weight:600;display:block;margin-bottom:3px;font-size:.98rem}
+.rej b .x{color:var(--risk);font-family:var(--fm);margin-right:5px}
+.rej span{font-size:.86rem;color:var(--muted);line-height:1.45}
+/* axes */
+.axes{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:520px){.axes{grid-template-columns:1fr}}
+.ax{border:1px solid var(--line);border-top:3px solid var(--c);border-radius:7px;padding:13px 15px;background:var(--panel)}
+.ax .n{font-family:var(--fm);font-size:.7rem;color:var(--c)}
+.ax h3{font-family:var(--fd);font-weight:600;font-size:1.04rem;margin:1px 0 6px;color:var(--c)}
+.ax p{margin:0;font-size:.88rem;line-height:1.5}
+.ax .role{display:block;margin-top:7px;font-size:.76rem;color:var(--muted);font-style:italic}
+/* bridge strip */
+.bridge{margin-top:22px;border-top:1px solid var(--line);padding-top:14px}
+.flow{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap}
+.step{flex:1;min-width:150px;background:var(--wash);border-radius:6px;padding:9px 11px}
+.step .p{font-family:var(--fm);font-size:.66rem;color:var(--muted);letter-spacing:.04em}
+.step .t{font-family:var(--fd);font-weight:600;font-size:.92rem;margin-top:1px}
+.step.here{outline:2px solid var(--calm);outline-offset:-2px}
+.arrow{display:flex;align-items:center;color:var(--muted);font-size:1.1rem}
+@media(max-width:520px){.arrow{display:none}}
+.foot{font-size:.76rem;color:var(--muted);margin-top:14px;line-height:1.45}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="frame">
+  <h1>The axes of a just soundscape</h1>
+  <p class="lede">Once noise is seen to fall unequally in more than one direction at once, a fair distribution can no longer be read off a single map. Two intuitive fixes fail; what replaces them is a standard with several axes.</p>
+
+  <div class="kicker">Two simplifications that fail</div>
+  <div class="reject">
+    <div class="rej"><b><span class="x">&times;</span>Move the noise off the poor</b><span>In some cities the poorer districts are already the quieter ones, so redistribution up the income gradient aims the wrong way.</span></div>
+    <div class="rej"><b><span class="x">&times;</span>Equal exposure for all</b><span>Equal decibels ignore that the same exposure harms some more than others, and that the power to obtain quiet is itself unequal.</span></div>
+  </div>
+
+  <div class="kicker">A standard with several axes</div>
+  <div class="axes">
+    <div class="ax" style="--c:var(--risk2)">
+      <span class="n">01 &middot; the raw burden</span>
+      <h3>Exposure</h3>
+      <p>The sound arriving at the fa&ccedil;ade. Foundational, but a single averaged reading is a weak proxy for harm.</p>
+      <span class="role">Do not load the heaviest exposure onto those least able to keep it out.</span>
+    </div>
+    <div class="ax" style="--c:var(--risk)">
+      <span class="n">02 &middot; harm, not decibels</span>
+      <h3>Susceptibility</h3>
+      <p>The conversion of a given noise into lost health. Worse baseline health and overlapping exposures make the same decibel cost more.</p>
+      <span class="role">Protect the most susceptible before the most exposed.</span>
+    </div>
+    <div class="ax" style="--c:var(--calm)">
+      <span class="n">03 &middot; the good sound</span>
+      <h3>Access to quiet</h3>
+      <p>The reach of restorative sound &mdash; a restful bedroom, a calm park nearby, the plain ability to escape.</p>
+      <span class="role">Treat quiet as a good that is not rationed by income.</span>
+    </div>
+    <div class="ax" style="--c:var(--calm2)">
+      <span class="n">04 &middot; the means to act</span>
+      <h3>Capacity to escape</h3>
+      <p>The resources to obtain quiet and recover from noise &mdash; glazing, barriers, mobility, bodily reserve.</p>
+      <span class="role">Measure success by whether the least able to secure quiet have been helped to it.</span>
+    </div>
+  </div>
+
+  <div class="bridge">
+    <div class="kicker" style="margin-top:0">Where the argument goes next</div>
+    <div class="flow">
+      <div class="step here"><div class="p">Ch. 9 &middot; this chapter</div><div class="t">Distribution</div></div>
+      <div class="arrow">&rarr;</div>
+      <div class="step"><div class="p">Ch. 10</div><div class="t">The economics of quiet</div></div>
+      <div class="arrow">&rarr;</div>
+      <div class="step"><div class="p">Ch. 11</div><div class="t">Governing sound</div></div>
+    </div>
+    <p class="foot">The multi-axis standard poses two further questions: whether the quiet it asks for is worth its price (the economics), and why instruments tuned to one averaged number at the fa&ccedil;ade so reliably miss susceptibility and access (the governance).</p>
+  </div>
+</div></div>
+<script>
+window.addEventListener('message',function(e){var d=e.data||{};
+  if(d&&d.type==='theme'&&(d.theme==='light'||d.theme==='dark')){document.documentElement.setAttribute('data-theme',d.theme);fit();}});
+function fit(){var h=Math.ceil(document.querySelector('.wrap').getBoundingClientRect().height)+4;
+  if(window.parent&&window.parent!==window)window.parent.postMessage({type:'resize',frame:'ch09-injustice-axes',height:h},'*');}
+window.addEventListener('load',fit);window.addEventListener('resize',fit);fit();
+</script>
+</body>
+</html>

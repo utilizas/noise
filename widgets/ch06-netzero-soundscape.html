@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Composing the net-zero street</title>
+<style>
+  /* Light is the default. The theme is set by JS from the host document's actual
+     background luminance (see applyTheme), so the widget follows the Quarto
+     light/dark toggle rather than the operating system's preference — the two
+     are independent, and a mismatch leaves body text unreadable. The media
+     query below is a fallback only: it applies before JS runs, and when this
+     file is opened standalone. */
+  :root {
+    --fg: #1f2430;
+    --muted: #5b6472;
+    --line: #d4d9e0;
+    --panel: #f5f6f8;
+    --accent: #0f6f8f;       /* scenario */
+    --baseline: #a8631f;     /* combustion baseline */
+    --good: #2e7d4f;
+    --bad: #b03a3a;
+    --track: #d9dee5;
+  }
+  :root[data-theme="dark"] {
+    --fg: #e8eaee;
+    --muted: #9aa3b0;
+    --line: #3a4150;
+    --panel: #232833;
+    --accent: #5fb7d4;
+    --baseline: #d99a55;
+    --good: #6fbf8f;
+    --bad: #d97f7f;
+    --track: #3a4150;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+      --fg: #e8eaee;
+      --muted: #9aa3b0;
+      --line: #3a4150;
+      --panel: #232833;
+      --accent: #5fb7d4;
+      --baseline: #d99a55;
+      --good: #6fbf8f;
+      --bad: #d97f7f;
+      --track: #3a4150;
+    }
+  }
+  html, body { margin: 0; padding: 0; background: transparent; color: var(--fg);
+    font: 15px/1.5 Georgia, 'Times New Roman', serif; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 4px 6px 10px; }
+  h2 { font-size: 1.15rem; margin: 0 0 2px; font-weight: 600; color: var(--fg); }
+  h3 { font-size: 0.98rem; margin: 0 0 6px; font-weight: 600; color: var(--fg); }
+  p.lead { margin: 0 0 12px; color: var(--muted); font-size: 0.92rem; }
+  .panel { background: var(--panel); border: 1px solid var(--line);
+    border-radius: 8px; padding: 12px 14px; margin: 0 0 12px; }
+  /* The result band is deliberately not a panel: it is an output, not an input. */
+  .result { background: transparent; border: 1px solid var(--accent);
+    border-left-width: 4px; border-radius: 8px; padding: 12px 14px; margin: 2px 0 12px; }
+  .result h3 { color: var(--accent); font-family: system-ui, sans-serif;
+    font-size: 0.82rem; letter-spacing: 0.06em; text-transform: uppercase; }
+  .row { display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center; margin: 4px 0; }
+  .ctrl { flex: 1 1 200px; min-width: 190px; }
+  label { display: block; font-family: system-ui, sans-serif; font-size: 0.78rem;
+    color: var(--muted); letter-spacing: 0.02em; }
+  label b { color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }
+  input[type=range] { width: 100%; accent-color: var(--accent); }
+  select { font: inherit; font-size: 0.85rem; color: var(--fg); background: var(--panel);
+    border: 1px solid var(--line); border-radius: 5px; padding: 2px 6px; }
+  .readout { font-family: system-ui, sans-serif; font-size: 0.85rem; margin-top: 6px;
+    color: var(--fg); }
+  .readout b { font-variant-numeric: tabular-nums; }
+  svg text { font-family: system-ui, sans-serif; }
+  .note { font-size: 0.78rem; color: var(--muted); margin-top: 10px; }
+  .verdict { display: inline-block; padding: 1px 8px; border-radius: 10px;
+    font-family: system-ui, sans-serif; font-size: 0.78rem; border: 1px solid var(--line); }
+  .verdict.pass { color: var(--good); border-color: var(--good); }
+  .verdict.fail { color: var(--bad); border-color: var(--bad); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h2>Composing the net-zero street</h2>
+  <p class="lead">Assemble a decarbonised street and compare it with its combustion
+  baseline. Every value is computed from the parameters you set: the traffic module uses
+  the CNOSSOS-EU category-1 emission model (Directive (EU)&nbsp;2015/996 as amended by
+  Delegated Directive (EU)&nbsp;2021/1226), with electric vehicles as rolling noise plus the
+  UNECE&nbsp;R138 AVAS minimum below 20&nbsp;km/h; the heat pump and turbine modules use
+  standard point-source propagation.</p>
+
+  <!-- ============ Input 1: the street ============ -->
+  <div class="panel">
+    <h3>1 · The street: electrifying the fleet</h3>
+    <div class="row">
+      <div class="ctrl"><label>Traffic speed · <b id="vVal"></b> km/h</label>
+        <input type="range" id="v" min="20" max="70" step="5" value="30"></div>
+      <div class="ctrl"><label>Flow · <b id="qVal"></b> vehicles/h</label>
+        <input type="range" id="q" min="100" max="2000" step="50" value="600"></div>
+      <div class="ctrl"><label>Electric share · <b id="evVal"></b> %</label>
+        <input type="range" id="ev" min="0" max="100" step="5" value="40"></div>
+      <div class="ctrl"><label>Façade distance · <b id="dtVal"></b> m</label>
+        <input type="range" id="dt" min="5" max="30" step="1" value="10"></div>
+    </div>
+    <svg id="spec" viewBox="0 0 720 250" width="100%" role="img"
+      aria-label="Octave-band spectrum of one average vehicle, combustion baseline versus chosen electric share"></svg>
+    <svg id="facadeG" viewBox="0 0 720 84" width="100%" role="img"
+      aria-label="Traffic level at the façade, combustion baseline versus fleet mix, at the chosen distance"></svg>
+    <div class="readout" id="trafficOut"></div>
+  </div>
+
+  <!-- ============ Input 2: the heat pump ============ -->
+  <div class="panel">
+    <h3>2 · The party wall: an air-source heat pump</h3>
+    <div class="row">
+      <div class="ctrl"><label>Unit sound power · <b id="lwVal"></b> dB(A)</label>
+        <input type="range" id="lw" min="45" max="70" step="1" value="58"></div>
+      <div class="ctrl"><label>Distance to neighbour’s window · <b id="dhVal"></b> m</label>
+        <input type="range" id="dh" min="1" max="15" step="0.5" value="4"></div>
+      <div class="ctrl"><label>Placement
+        <select id="qf">
+          <option value="2">on the ground, clear of walls</option>
+          <option value="4" selected>against one wall</option>
+          <option value="8">in a corner (two walls)</option>
+        </select></label></div>
+      <div class="ctrl"><label>Solid barrier
+        <select id="bar">
+          <option value="0" selected>none</option>
+          <option value="5">partial screening (−5 dB, indicative)</option>
+          <option value="10">line of sight fully broken (−10 dB, indicative)</option>
+        </select></label></div>
+    </div>
+    <svg id="hpG" viewBox="0 0 720 96" width="100%" role="img"
+      aria-label="Heat pump level at the assessment position against the 42 and 37 decibel thresholds"></svg>
+    <div class="readout" id="hpOut"></div>
+  </div>
+
+  <!-- ============ Input 3: the turbine ============ -->
+  <div class="panel">
+    <h3>3 · The horizon: a wind turbine</h3>
+    <div class="row">
+      <div class="ctrl"><label>Declared sound power · <b id="lwtVal"></b> dB(A)</label>
+        <input type="range" id="lwt" min="95" max="110" step="1" value="105"></div>
+      <div class="ctrl"><label>Distance to dwelling · <b id="dwVal"></b> m</label>
+        <input type="range" id="dw" min="200" max="2000" step="50" value="800"></div>
+    </div>
+    <svg id="wtG" viewBox="0 0 720 96" width="100%" role="img"
+      aria-label="Wind turbine level at the dwelling against the WHO 45 decibel conditional guideline"></svg>
+    <div class="readout" id="wtOut"></div>
+  </div>
+
+  <!-- ============ Output ============ -->
+  <div class="result">
+    <h3>The result at the window</h3>
+    <svg id="compG" viewBox="0 0 720 120" width="100%" role="img"
+      aria-label="Combined level at the window, combustion baseline versus net-zero street"></svg>
+    <div class="readout" id="compOut"></div>
+  </div>
+
+  <p class="note"><b>Model and assumptions.</b> Traffic: CNOSSOS-EU category-1 rolling and
+  propulsion sound power (amended coefficients, Delegated Directive (EU)&nbsp;2021/1226;
+  speeds below 20&nbsp;km/h are clamped to 20&nbsp;km/h as the Directive prescribes);
+  electric vehicles are modelled as rolling noise only, with the R138 AVAS minimum
+  (50&nbsp;dB(A) at 10&nbsp;km/h, 56&nbsp;dB(A) at 20&nbsp;km/h at 2&nbsp;m) added as a
+  broadband floor at or below 20&nbsp;km/h; the fleet is combined energetically and treated
+  as a line source over reflective ground. Heat pump and turbine: point sources with
+  geometric divergence (reflection factors 2, 4, 8; barrier values indicative); atmospheric
+  absorption is neglected, so kilometre-scale turbine levels are slightly conservative
+  (overestimated). A-weighting is computed from the IEC&nbsp;61672-1 analytical formula.
+  Reference thresholds: 42 and 37&nbsp;dB LAeq (MCS&nbsp;020 and MCS&nbsp;020&nbsp;a);
+  45&nbsp;dB L<sub>den</sub> (WHO&nbsp;2018 conditional recommendation for wind turbines —
+  note the comparison here is with an instantaneous level, not a yearly L<sub>den</sub>).
+  All arithmetic in this page was verified independently in Node.js before publication.</p>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ================= theme =================
+  // The host page (Quarto) has its own light/dark toggle, independent of the
+  // operating system's prefers-color-scheme. Reading the host's actual
+  // background luminance keeps the two in step without depending on Quarto's
+  // internal class names. Falls back to prefers-color-scheme when standalone.
+  function parseRGB(str) {
+    var m = str && str.match(/rgba?\(([^)]+)\)/);
+    if (!m) return null;
+    var p = m[1].split(',').map(parseFloat);
+    if (p.length > 3 && p[3] === 0) return null;   // fully transparent
+    return p;
+  }
+  function hostIsDark() {
+    if (window.parent === window) return null;      // not framed
+    try {
+      var pw = window.parent, doc = pw.document;
+      var p = null, cands = [doc.body, doc.documentElement];
+      for (var i = 0; i < cands.length && !p; i++) {
+        if (cands[i]) p = parseRGB(pw.getComputedStyle(cands[i]).backgroundColor);
+      }
+      if (!p) return null;
+      var lum = (0.2126 * p[0] + 0.7152 * p[1] + 0.0722 * p[2]) / 255;
+      return lum < 0.5;
+    } catch (e) { return null; }                    // cross-origin
+  }
+  function applyTheme() {
+    var dark = hostIsDark();
+    if (dark === null) {
+      dark = !!(window.matchMedia &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches);
+    }
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  }
+  function watchHostTheme() {
+    if (window.parent === window || typeof MutationObserver === 'undefined') return;
+    try {
+      var doc = window.parent.document;
+      var obs = new MutationObserver(function () { applyTheme(); update(); });
+      var opts = { attributes: true, attributeFilter: ['class', 'style', 'data-bs-theme'] };
+      if (doc.documentElement) obs.observe(doc.documentElement, opts);
+      if (doc.body) obs.observe(doc.body, opts);
+    } catch (e) { /* cross-origin: nothing to watch */ }
+  }
+
+  // ================= computation core (Node-verified) =================
+  var FREQ = [63, 125, 250, 500, 1000, 2000, 4000, 8000];
+  function aWeight(f) {
+    var f2 = f * f;
+    var ra = (Math.pow(12194, 2) * f2 * f2) /
+      ((f2 + Math.pow(20.6, 2)) *
+       Math.sqrt((f2 + Math.pow(107.7, 2)) * (f2 + Math.pow(737.9, 2))) *
+       (f2 + Math.pow(12194, 2)));
+    return 20 * Math.log10(ra) + 2.0;
+  }
+  var AW = FREQ.map(aWeight);
+  var AR = [83.1, 89.2, 87.7, 93.1, 100.1, 96.7, 86.8, 76.2];
+  var BR = [30.0, 41.5, 38.9, 25.7, 32.5, 37.2, 39.0, 40.0];
+  var AP = [97.9, 92.5, 90.7, 87.2, 84.7, 88.0, 84.4, 77.1];
+  var BP = [-1.3, 7.2, 7.7, 8.0, 8.0, 8.0, 8.0, 8.0];
+  function esum(arr) {
+    var s = 0; for (var i = 0; i < arr.length; i++) s += Math.pow(10, arr[i] / 10);
+    return 10 * Math.log10(s);
+  }
+  function rollingLW(v) {
+    var vc = Math.max(v, 20);
+    return AR.map(function (a, i) { return a + BR[i] * Math.log10(vc / 70); });
+  }
+  function propulsionLW(v) {
+    var vc = Math.max(v, 20);
+    return AP.map(function (a, i) { return a + BP[i] * (vc - 70) / 70; });
+  }
+  function vehicleLWA(v, isEV) {
+    var roll = rollingLW(v), prop = propulsionLW(v);
+    var bandsA = roll.map(function (L, i) {
+      if (isEV) return L + AW[i];
+      return 10 * Math.log10(Math.pow(10, L / 10) + Math.pow(10, prop[i] / 10)) + AW[i];
+    });
+    var LWA = esum(bandsA);
+    if (isEV && v <= 20) {
+      var lp = 50 + (56 - 50) * (Math.min(Math.max(v, 10), 20) - 10) / 10;
+      var lwAvas = lp + 20 * Math.log10(2) + 8;
+      LWA = 10 * Math.log10(Math.pow(10, LWA / 10) + Math.pow(10, lwAvas / 10));
+    }
+    return LWA;
+  }
+  function fleetSpectrumA(v, s) {
+    var roll = rollingLW(v), prop = propulsionLW(v);
+    return FREQ.map(function (_, i) {
+      var ice = Math.pow(10, roll[i] / 10) + Math.pow(10, prop[i] / 10);
+      var ev = Math.pow(10, roll[i] / 10);
+      return 10 * Math.log10((1 - s) * ice + s * ev) + AW[i];
+    });
+  }
+  function trafficLeq(v, flow, s, d) {
+    var mix = 10 * Math.log10(
+      (1 - s) * Math.pow(10, vehicleLWA(v, false) / 10) +
+      s * Math.pow(10, vehicleLWA(v, true) / 10));
+    var lwPerM = mix + 10 * Math.log10(flow / (1000 * v));
+    return lwPerM - 10 * Math.log10(Math.PI * d);
+  }
+  function heatPumpLp(lw, d, Q, barrier) {
+    return lw - 20 * Math.log10(d) - 11 + 10 * Math.log10(Q) - barrier;
+  }
+  function turbineLp(lw, d) { return lw - 20 * Math.log10(d) - 8; }
+
+  // ================= UI =================
+  var $ = function (id) { return document.getElementById(id); };
+  var css = function (name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  };
+  ['v', 'q', 'ev', 'dt', 'lw', 'dh', 'qf', 'bar', 'lwt', 'dw'].forEach(function (id) {
+    $(id).addEventListener('input', update);
+  });
+
+  function svgEl(tag, attrs, parent, text) {
+    var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (var k in attrs) el.setAttribute(k, attrs[k]);
+    if (text !== undefined) el.textContent = text;
+    parent.appendChild(el);
+    return el;
+  }
+  function clear(svg) { while (svg.firstChild) svg.removeChild(svg.firstChild); }
+
+  function gauge(svg, value, min, max, thresholds, colour) {
+    clear(svg);
+    var W = 720, x0 = 14, x1 = W - 14, y = 44, h = 16;
+    var sc = function (v) {
+      return x0 + (Math.min(Math.max(v, min), max) - min) / (max - min) * (x1 - x0);
+    };
+    svgEl('rect', { x: x0, y: y, width: x1 - x0, height: h, rx: 4, fill: css('--track') }, svg);
+    svgEl('rect', { x: x0, y: y, width: Math.max(sc(value) - x0, 2), height: h, rx: 4,
+      fill: colour }, svg);
+    thresholds.forEach(function (t) {
+      var tx = sc(t.v);
+      svgEl('line', { x1: tx, y1: y - 14, x2: tx, y2: y + h + 6, stroke: css('--fg'),
+        'stroke-width': 1.2, 'stroke-dasharray': '4 3' }, svg);
+      svgEl('text', { x: tx, y: y - 18, 'text-anchor': 'middle', 'font-size': 11,
+        fill: css('--muted') }, svg, t.label);
+    });
+    svgEl('text', { x: sc(value), y: y + h + 22, 'text-anchor': 'middle',
+      'font-size': 13, 'font-weight': 600, fill: css('--fg') }, svg,
+      value.toFixed(1) + ' dB(A)');
+    svgEl('text', { x: x0, y: y + h + 22, 'font-size': 10, fill: css('--muted') }, svg, min);
+    svgEl('text', { x: x1, y: y + h + 22, 'text-anchor': 'end', 'font-size': 10,
+      fill: css('--muted') }, svg, max);
+  }
+
+  function spectrumChart(svg, base, scen) {
+    clear(svg);
+    var W = 720, H = 250, mL = 44, mR = 12, mT = 18, mB = 34;
+    var yMin = 40, yMax = 105;
+    var xw = (W - mL - mR) / FREQ.length;
+    var sy = function (v) {
+      return mT + (yMax - Math.min(Math.max(v, yMin), yMax)) / (yMax - yMin) * (H - mT - mB);
+    };
+    for (var g = 40; g <= 100; g += 20) {
+      svgEl('line', { x1: mL, y1: sy(g), x2: W - mR, y2: sy(g), stroke: css('--line'),
+        'stroke-width': 1 }, svg);
+      svgEl('text', { x: mL - 6, y: sy(g) + 4, 'text-anchor': 'end', 'font-size': 10,
+        fill: css('--muted') }, svg, g);
+    }
+    svgEl('text', { x: 12, y: mT - 4, 'font-size': 10, fill: css('--muted') }, svg,
+      'sound power per vehicle, dB(A) per octave');
+    FREQ.forEach(function (f, i) {
+      var cx = mL + xw * i, bw = xw * 0.30;
+      svgEl('rect', { x: cx + xw * 0.16, y: sy(base[i]), width: bw,
+        height: Math.max(sy(yMin) - sy(base[i]), 0), fill: css('--baseline'),
+        'fill-opacity': 0.85 }, svg);
+      svgEl('rect', { x: cx + xw * 0.16 + bw + 3, y: sy(scen[i]), width: bw,
+        height: Math.max(sy(yMin) - sy(scen[i]), 0), fill: css('--accent'),
+        'fill-opacity': 0.9 }, svg);
+      svgEl('text', { x: cx + xw / 2, y: H - mB + 16, 'text-anchor': 'middle',
+        'font-size': 10.5, fill: css('--muted') }, svg, f >= 1000 ? (f / 1000) + 'k' : f);
+    });
+    svgEl('text', { x: (mL + W - mR) / 2, y: H - 6, 'text-anchor': 'middle',
+      'font-size': 10.5, fill: css('--muted') }, svg, 'octave-band centre frequency, Hz');
+    svgEl('rect', { x: W - 260, y: mT, width: 10, height: 10, fill: css('--baseline') }, svg);
+    svgEl('text', { x: W - 246, y: mT + 9, 'font-size': 11, fill: css('--fg') }, svg,
+      'all-combustion');
+    svgEl('rect', { x: W - 150, y: mT, width: 10, height: 10, fill: css('--accent') }, svg);
+    svgEl('text', { x: W - 136, y: mT + 9, 'font-size': 11, fill: css('--fg') }, svg,
+      'your fleet mix');
+  }
+
+  function compositeChart(svg, pairs) {
+    clear(svg);
+    var W = 720, x0 = 150, x1 = W - 70, rowH = 34;
+    var min = 20, max = 80;
+    var sc = function (v) {
+      return x0 + (Math.min(Math.max(v, min), max) - min) / (max - min) * (x1 - x0);
+    };
+    pairs.forEach(function (p, i) {
+      var y = 16 + i * rowH;
+      svgEl('text', { x: x0 - 10, y: y + 13, 'text-anchor': 'end', 'font-size': 12,
+        fill: css('--fg') }, svg, p.label);
+      svgEl('rect', { x: x0, y: y, width: x1 - x0, height: 18, rx: 4,
+        fill: css('--track') }, svg);
+      svgEl('rect', { x: x0, y: y, width: Math.max(sc(p.v) - x0, 2), height: 18, rx: 4,
+        fill: p.colour }, svg);
+      svgEl('text', { x: sc(p.v) + 6, y: y + 13, 'font-size': 12, 'font-weight': 600,
+        fill: css('--fg') }, svg, p.v.toFixed(1) + ' dB(A)');
+    });
+  }
+
+  // Paired level bars for the traffic level AT THE FAÇADE (immission, Lp).
+  // This is the quantity that responds to distance; the spectrum above is
+  // emission (LW) and does not. Separating the two is the point of the panel.
+  function facadeBars(svg, base, mix, dist) {
+    clear(svg);
+    var W = 720, x0 = 150, x1 = W - 118, min = 35, max = 75, y = 8, rowH = 26, h = 16;
+    var sc = function (val) {
+      return x0 + (Math.min(Math.max(val, min), max) - min) / (max - min) * (x1 - x0);
+    };
+    // faint axis ticks so the shrink with distance reads as movement on a scale
+    for (var g = 40; g <= 70; g += 10) {
+      svgEl('line', { x1: sc(g), y1: y - 2, x2: sc(g), y2: y + rowH + h - 2,
+        stroke: css('--line'), 'stroke-width': 1 }, svg);
+      svgEl('text', { x: sc(g), y: y + rowH + h + 10, 'text-anchor': 'middle',
+        'font-size': 9.5, fill: css('--muted') }, svg, g);
+    }
+    svgEl('text', { x: 0, y: y + 11, 'font-size': 11, fill: css('--muted') }, svg,
+      'at the façade,');
+    svgEl('text', { x: 0, y: y + 24, 'font-size': 11, fill: css('--muted') }, svg,
+      dist + ' m · dB(A)');
+    [{ v: base, c: css('--baseline'), t: 'all-combustion' },
+     { v: mix, c: css('--accent'), t: 'your fleet mix' }].forEach(function (row, i) {
+      var yy = y + i * rowH;
+      svgEl('rect', { x: x0, y: yy, width: x1 - x0, height: h, rx: 3,
+        fill: css('--track') }, svg);
+      svgEl('rect', { x: x0, y: yy, width: Math.max(sc(row.v) - x0, 2), height: h, rx: 3,
+        fill: row.c }, svg);
+      svgEl('text', { x: sc(row.v) + 6, y: yy + 12, 'font-size': 11.5, 'font-weight': 600,
+        fill: css('--fg') }, svg, row.v.toFixed(1));
+      svgEl('text', { x: x1 + 6, y: yy + 12, 'font-size': 10.5, fill: css('--muted') },
+        svg, row.t);
+    });
+  }
+
+  function update() {
+    var v = +$('v').value, q = +$('q').value, ev = +$('ev').value / 100, dt = +$('dt').value;
+    var lw = +$('lw').value, dh = +$('dh').value, qf = +$('qf').value, bar = +$('bar').value;
+    var lwt = +$('lwt').value, dw = +$('dw').value;
+    $('vVal').textContent = v; $('qVal').textContent = q;
+    $('evVal').textContent = Math.round(ev * 100); $('dtVal').textContent = dt;
+    $('lwVal').textContent = lw; $('dhVal').textContent = dh;
+    $('lwtVal').textContent = lwt; $('dwVal').textContent = dw;
+
+    spectrumChart($('spec'), fleetSpectrumA(v, 0), fleetSpectrumA(v, ev));
+    var t0 = trafficLeq(v, q, 0, dt), t1 = trafficLeq(v, q, ev, dt);
+    facadeBars($('facadeG'), t0, t1, dt);
+    $('trafficOut').innerHTML =
+      'The spectrum above is <b>emission</b> — sound power per vehicle — and does not ' +
+      'change with distance. The bars are <b>immission</b> at the façade, which does: ' +
+      'all-combustion <b>' + t0.toFixed(1) + ' dB(A)</b>, your fleet mix <b>' +
+      t1.toFixed(1) + ' dB(A)</b> (electrification saves <b>' + (t0 - t1).toFixed(1) +
+      ' dB</b> here; moving the façade slider shifts both).';
+
+    var hp = heatPumpLp(lw, dh, qf, bar);
+    gauge($('hpG'), hp, 20, 70,
+      [{ v: 42, label: '42 dB · MCS 020' }, { v: 37, label: '37 dB · MCS 020 a)' }],
+      css('--accent'));
+    var v42 = hp <= 42, v37 = hp <= 37;
+    $('hpOut').innerHTML =
+      'At the neighbour’s window: <b>' + hp.toFixed(1) + ' dB(A)</b> — ' +
+      '<span class="verdict ' + (v42 ? 'pass' : 'fail') + '">' +
+      (v42 ? 'passes' : 'fails') + ' the former 42 dB limit</span> ' +
+      '<span class="verdict ' + (v37 ? 'pass' : 'fail') + '">' +
+      (v37 ? 'passes' : 'fails') + ' the 2025 37 dB limit</span>';
+
+    var wt = turbineLp(lwt, dw);
+    gauge($('wtG'), wt, 20, 70,
+      [{ v: 45, label: '45 dB · WHO 2018 (conditional)' }], css('--accent'));
+    $('wtOut').innerHTML =
+      'At the dwelling (divergence only, conservative): <b>' + wt.toFixed(1) + ' dB(A)</b>.';
+
+    var comp0 = esum([t0]);
+    var comp1 = esum([t1, hp, wt]);
+    compositeChart($('compG'), [
+      { label: 'combustion baseline', v: comp0, colour: css('--baseline') },
+      { label: 'net-zero street', v: comp1, colour: css('--accent') }
+    ]);
+    var msg;
+    if (comp1 < comp0 - 0.5) {
+      msg = 'The decarbonised street is quieter overall — but look at the spectrum above: what remains is rolling noise, and what has been added does not pause at night.';
+    } else if (comp1 > comp0 + 0.5) {
+      msg = 'The decarbonised street is louder at this window than its combustion baseline: the new sources have more than filled the space the engine vacated.';
+    } else {
+      msg = 'The overall level barely moves — the transition has rearranged the soundscape rather than reduced it.';
+    }
+    $('compOut').innerHTML = 'Combined level at the window — baseline <b>' + comp0.toFixed(1) +
+      ' dB(A)</b> vs net-zero <b>' + comp1.toFixed(1) + ' dB(A)</b>. ' + msg;
+
+    fitFrame();
+  }
+
+  // ================= iframe self-sizing =================
+  function fitFrame() {
+    var h = document.documentElement.scrollHeight;
+    try {
+      if (window.frameElement) window.frameElement.style.height = (h + 8) + 'px';
+    } catch (e) { /* cross-origin */ }
+    try {
+      window.parent.postMessage({ type: 'fitFrame', height: h + 8 }, '*');
+    } catch (e) { /* no-op */ }
+  }
+  window.addEventListener('resize', fitFrame);
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)')
+      .addEventListener('change', function () { applyTheme(); update(); });
+  }
+
+  applyTheme();
+  watchHostTheme();
+  update();
+})();
+</script>
+</body>
+</html>

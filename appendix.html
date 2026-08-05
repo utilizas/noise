@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Appendix: methods, data and tools – Noise and Risk</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./glossary.html" rel="next">
+<link href="./epilogue.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-8f78bad36740733fa4acb35e15e408cb.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-ebf1d8226c99587a9ea6e6ddbe88027f.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-e9aedb1de40472870c13f3f84e95ca57.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-b1c943040e7fa91d5b9ff8fcafa0dee4.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<!-- Noise and Risk — social, Dublin Core and structured-data meta tags.
+
+     Included via _quarto.yml (include-in-header). Replace [Author] and the
+
+     canonical URL before deploy. -->
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+
+
+<!-- Open Graph -->
+
+<meta property="og:type" content="book">
+
+<meta property="og:title" content="Appendix: methods, data and tools – Noise and Risk">
+
+<meta property="og:description" content="">
+
+<meta property="og:locale" content="en_GB">
+
+<meta property="og:site_name" content="Noise and Risk">
+
+<!-- <meta property="og:url" content="https://[canonical-url]/"> -->
+
+<!-- <meta property="og:image" content="https://[canonical-url]/assets/cover.png"> -->
+
+
+
+<!-- Twitter Card -->
+
+<meta name="twitter:card" content="summary_large_image">
+
+<meta name="twitter:title" content="Appendix: methods, data and tools – Noise and Risk">
+
+<meta name="twitter:description" content="">
+
+
+
+<!-- Dublin Core -->
+
+<meta name="DC.title" content="Noise and Risk: Exposure, inequality and the politics of silence">
+
+<meta name="DC.creator" content="[Author]">
+
+<meta name="DC.language" content="en-GB">
+
+<meta name="DC.type" content="Text.Monograph">
+
+<meta name="DC.format" content="text/html">
+
+<meta name="DC.subject" content="environmental noise; risk; soundscape; public health; environmental justice; governance">
+
+
+
+<!-- JSON-LD structured data -->
+
+<script type="application/ld+json">
+
+{
+
+  "@context": "https://schema.org",
+
+  "@type": "Book",
+
+  "name": "Noise and Risk",
+
+  "alternateName": "Noise and Risk: Exposure, inequality and the politics of silence",
+
+  "inLanguage": "en-GB",
+
+  "author": { "@type": "Person", "name": "[Author]" },
+
+  "about": [
+
+    "environmental noise",
+
+    "risk epistemology",
+
+    "soundscape",
+
+    "public health",
+
+    "environmental justice",
+
+    "noise governance"
+
+  ],
+
+  "abstract": "Environmental noise has moved from nuisance to measurable risk factor — cardiovascular, metabolic, cognitive — while the sources producing it and the instruments used to measure it change faster than the governance meant to contain them.",
+
+  "bookFormat": "https://schema.org/EBook"
+
+}
+
+</script>
+
+<!-- Theme bridge: tells embedded widget iframes the host's light/dark state.
+
+     Robust across file://, localhost and production (postMessage crosses origins).
+
+     Detects by background luminance, so it does not depend on Quarto class names. -->
+
+<script>
+
+(function () {
+
+  function hostThemeIsDark() {
+
+    var b = getComputedStyle(document.body).backgroundColor || '';
+
+    var m = b.match(/rgba?\(([^)]+)\)/); if (!m) return false;
+
+    var p = m[1].split(',').map(parseFloat);
+
+    return (0.2126 * p[0] + 0.7152 * p[1] + 0.0722 * p[2]) / 255 < 0.5;
+
+  }
+
+  function broadcast() {
+
+    var theme = hostThemeIsDark() ? 'dark' : 'light';
+
+    document.querySelectorAll('iframe').forEach(function (f) {
+
+      try { f.contentWindow.postMessage({ type: 'quarto-theme', theme: theme }, '*'); }
+
+      catch (e) { /* ignore */ }
+
+    });
+
+  }
+
+  // Answer a widget that asks on load, and re-broadcast on any theme toggle.
+
+  window.addEventListener('message', function (e) {
+
+    if (e.data && e.data.type === 'request-theme') broadcast();
+
+  });
+
+  new MutationObserver(broadcast).observe(document.body,
+
+    { attributes: true, attributeFilter: ['class', 'style', 'data-bs-theme'] });
+
+  new MutationObserver(broadcast).observe(document.documentElement,
+
+    { attributes: true, attributeFilter: ['class', 'style', 'data-bs-theme'] });
+
+  window.addEventListener('load', broadcast);
+
+  broadcast();
+
+})();
+
+</script>
+
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar docked quarto-dark"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = true;
+    const darkModeDefault = authorPrefersDark;
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./appendix.html">Appendix: methods, data and tools</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Noise and Risk</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://github.com/utilizas/noise" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">I. The object</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-what-counts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What counts as noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-measuring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Measuring the invisible</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-the-body.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The body under sound</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-the-maps.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">The maps</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">II. The sources</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-traffic.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Traffic, the old giant</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-quiet-that-wasnt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">The quiet that wasn’t</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-machine-hum.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">The machine hum</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-indoor-personal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The indoor and the personal</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">III. The politics</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-sonic-injustice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Sonic injustice</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-economics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The economics of quiet</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-governing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Governing sound</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-designing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Designing the soundscape</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./epilogue.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Epilogue</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./appendix.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Appendix: methods, data and tools</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Glossary</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#data-and-figure-provenance" id="toc-data-and-figure-provenance" class="nav-link active" data-scroll-target="#data-and-figure-provenance">Data and figure provenance</a></li>
+  <li><a href="#the-interactive-layer" id="toc-the-interactive-layer" class="nav-link" data-scroll-target="#the-interactive-layer">The interactive layer</a></li>
+  <li><a href="#reproducibility" id="toc-reproducibility" class="nav-link" data-scroll-target="#reproducibility">Reproducibility</a></li>
+  <li><a href="#declaration-on-the-use-of-ai" id="toc-declaration-on-the-use-of-ai" class="nav-link" data-scroll-target="#declaration-on-the-use-of-ai">Declaration on the use of AI</a></li>
+  <li><a href="#how-to-cite-this-work" id="toc-how-to-cite-this-work" class="nav-link" data-scroll-target="#how-to-cite-this-work">How to cite this work</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-appendix" class="quarto-section-identifier">Appendix: methods, data and tools</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="data-and-figure-provenance" class="level2">
+<h2 class="anchored" data-anchor-id="data-and-figure-provenance">Data and figure provenance</h2>
+<p>Every figure in this book is generated from a documented source. The workflow is consistent across chapters: source data (typically CSV) is downloaded with its access date recorded, cleaned in R using a tidyverse pipeline, and exported as flat JSON that the chapter’s widget consumes. Cleaning scripts live in <code>R/</code>; raw inputs in <code>data/raw/</code> (with access dates), cleaned intermediates in <code>data/clean/</code>, and the widget-facing JSON in <code>data/json/</code>. No figure appears without a cited source and access date; where a value is estimated or extrapolated beyond the range in which it was measured, the figure marks this rather than presenting it as a point measurement.</p>
+<p>The table gives, for each chapter’s principal figure or simulator, the primary source behind it and the date it was accessed; it is not a re-listing of every citation in the chapter’s prose, which belongs to <code>references.bib</code>. Licence terms and the specific cleaning script for each source are indexed separately in the author’s local <code>R/</code> working tree and are not reproduced here pending a full licence audit ahead of any public release.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 4%">
+<col style="width: 81%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Ch.</th>
+<th>Primary data source(s) behind the figure/widget</th>
+<th>Accessed</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Perceptual-attribute and circumplex framework, ISO/TS 12913-2:2018 and -3:2019 <span class="citation" data-cites="iso12913-2 iso12913-3">(<a href="references.html#ref-iso12913-2" role="doc-biblioref">International Organization for Standardization, 2018</a>, <a href="references.html#ref-iso12913-3" role="doc-biblioref">2019</a>)</span></td>
+<td>2026-07-11</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>A-weighting curve, IEC 61672-1:2013 Annex E <span class="citation" data-cites="iec61672">(<a href="references.html#ref-iec61672" role="doc-biblioref">International Electrotechnical Commission, 2013</a>)</span>; equal-loudness basis, ISO 226:2023 <span class="citation" data-cites="iso226">(<a href="references.html#ref-iso226" role="doc-biblioref">International Organization for Standardization, 2023</a>)</span></td>
+<td>2026-07-11</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>Exposure–response function: <span class="citation" data-cites="vankempen2018">Kempen et al. (<a href="references.html#ref-vankempen2018" role="doc-biblioref">2018</a>)</span> (ischaemic heart disease); <span class="citation" data-cites="munzel2024">Münzel et al. (<a href="references.html#ref-munzel2024" role="doc-biblioref">2024</a>)</span> (pooled all-cardiovascular)</td>
+<td>2026-07-11</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>Propagation, ISO 9613-2:1996; reporting bands and 55 dB floor, Directive 2002/49/EC <span class="citation" data-cites="end2002">(<a href="references.html#ref-end2002" role="doc-biblioref">European Parliament and Council of the European Union, 2002</a>)</span>; CNOSSOS-EU common method <span class="citation" data-cites="kephalopoulos2014">(<a href="references.html#ref-kephalopoulos2014" role="doc-biblioref">Kephalopoulos et al., 2014</a>)</span></td>
+<td>2026-07-13</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>European Environment Agency, <em>Environmental noise in Europe 2025</em> (2022 reporting round) <span class="citation" data-cites="eea2025">(<a href="references.html#ref-eea2025" role="doc-biblioref">European Environment Agency, 2025</a>)</span></td>
+<td>2026-07-13</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>Modulation phenomenology and audible depth, <span class="citation" data-cites="hansen2020">Hansen &amp; Hansen (<a href="references.html#ref-hansen2020" role="doc-biblioref">2020</a>)</span>; peak-to-trough depth definition, IOA reference method <span class="citation" data-cites="ioa2016am">(<a href="references.html#ref-ioa2016am" role="doc-biblioref">Institute of Acoustics, 2016</a>)</span></td>
+<td><em>not stated — see note</em></td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>Traffic emission, CNOSSOS-EU cat. 1 as amended <span class="citation" data-cites="eu2021-1226 kephalopoulos2014">(<a href="references.html#ref-eu2021-1226" role="doc-biblioref">European Commission, 2021</a>; <a href="references.html#ref-kephalopoulos2014" role="doc-biblioref">Kephalopoulos et al., 2014</a>)</span>; AVAS minima <span class="citation" data-cites="unece138">(<a href="references.html#ref-unece138" role="doc-biblioref">United Nations Economic Commission for Europe, 2017</a>)</span>; EV treatment, <span class="citation" data-cites="pallas2016">Pallas et al. (<a href="references.html#ref-pallas2016" role="doc-biblioref">2016</a>)</span>; heat-pump thresholds <span class="citation" data-cites="mcs020a">(<a href="references.html#ref-mcs020a" role="doc-biblioref">The MCS Service Company, 2025</a>)</span>; wind-turbine guideline, WHO 2018 <span class="citation" data-cites="who2018">(<a href="references.html#ref-who2018" role="doc-biblioref">World Health Organization Regional Office for Europe, 2018</a>)</span></td>
+<td>2026-07-15</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>Propagation, ISO 9613-1/-2 <span class="citation" data-cites="iso9613-1 iso9613-2">(<a href="references.html#ref-iso9613-1" role="doc-biblioref">International Organization for Standardization, 1993</a>, <a href="references.html#ref-iso9613-2" role="doc-biblioref">1996</a>)</span>; A-weighting, IEC 61672-1 <span class="citation" data-cites="iec61672">(<a href="references.html#ref-iec61672" role="doc-biblioref">International Electrotechnical Commission, 2013</a>)</span>; property-line levels, <span class="citation" data-cites="jlarc2024">Joint Legislative Audit and Review Commission (<a href="references.html#ref-jlarc2024" role="doc-biblioref">2024</a>)</span></td>
+<td>2026-07-21</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td>STI method, IEC 60268-16 <span class="citation" data-cites="iec60268-16">(<a href="references.html#ref-iec60268-16" role="doc-biblioref">International Electrotechnical Commission, 2020</a>)</span>; classroom targets, ANSI/ASA S12.60 <span class="citation" data-cites="ansiS1260">(<a href="references.html#ref-ansiS1260" role="doc-biblioref">Acoustical Society of America, 2010</a>)</span></td>
+<td>2026-07-30</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td>District household income <span class="citation" data-cites="bcnrenda2019">(<a href="references.html#ref-bcnrenda2019" role="doc-biblioref">Ajuntament de Barcelona, Oficina Municipal de Dades, 2019</a>)</span>; district <span class="math inline">\(L_\text{den}\)</span> exposure <span class="citation" data-cites="bcnsoroll2022">(<a href="references.html#ref-bcnsoroll2022" role="doc-biblioref">Ajuntament de Barcelona, 2022</a>)</span>; boundaries, CartoBCN (Ajuntament de Barcelona)</td>
+<td>2026-07-30</td>
+</tr>
+<tr class="odd">
+<td>10</td>
+<td>Exposure–response functions, WHO 2018 <span class="citation" data-cites="who2018">(<a href="references.html#ref-who2018" role="doc-biblioref">World Health Organization Regional Office for Europe, 2018</a>)</span>; disability weights, WHO 2011 <span class="citation" data-cites="who2011">(<a href="references.html#ref-who2011" role="doc-biblioref">World Health Organization Regional Office for Europe, 2011</a>)</span>; monetary values, EEA 2025 <span class="citation" data-cites="eea2025">(<a href="references.html#ref-eea2025" role="doc-biblioref">European Environment Agency, 2025</a>)</span>; property depreciation, <span class="citation" data-cites="nelson2004">Nelson (<a href="references.html#ref-nelson2004" role="doc-biblioref">2004</a>)</span></td>
+<td>2026-07-31</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>Guideline values, WHO 2018 <span class="citation" data-cites="who2018">(<a href="references.html#ref-who2018" role="doc-biblioref">World Health Organization Regional Office for Europe, 2018</a>)</span>; mapping and non-binding status, END <span class="citation" data-cites="end2002">(<a href="references.html#ref-end2002" role="doc-biblioref">European Parliament and Council of the European Union, 2002</a>)</span> and EEA 2025 <span class="citation" data-cites="eea2025">(<a href="references.html#ref-eea2025" role="doc-biblioref">European Environment Agency, 2025</a>)</span>; binding limits and correction terms, RD 1367/2007 <span class="citation" data-cites="rd1367_2007">(<a href="references.html#ref-rd1367_2007" role="doc-biblioref">BOE, 2007</a>)</span></td>
+<td>2026-08-01</td>
+</tr>
+<tr class="odd">
+<td>12</td>
+<td>Predictive pleasantness model, <span class="citation" data-cites="mitchell2021">Mitchell et al. (<a href="references.html#ref-mitchell2021" role="doc-biblioref">2021</a>)</span>; masker-level trade-off and type ordering, <span class="citation" data-cites="decoensel2011">De Coensel et al. (<a href="references.html#ref-decoensel2011" role="doc-biblioref">2011</a>)</span>; ISO 12913-3 pleasantness scale <span class="citation" data-cites="iso12913-3">(<a href="references.html#ref-iso12913-3" role="doc-biblioref">International Organization for Standardization, 2019</a>)</span>; augmentation field results, <span class="citation" data-cites="lam2024">Lam et al. (<a href="references.html#ref-lam2024" role="doc-biblioref">2024</a>)</span></td>
+<td>2026-08-01</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="the-interactive-layer" class="level2">
+<h2 class="anchored" data-anchor-id="the-interactive-layer">The interactive layer</h2>
+<p>Each simulator is a self-contained HTML file (CSS and JavaScript inline) inserted by iframe, so that any chapter’s interactive can be opened, audited or reused independently. Every simulator computes on the parameter the reader enters; none is a fixed animation. Where a simulator embodies a statistical model (for example, the exposure-response function in Chapter 3), the model, its reference category and its confidence interval are stated in the widget and its source line, and the range of valid extrapolation is marked.</p>
+<p>The fifteen simulators, by chapter, are listed below with the parameter the reader sets and the quantity the widget returns.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 33%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Ch.</th>
+<th>Widget</th>
+<th>Parameter set by the reader → what is returned</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><code>ch01-soundscape-axes</code></td>
+<td>A recorded sound selected or described → its position on the ISO 12913 pleasant–eventful circumplex</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><code>ch02-spectrum-comparator</code></td>
+<td>Tone frequency and level → the same tone’s dB and dB(A) reading side by side, showing a low-frequency tone attenuate toward inaudibility under A-weighting</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td><code>ch03-risk-calculator</code></td>
+<td>Exposure level (<span class="math inline">\(L_\text{den}\)</span>, dB) → relative risk of ischaemic heart disease, read off the pooled exposure–response function</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td><code>ch04-map-model</code></td>
+<td>Source type and distance from façade → modelled façade level, and whether it falls above or below the Directive’s 55 dB reporting floor</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td><code>ch05-scale-europe-2022</code></td>
+<td>Transport mode selected → population exposed above WHO/END thresholds, EEA 2022 reporting round</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td><code>ch05-annoyance-by-mode</code></td>
+<td>Transport mode and exposure level → percentage highly annoyed</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td><code>ch06-netzero-soundscape</code></td>
+<td>Mix of EV/AVAS, heat-pump and small-wind sources assembled by the reader → composite soundscape profile against the combustion-era baseline</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td><code>ch06-amplitude-modulation</code></td>
+<td>Amplitude-modulation depth of a synthetic wind-turbine-like tone, held at a fixed L<sub>eq</sub> → auralised sound, modulated vs steady, so the reader hears what an identical average level conceals</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td><code>ch07-hum-attenuation</code></td>
+<td>Distance from a tonal source, with the tonal penalty applied or not → attenuated level at the property line</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td><code>ch08-classroom-intelligibility</code></td>
+<td>Background level, reverberation time and speech-to-noise ratio → Speech Transmission Index (STI)</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td><code>ch09-exposure-income</code></td>
+<td>Noise-level threshold chosen by the reader → household income plotted against exposure share, by Barcelona district</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td><code>ch09-injustice-axes</code></td>
+<td>A source or scenario selected → its position on the distributive/procedural two-axis framework</td>
+</tr>
+<tr class="odd">
+<td>10</td>
+<td><code>ch10-cost-calculator</code></td>
+<td>Population exposed and a decibel reduction → monetised annual cost or abatement benefit</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td><code>ch11-policy-comparator</code></td>
+<td>Source type selected (road, night flight, nightlife terrace, heat pump, data-centre hum, wind turbine) → compliance status under each of three regimes, plus a fourth column scored on perceived character rather than averaged level</td>
+</tr>
+<tr class="odd">
+<td>12</td>
+<td><code>ch12-augmentation-demo</code></td>
+<td>Traffic drone level, masker type and masker level → estimated ISO soundscape pleasantness</td>
+</tr>
+</tbody>
+</table>
+<p>Each computes on the parameter entered.</p>
+</section>
+<section id="reproducibility" class="level2">
+<h2 class="anchored" data-anchor-id="reproducibility">Reproducibility</h2>
+<p>This work is a Quarto project rendered to HTML only. <code>execute: freeze</code> is set so that computed outputs are cached and the rendered book is stable between builds. The reference list is managed in a single <code>references.bib</code>, formatted to APA 7th edition, with a DOI recorded for every source that has one.</p>
+</section>
+<section id="declaration-on-the-use-of-ai" class="level2">
+<h2 class="anchored" data-anchor-id="declaration-on-the-use-of-ai">Declaration on the use of AI</h2>
+<p>This is not a short paper reporting a single study, nor a protocol-bound summary of one research programme’s results. It is a book-length, three-part diagnosis of a multidimensional problem — acoustic and epidemiological on one axis, economic and distributive on a second, epistemic and regulatory on a third — built across twelve chapters, fifteen self-contained interactive simulators and a reference list of some 110 sources spanning international standards (ISO, IEC, ANSI/ASA), World Health Organization guidance, European Union directives and their common assessment methods, national law and its regional and municipal transpositions, and case law from domestic and European courts. The aim throughout has been to hold in one frame material that more conventional treatments leave scattered across separate literatures — an acoustician’s standard, an epidemiologist’s exposure–response function, an economist’s hedonic valuation, a legal scholar’s directive, a sociologist’s account of who gets heard — and to do so without letting any one of those registers soften into the others. That aim, and the sustained editorial work of pursuing it across some 35,600 words of manuscript prose — front matter, twelve chapters and back matter together — before counting the verification trail behind each of the 110 references and the code and documentation behind fifteen working simulators, is the measure of what this declaration describes.</p>
+<p>AI assistance was used across the project’s phases, and every phase remained under the author’s direction and final judgement. Concretely: in proposing chapter and section architecture, subject to the author’s confirmation or revision before any prose was built on it; in researching and verifying empirical anchors against primary sources — standards bodies, peer-reviewed journals, official statistical and regulatory publications, court records — before, not after, a claim entered the text; in drafting prose to the author’s specification of register, structure and emphasis, redrafted iteratively against the author’s own edits; in constructing the interactive simulators, including the computational model behind each one, with the underlying arithmetic independently checked (in R, Python or Node.js as the chapter required) before it was written into a widget; and in formatting citations and assembling <code>references.bib</code> entries for the author’s review.</p>
+<p>The safeguard governing all of this was verification-first, applied without exception. No digital object identifier or URL was ever inferred to close a gap; where a source could not be verified, the claim it would have supported waited rather than entering the text provisionally, and pending items were held visibly — as a commented placeholder in <code>references.bib</code>, not as a citation presented as settled — until resolved or removed. Numerical claims embedded in a simulator were checked against their stated model before publication, not merely asserted plausible. Where two published figures for the same quantity conflicted, the conflict is noted in the text rather than silently resolved in favour of the more convenient number.</p>
+<p>None of this delegates the intellectual work. The argument of each chapter, the decision of which nuance to preserve against the pull of a tidier slogan — the Barcelona inversion kept as a genuine finding rather than smoothed into the expected pattern is the clearest instance — the judgement of what belongs in a widget’s readout and what would clutter it, and the final text in every chapter, are the author’s. AI assistance accelerated each of those steps where it could add real advantage, but it did not make the judgement of what to keep, cut or say instead.</p>
+</section>
+<section id="how-to-cite-this-work" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-cite-this-work">How to cite this work</h2>
+<p>This work exists in two forms that serve different purposes, and citation should point to the one built for that purpose. The interactive text — where the argument and its fifteen simulators actually run — is deployed identically to a small number of mirrored addresses, kept in sync so that no one of them is more authoritative than the others as a place to <em>read</em> the work. For citation, a separate and fixed record is kept on Zenodo, a CERN-backed open-access archive that assigns each release a persistent DOI and preserves a permanent snapshot independent of any single host remaining online. The DOI, not any of the addresses below, is the correct target for scholarly citation.</p>
+<section id="suggested-citation-apa-7th" class="level3">
+<h3 class="anchored" data-anchor-id="suggested-citation-apa-7th">Suggested citation (APA 7th)</h3>
+<blockquote class="blockquote">
+<p>Moreno, Miguel (2026). <em>Noise and Risk: Exposure, inequality and the politics of silence</em> (Version 1.0) [Interactive HTML monograph]. Zenodo. https://doi.org/10.5281/zenodo.XXXXXXX</p>
+</blockquote>
+</section>
+<section id="bibtex" class="level3">
+<h3 class="anchored" data-anchor-id="bibtex">BibTeX</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bibtex code-with-copy"><code class="sourceCode bibtex"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">@misc</span>{<span class="ot">moreno2026noise</span>,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">author</span>       = {Moreno, Miguel},</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">title</span>        = {Noise and Risk: Exposure, Inequality and the Politics of Silence},</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">year</span>         = {2026},</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">note</span>         = {Version 1.0},</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">publisher</span>    = {Zenodo},</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">doi</span>          = {10.5281/zenodo.XXXXXXX},</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">url</span>          = {https://doi.org/10.5281/zenodo.XXXXXXX}</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="licence" class="level3">
+<h3 class="anchored" data-anchor-id="licence">Licence</h3>
+<p>The text is published under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International licence (CC BY-NC-SA 4.0) — the same terms already declared, with their roundels, in the book’s own title block. In brief: reuse and adaptation are permitted with attribution, for non-commercial purposes, and under the same licence for any derivative. The full legal text is at <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">creativecommons.org/licenses/by-nc-sa/4.0</a>.</p>
+<p>The interactive layer is licensed separately, since Creative Commons terms are not designed for software. All fifteen simulators listed in the table above — every self-contained HTML/CSS/JavaScript widget inserted through the chapters, without exception — are released under the <strong>PolyForm Noncommercial License 1.0.0</strong> (SPDX identifier <code>PolyForm-Noncommercial-1.0.0</code>), full text at <a href="https://polyformproject.org/licenses/noncommercial/1.0.0">polyformproject.org/licenses/noncommercial/1.0.0</a>. This declaration governs every widget from the date of publication, including any that does not yet carry its own header comment to that effect.</p>
+<!-- The individual files should each carry `SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0` as a leading comment, and the full licence text should be kept as a standalone `LICENSE-CODE` file at the repository root, distinct from the `LICENSE` file covering the prose under CC BY-NC-SA. -->
+</section>
+<section id="reading-copies" class="level3">
+<h3 class="anchored" data-anchor-id="reading-copies">Reading copies</h3>
+<p>The rendered book is deployed identically to four addresses. Vercel is canonical; the remainder are mirrors, kept in sync so that any one of them is a complete substitute should another become unavailable.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Host</th>
+<th>Address</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Vercel</td>
+<td><code>https://noise.vercel.app</code></td>
+<td>Canonical</td>
+</tr>
+<tr class="even">
+<td>GitHub Pages</td>
+<td><code>https://[account-or-org].github.io/noise/</code></td>
+<td>Mirror</td>
+</tr>
+<tr class="odd">
+<td>Netlify</td>
+<td><code>https://noise.netlify.app</code></td>
+<td>Mirror</td>
+</tr>
+<tr class="even">
+<td>Cloudflare Pages</td>
+<td><code>https://noise.pages.dev</code></td>
+<td>Mirror</td>
+</tr>
+</tbody>
+</table>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
+<div id="ref-ansiS1260" class="csl-entry" role="listitem">
+Acoustical Society of America. (2010). <em>Acoustical performance criteria, design requirements, and guidelines for schools, part 1: Permanent schools</em> (ANSI/ASA S12.60-2010 (R2020)). American National Standards Institute / Acoustical Society of America.
+</div>
+<div id="ref-bcnsoroll2022" class="csl-entry" role="listitem">
+Ajuntament de Barcelona. (2022). <em>Poblaci<span>ó</span> exposada als nivells de soroll del mapa estrat<span>è</span>gic de soroll</em>. Open Data BCN. <a href="https://opendata-ajuntament.barcelona.cat/data/ca/dataset/poblacio-exposada-mapa-estrategic-soroll">https://opendata-ajuntament.barcelona.cat/data/ca/dataset/poblacio-exposada-mapa-estrategic-soroll</a>
+</div>
+<div id="ref-bcnrenda2019" class="csl-entry" role="listitem">
+Ajuntament de Barcelona, Oficina Municipal de Dades. (2019). <em>Renda disponible de les llars per c<span>à</span>pita (<span>RDLpc</span>), <span class="nocase">í</span>ndex <span>Barcelona</span> = 100</em>. Open Data BCN. <a href="https://opendata-ajuntament.barcelona.cat/data/en/dataset/renda-disponible-llars-bcn">https://opendata-ajuntament.barcelona.cat/data/en/dataset/renda-disponible-llars-bcn</a>
+</div>
+<div id="ref-rd1367_2007" class="csl-entry" role="listitem">
+BOE. (2007). <em>Real decreto 1367/2007, de 19 de octubre, por el que se desarrolla la ley 37/2003, de 17 de noviembre, del ruido, en lo referente a zonificación acústica, objetivos de calidad y emisiones acústicas</em>. Boletín Oficial del Estado núm. 254, de 23 de octubre de 2007. <a href="https://www.boe.es/eli/es/rd/2007/10/19/1367/con">https://www.boe.es/eli/es/rd/2007/10/19/1367/con</a>
+</div>
+<div id="ref-decoensel2011" class="csl-entry" role="listitem">
+De Coensel, B., Vanwetswinkel, S., &amp; Botteldooren, D. (2011). Effects of natural sounds on the perception of road traffic noise. <em>The Journal of the Acoustical Society of America</em>, <em>129</em>(4), EL148–EL153. <a href="https://doi.org/10.1121/1.3567073">https://doi.org/10.1121/1.3567073</a>
+</div>
+<div id="ref-eu2021-1226" class="csl-entry" role="listitem">
+European Commission. (2021). <em>Commission delegated directive (EU) 2021/1226 of 21 december 2020 amending, for the purposes of adapting to scientific and technical progress, annex <span>II</span> to directive 2002/49/EC as regards common noise assessment methods</em>. <a href="https://eur-lex.europa.eu/eli/dir_del/2021/1226/oj">https://eur-lex.europa.eu/eli/dir_del/2021/1226/oj</a>
+</div>
+<div id="ref-eea2025" class="csl-entry" role="listitem">
+European Environment Agency. (2025). <em>Environmental noise in <span>Europe</span> 2025</em>. Publications Office of the European Union. <a href="https://www.eea.europa.eu/en/analysis/publications/environmental-noise-in-europe-2025">https://www.eea.europa.eu/en/analysis/publications/environmental-noise-in-europe-2025</a>
+</div>
+<div id="ref-end2002" class="csl-entry" role="listitem">
+European Parliament and Council of the European Union. (2002). <em>Directive 2002/49/EC of 25 june 2002 relating to the assessment and management of environmental noise</em>. Official Journal of the European Union, L 189, 18.7.2002, pp. 12–25. <a href="https://eur-lex.europa.eu/eli/dir/2002/49/oj">https://eur-lex.europa.eu/eli/dir/2002/49/oj</a>
+</div>
+<div id="ref-hansen2020" class="csl-entry" role="listitem">
+Hansen, C., &amp; Hansen, K. (2020). Recent advances in wind turbine noise research. <em>Acoustics</em>, <em>2</em>(1), 171–206. <a href="https://doi.org/10.3390/acoustics2010013">https://doi.org/10.3390/acoustics2010013</a>
+</div>
+<div id="ref-ioa2016am" class="csl-entry" role="listitem">
+Institute of Acoustics. (2016). <em>A method for rating amplitude modulation in wind turbine noise: Final report</em>. Institute of Acoustics Noise Working Group (Wind Turbine Noise). <a href="https://www.ioa.org.uk/sites/default/files/AMWG%20Final%20Report-09-08-2016_0.pdf">https://www.ioa.org.uk/sites/default/files/AMWG%20Final%20Report-09-08-2016_0.pdf</a>
+</div>
+<div id="ref-iec61672" class="csl-entry" role="listitem">
+International Electrotechnical Commission. (2013). <em>Electroacoustics — sound level meters — part 1: specifications</em> (IEC 61672-1:2013). International Electrotechnical Commission.
+</div>
+<div id="ref-iec60268-16" class="csl-entry" role="listitem">
+International Electrotechnical Commission. (2020). <em>Sound system equipment — part 16: Objective rating of speech intelligibility by speech transmission index</em> (IEC 60268-16:2020). International Electrotechnical Commission.
+</div>
+<div id="ref-iso9613-1" class="csl-entry" role="listitem">
+International Organization for Standardization. (1993). <em>Acoustics — attenuation of sound during propagation outdoors — part 1: Calculation of the absorption of sound by the atmosphere</em> (ISO 9613-1:1993). International Organization for Standardization. <a href="https://www.iso.org/standard/17426.html">https://www.iso.org/standard/17426.html</a>
+</div>
+<div id="ref-iso9613-2" class="csl-entry" role="listitem">
+International Organization for Standardization. (1996). <em>Acoustics — attenuation of sound during propagation outdoors — part 2: General method of calculation</em> (ISO 9613-2:1996). International Organization for Standardization. <a href="https://www.iso.org/standard/20649.html">https://www.iso.org/standard/20649.html</a>
+</div>
+<div id="ref-iso12913-2" class="csl-entry" role="listitem">
+International Organization for Standardization. (2018). <em>Acoustics — soundscape — part 2: Data collection and reporting requirements</em> (ISO/TS 12913-2:2018). International Organization for Standardization. <a href="https://www.iso.org/standard/75267.html">https://www.iso.org/standard/75267.html</a>
+</div>
+<div id="ref-iso12913-3" class="csl-entry" role="listitem">
+International Organization for Standardization. (2019). <em>Acoustics — soundscape — part 3: Data analysis</em> (ISO/TS 12913-3:2019). International Organization for Standardization. <a href="https://www.iso.org/standard/69864.html">https://www.iso.org/standard/69864.html</a>
+</div>
+<div id="ref-iso226" class="csl-entry" role="listitem">
+International Organization for Standardization. (2023). <em>Acoustics — normal equal-loudness-level contours</em> (ISO 226:2023). International Organization for Standardization.
+</div>
+<div id="ref-jlarc2024" class="csl-entry" role="listitem">
+Joint Legislative Audit and Review Commission. (2024). <em>Data centers in <span>Virginia</span></em> (Report No. 598). Joint Legislative Audit; Review Commission, Commonwealth of Virginia. <a href="https://jlarc.virginia.gov/landing-2024-data-centers-in-virginia.asp">https://jlarc.virginia.gov/landing-2024-data-centers-in-virginia.asp</a>
+</div>
+<div id="ref-vankempen2018" class="csl-entry" role="listitem">
+Kempen, E. van, Casas, M., Pershagen, G., &amp; Foraster, M. (2018). <span>WHO</span> environmental noise guidelines for the <span>European</span> region: A systematic review on environmental noise and cardiovascular and metabolic effects: A summary. <em>International Journal of Environmental Research and Public Health</em>, <em>15</em>(2), 379. <a href="https://doi.org/10.3390/ijerph15020379">https://doi.org/10.3390/ijerph15020379</a>
+</div>
+<div id="ref-kephalopoulos2014" class="csl-entry" role="listitem">
+Kephalopoulos, S., Paviotti, M., Anfosso-Lédée, F., Van Maercke, D., Shilton, S., &amp; Jones, N. (2014). Advances in the development of common noise assessment methods in <span>Europe</span>: The <span>CNOSSOS-EU</span> framework for strategic environmental noise mapping. <em>Science of the Total Environment</em>, <em>482–483</em>, 400–410. <a href="https://doi.org/10.1016/j.scitotenv.2014.02.031">https://doi.org/10.1016/j.scitotenv.2014.02.031</a>
+</div>
+<div id="ref-lam2024" class="csl-entry" role="listitem">
+Lam, B., Ong, Z.-T., Ooi, K., Ong, W.-H., Wong, T., Watcharasupat, K. N., Boey, V., Lee, I., Hong, J. Y., Kang, J., Lee, K. F. A., Christopoulos, G., &amp; Gan, W.-S. (2024). Automating urban soundscape enhancements with <span>AI</span>: In-situ assessment of quality and restorativeness in traffic-exposed residential areas. <em>Building and Environment</em>, <em>266</em>, 112106. <a href="https://doi.org/10.1016/j.buildenv.2024.112106">https://doi.org/10.1016/j.buildenv.2024.112106</a>
+</div>
+<div id="ref-mitchell2021" class="csl-entry" role="listitem">
+Mitchell, A., Oberman, T., Aletta, F., Kachlicka, M., Lionello, M., Erfanian, M., &amp; Kang, J. (2021). Investigating urban soundscapes of the <span>COVID-19</span> lockdown: A predictive soundscape modeling approach. <em>The Journal of the Acoustical Society of America</em>, <em>150</em>(6), 4474–4488. <a href="https://doi.org/10.1121/10.0008928">https://doi.org/10.1121/10.0008928</a>
+</div>
+<div id="ref-munzel2024" class="csl-entry" role="listitem">
+Münzel, T., Hahad, O., Daiber, A., &amp; Sørensen, M. (2024). Noise causes cardiovascular disease: It’s time to act. <em>Journal of Exposure Science &amp; Environmental Epidemiology</em>. <a href="https://doi.org/10.1038/s41370-024-00732-4">https://doi.org/10.1038/s41370-024-00732-4</a>
+</div>
+<div id="ref-nelson2004" class="csl-entry" role="listitem">
+Nelson, J. P. (2004). Meta-analysis of airport noise and hedonic property values: Problems and prospects. <em>Journal of Transport Economics and Policy</em>, <em>38</em>(1), 1–27.
+</div>
+<div id="ref-pallas2016" class="csl-entry" role="listitem">
+Pallas, M.-A., Bérengier, M., Chatagnon, R., Czuka, M., Conter, M., &amp; Muirhead, M. (2016). Towards a model for electric vehicle noise emission in the <span>European</span> prediction method <span>CNOSSOS-EU</span>. <em>Applied Acoustics</em>, <em>113</em>, 89–101. <a href="https://doi.org/10.1016/j.apacoust.2016.06.012">https://doi.org/10.1016/j.apacoust.2016.06.012</a>
+</div>
+<div id="ref-mcs020a" class="csl-entry" role="listitem">
+The MCS Service Company. (2025). <em><span>MCS</span> 020 a): Air source heat pump sound calculation (for permitted development installations), issue 1.1</em>. MCS Charitable Foundation. <a href="https://mcscertified.com/wp-content/uploads/2025/07/MCS-020-a-Issue-1.1-Final.pdf">https://mcscertified.com/wp-content/uploads/2025/07/MCS-020-a-Issue-1.1-Final.pdf</a>
+</div>
+<div id="ref-unece138" class="csl-entry" role="listitem">
+United Nations Economic Commission for Europe. (2017). <em><span>UN</span> regulation no 138 — uniform provisions concerning the approval of quiet road transport vehicles with regard to their reduced audibility</em>. <a href="https://unece.org/fileadmin/DAM/trans/main/wp29/wp29regs/2017/R138r1e.pdf">https://unece.org/fileadmin/DAM/trans/main/wp29/wp29regs/2017/R138r1e.pdf</a>
+</div>
+<div id="ref-who2011" class="csl-entry" role="listitem">
+World Health Organization Regional Office for Europe. (2011). <em>Burden of disease from environmental noise: Quantification of healthy life years lost in <span>Europe</span></em>. WHO Regional Office for Europe.
+</div>
+<div id="ref-who2018" class="csl-entry" role="listitem">
+World Health Organization Regional Office for Europe. (2018). <em>Environmental noise guidelines for the <span>European</span> region</em>. WHO Regional Office for Europe. <a href="https://www.who.int/europe/publications/i/item/9789289053563">https://www.who.int/europe/publications/i/item/9789289053563</a>
+</div>
+</div>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./epilogue.html" class="pagination-link" aria-label="Epilogue">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Epilogue</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./glossary.html" class="pagination-link" aria-label="Glossary">
+        <span class="nav-page-text">Glossary</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>1&nbsp; What counts as noise – Noise and Risk</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./02-measuring.html" rel="next">
+<link href="./introduction.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-8f78bad36740733fa4acb35e15e408cb.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-ebf1d8226c99587a9ea6e6ddbe88027f.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-e9aedb1de40472870c13f3f84e95ca57.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-b1c943040e7fa91d5b9ff8fcafa0dee4.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<!-- Noise and Risk — social, Dublin Core and structured-data meta tags.
+
+     Included via _quarto.yml (include-in-header). Replace [Author] and the
+
+     canonical URL before deploy. -->
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+
+
+<!-- Open Graph -->
+
+<meta property="og:type" content="book">
+
+<meta property="og:title" content="1&nbsp; What counts as noise – Noise and Risk">
+
+<meta property="og:description" content="">
+
+<meta property="og:locale" content="en_GB">
+
+<meta property="og:site_name" content="Noise and Risk">
+
+<!-- <meta property="og:url" content="https://[canonical-url]/"> -->
+
+<!-- <meta property="og:image" content="https://[canonical-url]/assets/cover.png"> -->
+
+
+
+<!-- Twitter Card -->
+
+<meta name="twitter:card" content="summary_large_image">
+
+<meta name="twitter:title" content="1&nbsp; What counts as noise – Noise and Risk">
+
+<meta name="twitter:description" content="">
+
+
+
+<!-- Dublin Core -->
+
+<meta name="DC.title" content="Noise and Risk: Exposure, inequality and the politics of silence">
+
+<meta name="DC.creator" content="[Author]">
+
+<meta name="DC.language" content="en-GB">
+
+<meta name="DC.type" content="Text.Monograph">
+
+<meta name="DC.format" content="text/html">
+
+<meta name="DC.subject" content="environmental noise; risk; soundscape; public health; environmental justice; governance">
+
+
+
+<!-- JSON-LD structured data -->
+
+<script type="application/ld+json">
+
+{
+
+  "@context": "https://schema.org",
+
+  "@type": "Book",
+
+  "name": "Noise and Risk",
+
+  "alternateName": "Noise and Risk: Exposure, inequality and the politics of silence",
+
+  "inLanguage": "en-GB",
+
+  "author": { "@type": "Person", "name": "[Author]" },
+
+  "about": [
+
+    "environmental noise",
+
+    "risk epistemology",
+
+    "soundscape",
+
+    "public health",
+
+    "environmental justice",
+
+    "noise governance"
+
+  ],
+
+  "abstract": "Environmental noise has moved from nuisance to measurable risk factor — cardiovascular, metabolic, cognitive — while the sources producing it and the instruments used to measure it change faster than the governance meant to contain them.",
+
+  "bookFormat": "https://schema.org/EBook"
+
+}
+
+</script>
+
+<!-- Theme bridge: tells embedded widget iframes the host's light/dark state.
+
+     Robust across file://, localhost and production (postMessage crosses origins).
+
+     Detects by background luminance, so it does not depend on Quarto class names. -->
+
+<script>
+
+(function () {
+
+  function hostThemeIsDark() {
+
+    var b = getComputedStyle(document.body).backgroundColor || '';
+
+    var m = b.match(/rgba?\(([^)]+)\)/); if (!m) return false;
+
+    var p = m[1].split(',').map(parseFloat);
+
+    return (0.2126 * p[0] + 0.7152 * p[1] + 0.0722 * p[2]) / 255 < 0.5;
+
+  }
+
+  function broadcast() {
+
+    var theme = hostThemeIsDark() ? 'dark' : 'light';
+
+    document.querySelectorAll('iframe').forEach(function (f) {
+
+      try { f.contentWindow.postMessage({ type: 'quarto-theme', theme: theme }, '*'); }
+
+      catch (e) { /* ignore */ }
+
+    });
+
+  }
+
+  // Answer a widget that asks on load, and re-broadcast on any theme toggle.
+
+  window.addEventListener('message', function (e) {
+
+    if (e.data && e.data.type === 'request-theme') broadcast();
+
+  });
+
+  new MutationObserver(broadcast).observe(document.body,
+
+    { attributes: true, attributeFilter: ['class', 'style', 'data-bs-theme'] });
+
+  new MutationObserver(broadcast).observe(document.documentElement,
+
+    { attributes: true, attributeFilter: ['class', 'style', 'data-bs-theme'] });
+
+  window.addEventListener('load', broadcast);
+
+  broadcast();
+
+})();
+
+</script>
+
+
+
+</head>
+
+<body class="nav-sidebar docked quarto-dark"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = true;
+    const darkModeDefault = authorPrefersDark;
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-what-counts.html">I. The object</a></li><li class="breadcrumb-item"><a href="./01-what-counts.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What counts as noise</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Noise and Risk</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://github.com/utilizas/noise" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">I. The object</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-what-counts.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What counts as noise</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-measuring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Measuring the invisible</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-the-body.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The body under sound</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-the-maps.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">The maps</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">II. The sources</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-traffic.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Traffic, the old giant</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-quiet-that-wasnt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">The quiet that wasn’t</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-machine-hum.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">The machine hum</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-indoor-personal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The indoor and the personal</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">III. The politics</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-sonic-injustice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Sonic injustice</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-economics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The economics of quiet</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-governing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Governing sound</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-designing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Designing the soundscape</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./epilogue.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Epilogue</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./appendix.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Appendix: methods, data and tools</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Glossary</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#unwanted-sound-and-why-the-definition-fails" id="toc-unwanted-sound-and-why-the-definition-fails" class="nav-link active" data-scroll-target="#unwanted-sound-and-why-the-definition-fails"><span class="header-section-number">1.1</span> Unwanted sound, and why the definition fails</a></li>
+  <li><a href="#the-soundscape-turn" id="toc-the-soundscape-turn" class="nav-link" data-scroll-target="#the-soundscape-turn"><span class="header-section-number">1.2</span> The soundscape turn</a></li>
+  <li><a href="#the-eight-attributes" id="toc-the-eight-attributes" class="nav-link" data-scroll-target="#the-eight-attributes"><span class="header-section-number">1.3</span> The eight attributes</a></li>
+  <li><a href="#what-a-definition-decides" id="toc-what-a-definition-decides" class="nav-link" data-scroll-target="#what-a-definition-decides"><span class="header-section-number">1.4</span> What a definition decides</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-what-counts.html">I. The object</a></li><li class="breadcrumb-item"><a href="./01-what-counts.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What counts as noise</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-what-counts" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What counts as noise</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Ask what noise is and the intuitive answer arrives before the question has finished: noise is unwanted sound. The definition is serviceable enough, and it has organised environmental regulation for the better part of a century. But notice what it smuggles in. <em>Unwanted</em> is not a property of the air. It is a judgement made by a listener, in a place, at a time, and the same physical signal can cross the line between wanted and unwanted depending on who is listening and why. The train that is infrastructure to the commuter on the platform is an assault to the shift-worker trying to sleep beside the track. Nothing about the sound has changed; the person and the context have. The definition that seems to locate the problem in the sound has, on inspection, located it in the relation between the sound and the hearer.</p>
+<p>That relation is what the last two decades have turned into an object of study. For most of its history, noise control treated sound as a quantity emitted by a source and received at a point — something to be metred, capped and abated, with the listener present only as a threshold to be protected. The soundscape turn did something more radical than add nuance. It moved the object of study from the sound to the <em>experience</em> of the sound, and in doing so gave noise a vocabulary precise enough to be measured, mapped, and eventually designed. That move is the foundation the rest of the book is built on, and it is also, quietly, the first appearance of a theme that will run underneath everything that follows: what we choose to measure decides what we are able to see.</p>
+<section id="unwanted-sound-and-why-the-definition-fails" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="unwanted-sound-and-why-the-definition-fails"><span class="header-section-number">1.1</span> Unwanted sound, and why the definition fails</h2>
+<p>The classical account has an honourable pedigree and a real use. Defining noise as unwanted sound draws a bright line between acoustics and annoyance, leaving the physicist to measure the pressure variation and the regulator to decide how much of it a person should have to tolerate. It underwrites limit values, working-time exposure rules and the whole apparatus of noise abatement. Within its domain it works.</p>
+<p>The definition fails not by being wrong but by being incomplete, in a way that matters more the closer one looks. Three things escape it.</p>
+<p>First, the same sound is wanted and unwanted at once, depending on the listener. A church bell, a call to prayer, a children’s playground, a music venue — each is cherished by some of the people within earshot and resented by others, and no measurement at the property line can adjudicate between them because the disagreement is not about decibels. It is about meaning.</p>
+<p>Second, the definition cannot explain why sounds of <em>equal</em> level are not equally unwanted. A steady mechanical hum and the varied sound of a street market can register the same figure on a meter and be experienced as opposites — one draining, one enlivening. If noise were simply unwanted sound, and unwantedness tracked level, this could not happen. It happens constantly.</p>
+<p>Third, and most consequentially for this work, the definition takes the <em>source</em> as given and asks only how loud it is. Nothing in it can ask what a place should sound like — whether a sound belongs, whether its absence would be an improvement or a loss. It can subtract; it cannot compose. A framework that can only ever say <em>less</em> has already given up the more interesting question.</p>
+<p>The same element is missing from all three failures — the listener, the context, the meaning. To restore them is not to abandon acoustics but to recognise that noise lives in the meeting of a physical environment and a perceiving person. The soundscape framework is the attempt to make that meeting an object of rigorous study.</p>
+</section>
+<section id="the-soundscape-turn" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="the-soundscape-turn"><span class="header-section-number">1.2</span> The soundscape turn</h2>
+<p>The word <em>soundscape</em> carries an older, evocative history — the acoustic-ecology tradition that taught a generation to hear the environment as a composition rather than a nuisance to be suppressed. But an evocative idea is not yet a measurable one, and for decades the term stayed idiosyncratic; everyone meant something slightly different by it, which is another way of saying that no one could build on anyone else’s work.</p>
+<p>The decisive move was to fix the definition. In 2014 the International Organization for Standardization published the first part of a three-part series that did exactly this. ISO 12913-1 defines a soundscape as the acoustic environment as perceived or experienced and understood by a person or people, in context <span class="citation" data-cites="iso12913-1">(<a href="references.html#ref-iso12913-1" role="doc-biblioref">International Organization for Standardization, 2014</a>)</span>. The phrasing is doing careful work, separating two things that ordinary language runs together. The <em>acoustic environment</em> is the physical phenomenon, the sound field, measurable in the usual way. The <em>soundscape</em>, by contrast, is a perceptual construct that exists only through a listener’s engagement with that environment. The acoustic environment is out there whether or not anyone hears it. The soundscape is not; it comes into being in the hearing.</p>
+<p>That distinction looks like a philosopher’s nicety and is in fact the hinge of the whole field. Once perception is written into the definition, context stops being an inconvenience to be controlled away and becomes part of the object. The standard is explicit that a soundscape assessment is <em>through</em> human perception of the acoustic environment, and it lists the factors that shape that perception: the listener’s attitude to the source and to whoever is producing the sound, their expectations and cultural background, their reason for being in the place, their sense of whether they can control their exposure, and the other senses feeding in alongside the ears. None of these appears on a sound-level meter. All of them determine whether a given acoustic environment is experienced as pleasant or as intolerable.</p>
+<p>The framework, in other words, does not soften the physics; it embeds the physics in the situation where sound is actually encountered. This is what allows later chapters to speak of <em>designing</em> a soundscape rather than only suppressing sound — a possibility taken up in full in the constructive turn of the final chapter. But it also sets up the more critical thread. If soundscape is perception-dependent, then any instrument that claims to measure it is making a claim about perception, and the choices built into that instrument — which frequencies it weights, which it discards — become claims about what is worth perceiving. The next chapter is about one such instrument and the choices hidden inside it.</p>
+</section>
+<section id="the-eight-attributes" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="the-eight-attributes"><span class="header-section-number">1.3</span> The eight attributes</h2>
+<p>A definition that stays qualitative changes nothing in practice. The real achievement of the soundscape programme was to make perception <em>quantitative</em> without flattening it — to find a small number of dimensions that capture how people actually experience acoustic environments, and a defined set of scales for measuring them.</p>
+<p>The empirical basis came from a study by Axelsson, Nilsson and Berglund, who had a hundred listeners rate fifty binaural recordings of urban outdoor environments on more than a hundred attribute scales, then reduced the results to their underlying structure <span class="citation" data-cites="axelsson2010">(<a href="references.html#ref-axelsson2010" role="doc-biblioref">Axelsson et al., 2010</a>)</span>. Three dimensions emerged, but two did almost all the work: a <em>pleasantness</em> dimension, accounting for roughly half the variance, and an <em>eventfulness</em> dimension accounting for close to a fifth. (A third, familiarity, explained little and is usually set aside.) The finding is more than a statistical convenience. It says that when people judge a soundscape, they are answering two largely independent questions — <em>is this pleasant or unpleasant?</em> and <em>is much happening here or little?</em> — and that most of the perceptual richness of everyday acoustic experience lives in the plane those two axes define.</p>
+<p>This is the point at which attribution has to be exact, because most summaries blur it. The two-dimensional pleasant–eventful structure is Axelsson and colleagues’ finding. The now-standard <em>eight</em> perceptual attributes are the operationalisation of that structure in the second part of the ISO series. In its Method A, ISO/TS 12913-2 sets out eight descriptors — pleasant, vibrant, eventful, chaotic, annoying, monotonous, uneventful and calm — rated on bipolar five-point scales, as the recommended way to collect soundscape data in the field <span class="citation" data-cites="iso12913-2">(<a href="references.html#ref-iso12913-2" role="doc-biblioref">International Organization for Standardization, 2018</a>)</span>. The eight are not eight independent qualities. They are eight equally spaced positions around a circle, the <em>circumplex</em>, whose two underlying axes are pleasantness and eventfulness. The third part of the series, ISO/TS 12913-3, then specifies the geometry that makes this usable. Neighbouring attributes sit forty-five degrees apart and opposites a hundred and eighty, and a set of ratings can be transformed into a single coordinate in the pleasant–eventful plane <span class="citation" data-cites="iso12913-3">(<a href="references.html#ref-iso12913-3" role="doc-biblioref">International Organization for Standardization, 2019</a>)</span>.</p>
+<p>Reading around the circle shows why the eight attributes are the <em>right</em> eight rather than an arbitrary list, and the structure turns out to be intuitive. A vibrant soundscape is one that is both pleasant and eventful — a lively square that people enjoy. Rotate towards pure eventfulness and then into unpleasantness and you reach the chaotic: eventful but not wanted, the noisy street corner. Continue to the monotonous, which is both unpleasant and uneventful — the draining drone with nothing in it. Round again to the calm, both pleasant and uneventful, the quiet park. Each of the eight names a compass point, and any real soundscape can be placed by where its ratings fall in the plane <span class="citation" data-cites="aletta2016">(<a href="references.html#ref-aletta2016" role="doc-biblioref">Aletta et al., 2016</a>)</span>. The standard preserves one nuance deliberately. In the environmental-noise tradition the pole opposite <em>pleasant</em> is labelled <em>annoying</em> rather than the more neutral <em>unpleasant</em>, keeping a bridge to the older language of annoyance research even as the framework moves beyond it.</p>
+<div class="widget-frame">
+<iframe src="widgets/ch01-soundscape-axes.html" height="650" loading="lazy" title="Place a sound on the pleasant–eventful axes">
+</iframe>
+</div>
+<div class="fig-source">
+<p>Source · perceptual axes and eight attributes after <span class="citation" data-cites="axelsson2010">Axelsson et al. (<a href="references.html#ref-axelsson2010" role="doc-biblioref">2010</a>)</span> and ISO/TS 12913-2:2018 <span class="citation" data-cites="iso12913-2">(<a href="references.html#ref-iso12913-2" role="doc-biblioref">International Organization for Standardization, 2018</a>)</span>; circumplex geometry per ISO/TS 12913-3:2019 <span class="citation" data-cites="iso12913-3">(<a href="references.html#ref-iso12913-3" role="doc-biblioref">International Organization for Standardization, 2019</a>)</span>. Accessed 2026-07-11.</p>
+</div>
+<p>The simulator above makes one claim tangible. The <em>same</em> recorded sound occupies a definite position in a perceptual space, and that position — not its raw level — is what determines whether it is experienced as noise. Two sounds of identical loudness can sit at opposite ends of the pleasantness axis. That is the soundscape framework’s central empirical fact, and the one the decibel, on its own, cannot represent.</p>
+</section>
+<section id="what-a-definition-decides" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="what-a-definition-decides"><span class="header-section-number">1.4</span> What a definition decides</h2>
+<p>The argument here is easily mistaken for a plea for subtlety — for remembering that noise is complicated and perception matters. It is meant as something more pointed. To define noise relationally, as the soundscape framework does, is already to have made a decision with consequences that run through the rest of the book, because a definition is not a neutral starting point. It sets the terms on which everything downstream will be measured, mapped and governed.</p>
+<p>Consider what follows from the two ways of defining the object. If noise is unwanted sound at a source, the natural instruments are a level meter and a limit value, the natural question is <em>how loud</em>, and the natural response is abatement. If noise is a soundscape — a perceived environment in context — the natural instruments include the perceptual scales just described, the natural question becomes <em>how is this place experienced</em>, and the natural response opens onto design as well as reduction. These are not two descriptions of one practice. They are two different practices, and they make different things visible.</p>
+<p>Much of what follows lives in the gap between them. The metric that governs European noise policy sits firmly on the first side of this divide — a single weighted number, source-oriented, blind by construction to much of what the soundscape framework was built to capture. That is not an oversight to be tidied up. It is the shape of a choice about what counts, and the sources changing our acoustic world fastest are precisely the ones that choice cannot see. The soundscape turn matters here not because it is more humane but because it is more honest about a fact the older definition obscured: that before we measure noise, we have already decided what noise is, and that decision does work no measurement can undo.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
+<div id="ref-aletta2016" class="csl-entry" role="listitem">
+Aletta, F., Kang, J., &amp; Axelsson, Ö. (2016). Soundscape descriptors and a conceptual framework for developing predictive soundscape models. <em>Landscape and Urban Planning</em>, <em>149</em>, 65–74. <a href="https://doi.org/10.1016/j.landurbplan.2016.02.001">https://doi.org/10.1016/j.landurbplan.2016.02.001</a>
+</div>
+<div id="ref-axelsson2010" class="csl-entry" role="listitem">
+Axelsson, Ö., Nilsson, M. E., &amp; Berglund, B. (2010). A principal components model of soundscape perception. <em>The Journal of the Acoustical Society of America</em>, <em>128</em>(5), 2836–2846. <a href="https://doi.org/10.1121/1.3493436">https://doi.org/10.1121/1.3493436</a>
+</div>
+<div id="ref-iso12913-1" class="csl-entry" role="listitem">
+International Organization for Standardization. (2014). <em>Acoustics — soundscape — part 1: Definition and conceptual framework</em> (ISO 12913-1:2014). International Organization for Standardization. <a href="https://www.iso.org/standard/52161.html">https://www.iso.org/standard/52161.html</a>
+</div>
+<div id="ref-iso12913-2" class="csl-entry" role="listitem">
+International Organization for Standardization. (2018). <em>Acoustics — soundscape — part 2: Data collection and reporting requirements</em> (ISO/TS 12913-2:2018). International Organization for Standardization. <a href="https://www.iso.org/standard/75267.html">https://www.iso.org/standard/75267.html</a>
+</div>
+<div id="ref-iso12913-3" class="csl-entry" role="listitem">
+International Organization for Standardization. (2019). <em>Acoustics — soundscape — part 3: Data analysis</em> (ISO/TS 12913-3:2019). International Organization for Standardization. <a href="https://www.iso.org/standard/69864.html">https://www.iso.org/standard/69864.html</a>
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./introduction.html" class="pagination-link" aria-label="Introduction">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Introduction</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./02-measuring.html" class="pagination-link" aria-label="Measuring the invisible">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Measuring the invisible</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

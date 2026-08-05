@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exposure → relative-risk calculator</title>
+<style>
+:root{
+  --paper:#faf7f0; --ink:#1e1b16; --ink-2:#4a463d; --ink-3:#7a7466;
+  --rule:#d9d1c0; --rule-2:#c8bfa9; --risk:#9a3b2e; --risk-bg:#f2e4de;
+  --extrap:#8a8474; --amber:#b07515; --card:#faf7f0;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#211e16; --ink:#ece6d8; --ink-2:#b8b1a0; --ink-3:#807a6b;
+    --rule:#332f24; --rule-2:#403a2c; --risk:#e0836f; --risk-bg:#2c1f1a;
+    --extrap:#6b6556; --amber:#d5a04a; --card:#211e16;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0; padding:18px; background:var(--paper); color:var(--ink);
+  font-family:"Newsreader",Georgia,serif; font-size:16px; line-height:1.55}
+.label{font-family:"IBM Plex Mono",monospace; font-size:.62rem; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--risk); margin:0 0 .1rem}
+h4{font-family:"Fraunces","Georgia",serif; font-weight:500; margin:0 0 1rem; font-size:1.22rem}
+.controls{display:flex; flex-wrap:wrap; gap:1.1rem 1.8rem; align-items:flex-end; margin-bottom:1rem}
+.ctl{flex:1; min-width:200px}
+.ctl label{display:block; font-family:"IBM Plex Mono",monospace; font-size:.66rem;
+  letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3); margin-bottom:.5rem}
+input[type=range]{width:100%; accent-color:var(--risk); height:4px; cursor:pointer}
+.seg{display:inline-flex; border:1px solid var(--rule-2); border-radius:5px; overflow:hidden}
+.seg button{font-family:"Newsreader",serif; font-size:.88rem; padding:.42rem .8rem;
+  background:transparent; border:0; color:var(--ink-2); cursor:pointer; border-right:1px solid var(--rule-2)}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--risk); color:#fff}
+.readout{display:flex; gap:1.6rem; flex-wrap:wrap; margin:.1rem 0 1rem; padding:.9rem 0;
+  border-top:1px solid var(--rule); border-bottom:1px solid var(--rule)}
+.stat{min-width:118px}
+.stat .v{font-family:"Fraunces",serif; font-size:1.9rem; font-weight:600; color:var(--risk); line-height:1}
+.stat .k{font-family:"IBM Plex Mono",monospace; font-size:.6rem; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--ink-3); margin-top:.35rem}
+.stat .ci{font-family:"IBM Plex Mono",monospace; font-size:.7rem; color:var(--ink-2); margin-top:.1rem}
+#dsvg{width:100%; height:auto; display:block; margin:.2rem 0}
+.interp{font-size:.96rem; color:var(--ink-2); margin:.5rem 0 0; min-height:2.6em}
+.interp b{color:var(--ink); font-weight:500}
+.caveat{font-size:.78rem; color:var(--ink-3); margin:.9rem 0 0; line-height:1.5;
+  border-top:1px dashed var(--rule-2); padding-top:.7rem}
+.src{font-family:"IBM Plex Mono",monospace; font-size:.66rem; color:var(--ink-3); margin-top:.5rem}
+</style>
+</head>
+<body>
+<p class="label">Interactive · computes on your input</p>
+<h4>Exposure → relative-risk calculator</h4>
+
+<div class="controls">
+  <div class="ctl">
+    <label for="lden">Long-term exposure · L<sub>den</sub> = <span id="ldenval">65</span> dB</label>
+    <input type="range" id="lden" min="40" max="85" value="65" step="1" oninput="update()">
+  </div>
+  <div class="ctl" style="flex:0 0 auto">
+    <label>Health outcome</label>
+    <div class="seg" id="seg">
+      <button class="on" data-o="ihd" onclick="setOutcome('ihd')">Ischaemic heart disease</button>
+      <button data-o="cvd" onclick="setOutcome('cvd')">All CVD combined</button>
+    </div>
+  </div>
+</div>
+
+<div class="readout">
+  <div class="stat">
+    <div class="v" id="rr">—</div>
+    <div class="k">Relative risk</div>
+    <div class="ci" id="rrci">vs 45 dB low-exposure</div>
+  </div>
+  <div class="stat">
+    <div class="v" id="excess">—</div>
+    <div class="k">Excess risk</div>
+    <div class="ci" id="exci">point estimate</div>
+  </div>
+</div>
+
+<svg id="dsvg" viewBox="0 0 520 250" role="img" aria-labelledby="dtitle">
+  <title id="dtitle">Dose–response curve: relative risk against L-den, with 95% confidence band and an extrapolation zone below 53 dB</title>
+</svg>
+
+<p class="interp" id="interp"></p>
+<p class="caveat" id="caveat"></p>
+<p class="src" id="src"></p>
+
+<script>
+/* ============================================================
+   Exposure-response model.
+   RR(L) = base^((L - REF)/10), with REF = 45 dB as the chosen
+   low-exposure reference. The measured exposure-response function
+   (van Kempen et al., 2018) is anchored at a 53 dB reference
+   category; below 53 dB the curve is an ASSUMPTION consistent with
+   the "no safe threshold" position, not a direct measurement, and
+   is drawn as an explicit extrapolation band.
+   ============================================================ */
+var REF = 45, EVIDENCE_FLOOR = 53;
+var MODELS = {
+  ihd: { base:1.08, lo:1.01, hi:1.15,
+         label:'ischaemic heart disease incidence',
+         src:'van Kempen et al. (2018), WHO ENG systematic review — high-quality evidence; 53 dB reference category, linear ERR.' },
+  cvd: { base:1.032, lo:1.011, hi:1.052,
+         label:'all cardiovascular diagnoses combined',
+         src:'Münzel et al. (2024): combined CV risk across IHD, stroke, hypertension, arrhythmia and heart failure — +3.2% (95% CI 1.1–5.2%) per 10 dB road-traffic noise (Lden).' }
+};
+var outcome='ihd';
+function setOutcome(o){
+  outcome=o;
+  document.querySelectorAll('#seg button').forEach(function(b){ b.classList.toggle('on', b.dataset.o===o); });
+  update();
+}
+function rrAt(L,m,k){ return Math.pow(m[k],(L-REF)/10); }
+
+function update(){
+  var L=+document.getElementById('lden').value, m=MODELS[outcome];
+  document.getElementById('ldenval').textContent=L;
+  var rr=rrAt(L,m,'base'), lo=rrAt(L,m,'lo'), hi=rrAt(L,m,'hi'), exc=(rr-1)*100;
+
+  document.getElementById('rr').textContent=rr.toFixed(2)+'×';
+  document.getElementById('rrci').textContent='95% CI '+lo.toFixed(2)+'–'+hi.toFixed(2);
+  document.getElementById('excess').textContent=(exc>=0?'+':'')+exc.toFixed(0)+'%';
+  document.getElementById('exci').textContent='vs 45 dB reference';
+
+  var extrap = L < EVIDENCE_FLOOR;
+  if(L<=REF){
+    document.getElementById('interp').innerHTML=
+      'At <b>'+L+' dB</b> L<sub>den</sub> the reader sits at the 45 dB low-exposure reference — the baseline against which excess risk is expressed.';
+  } else if(extrap){
+    document.getElementById('interp').innerHTML=
+      'At <b>'+L+' dB</b> L<sub>den</sub>, the model shows <b>'+rr.toFixed(2)+'×</b> the 45 dB baseline — but this sits <b>below the 53 dB evidence floor</b>, so it is an extrapolation, not a measured estimate.';
+  } else {
+    document.getElementById('interp').innerHTML=
+      'At <b>'+L+' dB</b> L<sub>den</sub>, estimated '+m.label+' is <b>'+rr.toFixed(2)+'×</b> the 45 dB baseline (<b>'+(exc>=0?'+':'')+exc.toFixed(0)+'%</b>), 95% CI '+lo.toFixed(2)+'–'+hi.toFixed(2)+'.';
+  }
+
+  document.getElementById('caveat').innerHTML=
+    'A relative risk describes a population, not an individual prognosis. The exposure-response function was measured from a 53 dB reference category; the 45–53 dB segment (shaded) is an assumption consistent with the no-safe-threshold finding, not a direct measurement. Correlation is not causation — a diagnostic instrument, not a clinical or regulatory verdict.';
+  document.getElementById('src').textContent='Source · '+m.src;
+  draw(L,m,extrap);
+  fitFrame();
+}
+
+function cssv(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+
+function draw(L,m){
+  var W=520,H=250, padL=52,padR=16,padT=18,padB=40, x0=40,x1=85;
+  var yMax=Math.max(1.06, rrAt(x1,m,'hi')*1.04), yMin=0.96;
+  var ink3=cssv('--ink-3')||'#7a7466', faint=cssv('--rule')||'#d9d1c0',
+      risk=cssv('--risk')||'#9a3b2e', band=cssv('--risk-bg')||'#f2e4de',
+      extrap=cssv('--extrap')||'#8a8474', amber=cssv('--amber')||'#b07515',
+      card=cssv('--card')||'#faf7f0';
+
+  function X(v){ return padL+(v-x0)/(x1-x0)*(W-padL-padR); }
+  function Y(v){ return padT+(yMax-v)/(yMax-yMin)*(H-padT-padB); }
+  function seg(k,a,b){ var d=''; for(var v=a; v<=b+0.001; v++){ d+=(v===a?'M':'L')+X(v).toFixed(1)+' '+Y(rrAt(v,m,k)).toFixed(1)+' '; } return d; }
+  function bandBetween(a,b){
+    var d=seg('hi',a,b);
+    for(var v=b; v>=a-0.001; v--){ d+='L'+X(v).toFixed(1)+' '+Y(rrAt(v,m,'lo')).toFixed(1)+' '; }
+    return d+'Z';
+  }
+
+  /* gridlines */
+  var g='', step=yMax>1.35?0.1:0.05;
+  for(var t=1.0; t<=yMax+0.001; t+=step){
+    var tt=+t.toFixed(2), yy=Y(tt).toFixed(1);
+    g+='<line x1="'+padL+'" y1="'+yy+'" x2="'+(W-padR)+'" y2="'+yy+'" stroke="'+faint+'" stroke-width="1"/>';
+    g+='<text x="'+(padL-8)+'" y="'+(+yy+4)+'" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="10" fill="'+ink3+'">'+tt.toFixed(2)+'</text>';
+  }
+  [40,45,53,60,70,80,85].forEach(function(xt){
+    g+='<text x="'+X(xt).toFixed(1)+'" y="'+(H-padB+18)+'" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="'+ink3+'">'+xt+'</text>';
+  });
+
+  /* WHO guideline reference lines: 45 (aircraft/wind), 53 (road) */
+  function vline(xt,txt,col){
+    var xx=X(xt).toFixed(1);
+    return '<line x1="'+xx+'" y1="'+padT+'" x2="'+xx+'" y2="'+(H-padB)+'" stroke="'+col+'" stroke-width="1" stroke-dasharray="3 3"/>'+
+           '<text x="'+(+xx+4)+'" y="'+(padT+10)+'" font-family="IBM Plex Mono,monospace" font-size="9" fill="'+col+'">'+txt+'</text>';
+  }
+
+  /* extrapolation zone 40–53: shaded background column */
+  var ex0=X(40).toFixed(1), ex1=X(EVIDENCE_FLOOR).toFixed(1);
+  g+='<rect x="'+ex0+'" y="'+padT+'" width="'+(ex1-ex0).toFixed(1)+'" height="'+(H-padT-padB)+'" fill="'+extrap+'" opacity="0.10"/>';
+  g+='<text x="'+((+ex0+ +ex1)/2).toFixed(1)+'" y="'+(H-padB-6)+'" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8.5" fill="'+extrap+'">extrapolated</text>';
+
+  /* CI band: solid above the evidence floor, hatched-look (lower opacity) below */
+  g+='<path d="'+bandBetween(EVIDENCE_FLOOR,x1)+'" fill="'+band+'" opacity="0.9"/>';
+  g+='<path d="'+bandBetween(x0,EVIDENCE_FLOOR)+'" fill="'+band+'" opacity="0.4"/>';
+
+  /* curve: solid above floor, dashed below */
+  g+='<path d="'+seg('base',EVIDENCE_FLOOR,x1)+'" fill="none" stroke="'+risk+'" stroke-width="2.4"/>';
+  g+='<path d="'+seg('base',x0,EVIDENCE_FLOOR)+'" fill="none" stroke="'+risk+'" stroke-width="2" stroke-dasharray="4 3" opacity="0.75"/>';
+
+  g+=vline(45,'45 WHO air/wind',amber);
+  g+=vline(53,'53 WHO road',ink3);
+
+  var px=X(L), py=Y(rrAt(L,m,'base'));
+  g+='<line x1="'+px.toFixed(1)+'" y1="'+padT+'" x2="'+px.toFixed(1)+'" y2="'+(H-padB)+'" stroke="'+risk+'" stroke-width="1" opacity="0.45"/>';
+  g+='<circle cx="'+px.toFixed(1)+'" cy="'+py.toFixed(1)+'" r="5.5" fill="'+risk+'" stroke="'+card+'" stroke-width="2"/>';
+  g+='<text x="'+((padL+W-padR)/2)+'" y="'+(H-6)+'" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="'+ink3+'">L den · decibels</text>';
+
+  document.getElementById('dsvg').innerHTML=g;
+}
+
+/* Self-fit: match the parent iframe's height to the content so no inner
+   scrollbar appears — at any width, colour scheme, or outcome toggle.
+   Works when the widget is embedded same-origin (the Quarto local iframe);
+   if it is cross-origin or opened standalone it fails silently, leaving the
+   iframe's own height="" attribute as the fallback. */
+function fitFrame(){
+  try{
+    var f=window.frameElement;
+    if(f){ f.style.height=(document.documentElement.scrollHeight+4)+'px'; }
+  }catch(e){}
+}
+window.addEventListener('load', fitFrame);
+window.addEventListener('resize', fitFrame);
+if(document.fonts && document.fonts.ready){ document.fonts.ready.then(fitFrame); }
+
+update();
+</script>
+</body>
+</html>

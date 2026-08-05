@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A decibel is not a decibel — annoyance by transport mode</title>
+<style>
+:root{
+  --paper:#faf7f0; --ink:#1e1b16; --ink-2:#4a463d; --ink-3:#7a7466;
+  --rule:#d9d1c0; --rule-2:#c8bfa9; --card:#faf7f0;
+  --road:#9a3b2e; --rail:#2f6f6a; --air:#b07515; --bench:#8a8474;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#211e16; --ink:#ece6d8; --ink-2:#b8b1a0; --ink-3:#807a6b;
+    --rule:#332f24; --rule-2:#403a2c; --card:#211e16;
+    --road:#e0836f; --rail:#5fb4ac; --air:#d5a04a; --bench:#6b6556;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0; padding:18px; background:var(--paper); color:var(--ink);
+  font-family:"Newsreader",Georgia,serif; font-size:16px; line-height:1.55}
+.label{font-family:"IBM Plex Mono",monospace; font-size:.62rem; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--road); margin:0 0 .1rem}
+h4{font-family:"Fraunces","Georgia",serif; font-weight:500; margin:0 0 1rem; font-size:1.22rem}
+.ctl{margin-bottom:.7rem}
+.ctl label{display:block; font-family:"IBM Plex Mono",monospace; font-size:.66rem;
+  letter-spacing:.05em; text-transform:uppercase; color:var(--ink-3); margin-bottom:.5rem}
+input[type=range]{width:100%; accent-color:var(--road); height:4px; cursor:pointer}
+.readout{display:flex; gap:1.5rem; flex-wrap:wrap; margin:.2rem 0 .7rem; padding:.85rem 0;
+  border-top:1px solid var(--rule); border-bottom:1px solid var(--rule)}
+.stat{min-width:96px}
+.stat .v{font-family:"Fraunces",serif; font-size:1.7rem; font-weight:600; line-height:1}
+.stat .k{font-family:"IBM Plex Mono",monospace; font-size:.6rem; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--ink-3); margin-top:.35rem}
+.stat.road .v{color:var(--road)} .stat.rail .v{color:var(--rail)} .stat.air .v{color:var(--air)}
+.dot{display:inline-block; width:.6em; height:.6em; border-radius:50%; margin-right:.3em; vertical-align:baseline}
+#dsvg{width:100%; height:auto; display:block; margin:.2rem 0}
+.interp{font-size:.96rem; color:var(--ink-2); margin:.5rem 0 0; min-height:3.1em}
+.interp b{color:var(--ink); font-weight:500}
+.caveat{font-size:.78rem; color:var(--ink-3); margin:.9rem 0 0; line-height:1.5;
+  border-top:1px dashed var(--rule-2); padding-top:.7rem}
+.src{font-family:"IBM Plex Mono",monospace; font-size:.64rem; color:var(--ink-3); margin-top:.5rem; line-height:1.5}
+</style>
+</head>
+<body>
+<p class="label">Interactive · computes on your input</p>
+<h4>A decibel is not a decibel: annoyance by transport mode</h4>
+
+<div class="ctl">
+  <label for="lden">Long-term exposure · L<sub>den</sub> = <span id="ldenval">60</span> dB</label>
+  <input type="range" id="lden" min="45" max="80" value="60" step="1" oninput="update()">
+</div>
+
+<div class="readout">
+  <div class="stat road"><div class="v" id="vroad">—</div><div class="k"><span class="dot" style="background:var(--road)"></span>Road %HA</div></div>
+  <div class="stat rail"><div class="v" id="vrail">—</div><div class="k"><span class="dot" style="background:var(--rail)"></span>Rail %HA</div></div>
+  <div class="stat air"><div class="v" id="vair">—</div><div class="k"><span class="dot" style="background:var(--air)"></span>Aircraft %HA</div></div>
+</div>
+
+<svg id="dsvg" viewBox="0 0 520 250" role="img" aria-labelledby="dtitle">
+  <title id="dtitle">Percentage highly annoyed against day-evening-night level, for road, rail and aircraft noise, with the 10 percent WHO benchmark</title>
+</svg>
+
+<p class="interp" id="interp"></p>
+<p class="caveat" id="caveat"></p>
+<p class="src" id="src"></p>
+
+<script>
+/* ============================================================
+   %HA (percentage highly annoyed) exposure-response functions
+   for road, railway and aircraft noise, as legally adopted in
+   Annex III of the Environmental Noise Directive by Commission
+   Directive (EU) 2020/367, derived from the WHO systematic
+   review (Guski, Schreckenberg & Schuemer, 2017):
+
+     road:     %HA = 78.9270 - 3.1162*Lden + 0.0342*Lden^2
+     railway:  %HA = 38.1596 - 2.05538*Lden + 0.0285538*Lden^2
+     aircraft: %HA = -50.9693 + 1.0168*Lden + 0.0072*Lden^2
+
+   The 10% highly-annoyed benchmark (the WHO 2018 level of concern)
+   is reached at ~53 dB for road, ~54 dB for rail and ~45 dB for
+   aircraft: the same decibel is not the same harm.
+   ============================================================ */
+var HA = {
+  road: function(L){ return 78.9270 - 3.1162*L + 0.0342*L*L; },
+  rail: function(L){ return 38.1596 - 2.05538*L + 0.0285538*L*L; },
+  air:  function(L){ return -50.9693 + 1.0168*L + 0.0072*L*L; }
+};
+var BENCH = 10;
+function clampHA(v){ return Math.max(0, Math.min(100, v)); }
+function cssv(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+
+function update(){
+  var L=+document.getElementById('lden').value;
+  document.getElementById('ldenval').textContent=L;
+  var r=clampHA(HA.road(L)), ra=clampHA(HA.rail(L)), a=clampHA(HA.air(L));
+  document.getElementById('vroad').textContent=r.toFixed(0)+'%';
+  document.getElementById('vrail').textContent=ra.toFixed(0)+'%';
+  document.getElementById('vair').textContent=a.toFixed(0)+'%';
+
+  var ratio = (a/Math.max(r,0.1));
+  document.getElementById('interp').innerHTML=
+    'At <b>'+L+' dB</b> L<sub>den</sub>, aircraft noise makes an estimated <b>'+a.toFixed(0)+'%</b> of residents highly annoyed — against '+
+    '<b>'+r.toFixed(0)+'%</b> for road and <b>'+ra.toFixed(0)+'%</b> for rail at the identical level. '+
+    'A decibel of aircraft noise is roughly <b>'+ratio.toFixed(1)+'×</b> as annoying as a decibel of road noise here. '+
+    'Road and rail track each other closely and cross near 54 dB — the old assumption that rail is markedly less annoying does not survive the newer evidence.';
+
+  document.getElementById('caveat').innerHTML=
+    '%HA is a population estimate, not an individual verdict, and the curves are tentative exposure-response relations (moderate evidence for aircraft and rail, low for road). '+
+    'They describe annoyance at an equal averaged level — they cannot capture how an intermittent overflight or freight pass disturbs differently from a steady road hum at the same L<sub>den</sub>.';
+  document.getElementById('src').textContent=
+    'Source · %HA functions for road, rail and aircraft per Directive (EU) 2020/367, Annex III, after Guski, Schreckenberg & Schuemer (2017), WHO ENG systematic review; 10% highly-annoyed benchmark per WHO (2018). Accessed 2026-07-13.';
+  draw(L);
+  fitFrame();
+}
+
+function draw(Lsel){
+  var W=520,H=250, padL=42,padR=14,padT=16,padB=40, x0=40,x1=80, y0=0,y1=80;
+  var faint=cssv('--rule'), ink3=cssv('--ink-3'), card=cssv('--card'),
+      road=cssv('--road'), rail=cssv('--rail'), air=cssv('--air'), bench=cssv('--bench');
+  function X(v){ return padL+(v-x0)/(x1-x0)*(W-padL-padR); }
+  function Y(v){ return padT+(y1-v)/(y1-y0)*(H-padT-padB); }
+
+  var g='';
+  /* y gridlines every 10% */
+  for(var t=0; t<=y1; t+=10){
+    var yy=Y(t).toFixed(1);
+    g+='<line x1="'+padL+'" y1="'+yy+'" x2="'+(W-padR)+'" y2="'+yy+'" stroke="'+faint+'" stroke-width="1"/>';
+    g+='<text x="'+(padL-8)+'" y="'+(+yy+4)+'" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="10" fill="'+ink3+'">'+t+'</text>';
+  }
+  /* x ticks */
+  [40,45,50,55,60,65,70,75,80].forEach(function(xt){
+    g+='<text x="'+X(xt).toFixed(1)+'" y="'+(H-padB+18)+'" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="'+ink3+'">'+xt+'</text>';
+  });
+
+  /* 10% WHO benchmark */
+  var yB=Y(BENCH).toFixed(1);
+  g+='<line x1="'+padL+'" y1="'+yB+'" x2="'+(W-padR)+'" y2="'+yB+'" stroke="'+bench+'" stroke-width="1.2" stroke-dasharray="5 3"/>';
+  g+='<text x="'+(padL+4)+'" y="'+(+yB-4)+'" font-family="IBM Plex Mono,monospace" font-size="9" fill="'+bench+'">10% highly annoyed · WHO level of concern</text>';
+
+  /* curves */
+  function curve(fn,col){
+    var d='';
+    for(var v=x0; v<=x1+0.001; v+=1){
+      var yv=Math.max(0,Math.min(y1,fn(v)));
+      d+=(v===x0?'M':'L')+X(v).toFixed(1)+' '+Y(yv).toFixed(1)+' ';
+    }
+    return '<path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="2.3"/>';
+  }
+  g+=curve(HA.air, air);
+  g+=curve(HA.rail, rail);
+  g+=curve(HA.road, road);
+
+  /* marker at selected Lden */
+  var px=X(Lsel).toFixed(1);
+  g+='<line x1="'+px+'" y1="'+padT+'" x2="'+px+'" y2="'+(H-padB)+'" stroke="'+ink3+'" stroke-width="1" opacity="0.4"/>';
+  [['air',air],['rail',rail],['road',road]].forEach(function(m){
+    var yv=Math.max(0,Math.min(y1,HA[m[0]](Lsel)));
+    g+='<circle cx="'+px+'" cy="'+Y(yv).toFixed(1)+'" r="4.6" fill="'+m[1]+'" stroke="'+card+'" stroke-width="1.8"/>';
+  });
+
+  g+='<text x="'+((padL+W-padR)/2)+'" y="'+(H-6)+'" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="'+ink3+'">L den · decibels</text>';
+  document.getElementById('dsvg').innerHTML=g;
+}
+
+/* Self-fit: match the parent iframe to content height (same-origin only). */
+function fitFrame(){
+  try{ var f=window.frameElement; if(f){ f.style.height=(document.documentElement.scrollHeight+4)+'px'; } }catch(e){}
+}
+window.addEventListener('load', fitFrame);
+window.addEventListener('resize', fitFrame);
+if(document.fonts && document.fonts.ready){ document.fonts.ready.then(fitFrame); }
+
+update();
+</script>
+</body>
+</html>

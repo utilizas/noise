@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dB(A) versus spectrum comparator</title>
+<style>
+:root{
+  --paper:#faf7f0; --ink:#1e1b16; --ink-2:#4a463d; --ink-3:#7a7466;
+  --rule:#d9d1c0; --rule-2:#c8bfa9; --risk:#9a3b2e; --calm:#2f5d57;
+  --amber:#b07515; --card:#faf7f0;
+  --barZ:#c8bfa9; --barA:#9a3b2e; --curve:#b07515; --outside:#8a8474;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#211e16; --ink:#ece6d8; --ink-2:#b8b1a0; --ink-3:#807a6b;
+    --rule:#332f24; --rule-2:#403a2c; --risk:#e0836f; --calm:#7db8ad;
+    --amber:#d5a04a; --card:#211e16;
+    --barZ:#403a2c; --barA:#e0836f; --curve:#d5a04a; --outside:#6b6556;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0; padding:18px; background:var(--paper); color:var(--ink);
+  font-family:"Newsreader",Georgia,serif; font-size:15px; line-height:1.5}
+.label{font-family:"IBM Plex Mono",monospace; font-size:.6rem; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--risk); margin:0 0 .15rem}
+h4{font-family:"Fraunces",Georgia,serif; font-weight:500; margin:0 0 .9rem; font-size:1.18rem}
+
+#spec{width:100%; height:auto; display:block; margin:.2rem 0 .3rem}
+
+.readout{display:flex; gap:1.4rem; flex-wrap:wrap; margin:.4rem 0 1rem; padding:.85rem 0;
+  border-top:1px solid var(--rule); border-bottom:1px solid var(--rule)}
+.stat{min-width:98px}
+.stat .v{font-family:"Fraunces",serif; font-size:1.7rem; font-weight:600; line-height:1}
+.stat .v.z{color:var(--ink-2)} .stat .v.a{color:var(--risk)} .stat .v.g{color:var(--amber)}
+.stat .k{font-family:"IBM Plex Mono",monospace; font-size:.58rem; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--ink-3); margin-top:.3rem}
+
+.sliders{display:grid; grid-template-columns:repeat(9,1fr); gap:.3rem; margin:.4rem 0 .2rem}
+.s{display:flex; flex-direction:column; align-items:center; gap:.25rem}
+.s input[type=range]{writing-mode:vertical-lr; direction:rtl; width:20px; height:78px; accent-color:var(--risk); cursor:pointer}
+.s .bf{font-family:"IBM Plex Mono",monospace; font-size:.54rem; color:var(--ink-3); text-align:center; line-height:1.1}
+.s .bv{font-family:"IBM Plex Mono",monospace; font-size:.56rem; color:var(--ink-2)}
+
+.presets{margin:.8rem 0 0}
+.presets .pl{font-family:"IBM Plex Mono",monospace; font-size:.6rem; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--ink-3); margin:0 0 .4rem}
+.chips{display:flex; flex-wrap:wrap; gap:.4rem}
+.chip{font-family:"Newsreader",serif; font-size:.82rem; padding:.3rem .7rem; background:transparent;
+  border:1px solid var(--rule-2); border-radius:14px; color:var(--ink-2); cursor:pointer}
+.chip:hover{border-color:var(--risk); color:var(--ink)}
+.chip.on{background:var(--risk); color:#fff; border-color:var(--risk)}
+
+.interp{font-size:.95rem; color:var(--ink-2); margin:.9rem 0 0; min-height:2.6em}
+.interp b{color:var(--ink); font-weight:500}
+.caveat{font-size:.76rem; color:var(--ink-3); margin:1rem 0 0; line-height:1.5;
+  border-top:1px dashed var(--rule-2); padding-top:.7rem}
+.src{font-family:"IBM Plex Mono",monospace; font-size:.64rem; color:var(--ink-3); margin-top:.5rem}
+.leg{display:flex; gap:1.1rem; flex-wrap:wrap; font-family:"IBM Plex Mono",monospace;
+  font-size:.62rem; color:var(--ink-3); margin:.2rem 0 0}
+.leg span{display:inline-flex; align-items:center; gap:.35rem}
+.sw{width:11px; height:11px; border-radius:2px; display:inline-block}
+</style>
+</head>
+<body>
+<p class="label">Interactive · computes on your input</p>
+<h4>dB(A) versus spectrum — where the low-frequency hum goes</h4>
+
+<svg id="spec" viewBox="0 0 520 250" role="img" aria-labelledby="stitle">
+  <title id="stitle">Octave-band spectrum showing physical (unweighted) level and the A-weighted contribution of each band</title>
+</svg>
+
+<div class="leg">
+  <span><span class="sw" style="background:var(--barZ)"></span>physical level (unweighted, Z)</span>
+  <span><span class="sw" style="background:var(--barA)"></span>after A-weighting</span>
+  <span><span class="sw" style="background:var(--curve)"></span>A-weighting curve</span>
+</div>
+
+<div class="readout">
+  <div class="stat"><div class="v z" id="vz">—</div><div class="k">Unweighted · dB</div></div>
+  <div class="stat"><div class="v a" id="va">—</div><div class="k">A-weighted · dB(A)</div></div>
+  <div class="stat"><div class="v g" id="vg">—</div><div class="k">Gap discarded</div></div>
+</div>
+
+<div class="sliders" id="sliders"></div>
+
+<div class="presets">
+  <p class="pl">Example spectra</p>
+  <div class="chips" id="chips"></div>
+</div>
+
+<p class="interp" id="interp"></p>
+<p class="caveat" id="caveat"></p>
+<p class="src" id="src"></p>
+
+<script>
+/* ============================================================
+   dB(A)-vs-spectrum comparator.
+   A-weighting from the IEC 61672-1 analytical expression;
+   band levels combined on an energy basis:
+     L_total = 10·log10( Σ 10^(L_i/10) )
+   The A-weighted total adds the per-band A-weighting before summing.
+   The gap between the two is the low-frequency energy the single
+   dB(A) figure discards — the chapter's argument, made computable.
+   ============================================================ */
+
+var BANDS = [31.5, 63, 125, 250, 500, 1000, 2000, 4000, 8000];
+var END_FLOOR = 63; // END computes 63 Hz–8 kHz octave bands; 31.5 Hz lies below
+
+function Aweight(f){
+  var f2=f*f;
+  var num = Math.pow(12194,2)*Math.pow(f,4);
+  var den = (f2+Math.pow(20.6,2)) * Math.sqrt((f2+Math.pow(107.7,2))*(f2+Math.pow(737.9,2))) * (f2+Math.pow(12194,2));
+  return 20*Math.log10(num/den) + 2.00;
+}
+var AW = BANDS.map(Aweight);
+
+var PRESETS = {
+  'Low-frequency hum (data centre)':[75,78,52,46,42,40,37,34,30],
+  'Road traffic':[58,62,66,68,70,70,66,60,52],
+  'Balanced (equal bands)':[60,60,60,60,60,60,60,60,60]
+};
+var levels = PRESETS['Low-frequency hum (data centre)'].slice();
+var active = 'Low-frequency hum (data centre)';
+
+function totals(){
+  var z=0,a=0;
+  levels.forEach(function(L,i){ z+=Math.pow(10,L/10); a+=Math.pow(10,(L+AW[i])/10); });
+  return {Z:10*Math.log10(z), A:10*Math.log10(a)};
+}
+
+/* ---------- sliders ---------- */
+var sl = document.getElementById('sliders');
+BANDS.forEach(function(f,i){
+  var wrap=document.createElement('div'); wrap.className='s';
+  var flabel = f>=1000 ? (f/1000)+'k' : f;
+  wrap.innerHTML =
+    '<input type="range" id="in-'+i+'" min="0" max="90" step="1" value="'+levels[i]+'">'+
+    '<div class="bv" id="bv-'+i+'">'+levels[i]+'</div>'+
+    '<div class="bf">'+flabel+'<br>Hz</div>';
+  sl.appendChild(wrap);
+  wrap.querySelector('input').addEventListener('input', function(e){
+    levels[i]=+e.target.value;
+    document.getElementById('bv-'+i).textContent=e.target.value;
+    active=null; syncChips(); update();
+  });
+});
+
+/* ---------- preset chips ---------- */
+var chips=document.getElementById('chips');
+Object.keys(PRESETS).forEach(function(name){
+  var b=document.createElement('button'); b.className='chip'; b.textContent=name;
+  b.addEventListener('click', function(){
+    levels=PRESETS[name].slice();
+    levels.forEach(function(L,i){ document.getElementById('in-'+i).value=L; document.getElementById('bv-'+i).textContent=L; });
+    active=name; syncChips(); update();
+  });
+  chips.appendChild(b);
+});
+function syncChips(){ [].forEach.call(chips.children,function(c){ c.classList.toggle('on', c.textContent===active); }); }
+
+/* ---------- draw spectrum ---------- */
+function cssv(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+function draw(){
+  var W=520,H=250, padL=34,padR=44,padT=14,padB=34;
+  var yMax=90, plotW=W-padL-padR, plotH=H-padT-padB;
+  var n=BANDS.length, slot=plotW/n, bw=slot*0.54;
+  var barZ=cssv('--barZ'), barA=cssv('--barA'), curve=cssv('--curve'),
+      ink3=cssv('--ink-3'), faint=cssv('--rule'), outside=cssv('--outside');
+
+  function X(i){ return padL + slot*i + slot/2; }
+  function Y(L){ return padT + (yMax-L)/yMax*plotH; }
+  // right axis for weighting (−40..+5 dB)
+  var wMin=-42, wMax=6;
+  function Yw(a){ return padT + (wMax-a)/(wMax-wMin)*plotH; }
+
+  var g='';
+  // y gridlines (level)
+  [0,30,60,90].forEach(function(L){
+    var y=Y(L).toFixed(1);
+    g+='<line x1="'+padL+'" y1="'+y+'" x2="'+(W-padR)+'" y2="'+y+'" stroke="'+faint+'" stroke-width="1"/>';
+    g+='<text x="'+(padL-5)+'" y="'+(+y+3)+'" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="9" fill="'+ink3+'">'+L+'</text>';
+  });
+  // right-axis ticks (weighting)
+  [0,-20,-40].forEach(function(a){
+    var y=Yw(a).toFixed(1);
+    g+='<text x="'+(W-padR+5)+'" y="'+(+y+3)+'" text-anchor="start" font-family="IBM Plex Mono,monospace" font-size="9" fill="'+curve+'">'+a+'</text>';
+  });
+
+  // shade sub-END band (31.5 Hz)
+  var sx = padL + slot*0 ;
+  g+='<rect x="'+sx.toFixed(1)+'" y="'+padT+'" width="'+slot.toFixed(1)+'" height="'+plotH+'" fill="'+outside+'" opacity="0.10"/>';
+  g+='<text x="'+(sx+slot/2).toFixed(1)+'" y="'+(padT+plotH-4)+'" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="7.5" fill="'+outside+'">outside END</text>';
+
+  // bars
+  levels.forEach(function(L,i){
+    var x=X(i), aEff=Math.max(0, L+AW[i]);
+    // physical (Z) bar
+    g+='<rect x="'+(x-bw/2).toFixed(1)+'" y="'+Y(L).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+(Y(0)-Y(L)).toFixed(1)+'" fill="'+barZ+'"/>';
+    // A-weighted contribution bar (overlaid, narrower)
+    g+='<rect x="'+(x-bw/2*0.62).toFixed(1)+'" y="'+Y(aEff).toFixed(1)+'" width="'+(bw*0.62).toFixed(1)+'" height="'+(Y(0)-Y(aEff)).toFixed(1)+'" fill="'+barA+'"/>';
+    // x label
+    var flabel = BANDS[i]>=1000 ? (BANDS[i]/1000)+'k' : BANDS[i];
+    g+='<text x="'+x.toFixed(1)+'" y="'+(H-padB+13)+'" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="'+ink3+'">'+flabel+'</text>';
+  });
+
+  // A-weighting curve (right axis)
+  var pts = BANDS.map(function(f,i){ return X(i).toFixed(1)+','+Yw(AW[i]).toFixed(1); }).join(' ');
+  g+='<polyline points="'+pts+'" fill="none" stroke="'+curve+'" stroke-width="1.6" stroke-dasharray="4 2"/>';
+  BANDS.forEach(function(f,i){ g+='<circle cx="'+X(i).toFixed(1)+'" cy="'+Yw(AW[i]).toFixed(1)+'" r="1.8" fill="'+curve+'"/>'; });
+
+  // axis titles
+  g+='<text x="'+(padL-5)+'" y="'+(padT-4)+'" text-anchor="start" font-family="IBM Plex Mono,monospace" font-size="8" fill="'+ink3+'">dB</text>';
+  g+='<text x="'+(W-padR+5)+'" y="'+(padT-4)+'" text-anchor="start" font-family="IBM Plex Mono,monospace" font-size="8" fill="'+curve+'">A-wt</text>';
+  g+='<text x="'+(padL+plotW/2)+'" y="'+(H-3)+'" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8.5" fill="'+ink3+'">octave-band centre frequency</text>';
+
+  document.getElementById('spec').innerHTML=g;
+}
+
+/* ---------- update ---------- */
+function update(){
+  var t=totals(), gap=t.Z-t.A;
+  document.getElementById('vz').textContent=t.Z.toFixed(1);
+  document.getElementById('va').textContent=t.A.toFixed(1);
+  document.getElementById('vg').textContent=(gap>=0?'−':'+')+Math.abs(gap).toFixed(1)+' dB';
+
+  // biggest single contributor to the gap
+  var maxAtt=0, maxBand=null;
+  levels.forEach(function(L,i){
+    var contribZ=Math.pow(10,L/10), contribA=Math.pow(10,(L+AW[i])/10);
+    var lost=contribZ-contribA;
+    if(lost>maxAtt){maxAtt=lost; maxBand=i;}
+  });
+  var lead = active ? ('<b>'+active+'</b>: ') : '';
+  if(gap>8){
+    document.getElementById('interp').innerHTML = lead+'the physical level is <b>'+t.Z.toFixed(1)+' dB</b>, but the single A-weighted figure reads <b>'+t.A.toFixed(1)+' dB(A)</b> — <b>'+gap.toFixed(1)+' dB lower</b>. Most of that discarded energy is the '+BANDS[maxBand]+' Hz band, cut by '+Math.abs(AW[maxBand]).toFixed(0)+' dB before it reaches the number a regulator sees.';
+  } else {
+    document.getElementById('interp').innerHTML = lead+'physical level <b>'+t.Z.toFixed(1)+' dB</b> and A-weighted <b>'+t.A.toFixed(1)+' dB(A)</b> are close (gap '+gap.toFixed(1)+' dB): with the energy in the mid frequencies, A-weighting changes little. Push the low bands up to open the gap.';
+  }
+  draw();
+}
+
+document.getElementById('caveat').innerHTML =
+  'Levels combine on an energy basis; A-weighting is the IEC 61672-1 curve (e.g. −26 dB at 63 Hz, −16 dB at 125 Hz, 0 dB at 1 kHz). The single dB(A) figure is then averaged across day, evening and night as L<sub>den</sub>, removing the time dimension too — and the END computes only the 63 Hz–8 kHz octave bands, so the 31.5 Hz band shown here lies <b>outside the regulatory calculation entirely</b>.';
+document.getElementById('src').textContent =
+  'Source · A-weighting per IEC 61672-1:2013 (Annex E), computed from the analytical expression; band floor per Directive 2002/49/EC (END), Annex II.';
+
+draw(); update(); syncChips();
+</script>
+</body>
+</html>

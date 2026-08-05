@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Classroom intelligibility versus background noise</title>
+<style>
+/* ------------------------------------------------------------------ *
+ *  Noise and Risk · Ch. 8 widget — classroom speech intelligibility
+ *  Self-contained. STI via the simplified single-band modulation
+ *  transfer function of IEC 60268-16; classroom targets after ANSI/ASA
+ *  S12.60. Palette/fonts mirror the monograph (oxblood --risk / teal
+ *  --calm; Fraunces / Newsreader / IBM Plex Mono with fallbacks).
+ *  Three-layer theme: OS preference, overridden by a parent postMessage.
+ * ------------------------------------------------------------------ */
+:root{
+  /* light theme (default) */
+  --bg:        #f7f4ee;
+  --panel:     #fffdf8;
+  --ink:       #23201c;
+  --muted:     #6b6459;
+  --line:      #d9d2c4;
+  --risk:      #6f2331;   /* oxblood */
+  --calm:      #2c6e6a;   /* teal    */
+  --track:     #e7e0d2;
+  --grid:      #e2dccd;
+  --z-bad:     #9c4a4a;
+  --z-poor:    #b8823f;
+  --z-fair:    #b9a94a;
+  --z-good:    #5f8f5a;
+  --z-exc:     #2c6e6a;
+  --shadow:    0 1px 2px rgba(0,0,0,.06), 0 6px 20px rgba(0,0,0,.05);
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body:    "Newsreader", Georgia, serif;
+  --font-mono:    "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:      #1a1815;
+    --panel:   #232019;
+    --ink:     #ece6da;
+    --muted:   #9d968a;
+    --line:    #37322a;
+    --risk:    #e0788a;
+    --calm:    #6fb7b0;
+    --track:   #2e2a22;
+    --grid:    #322d25;
+    --z-bad:   #cf7d7d;
+    --z-poor:  #d8ab6d;
+    --z-fair:  #d6c774;
+    --z-good:  #90bd8a;
+    --z-exc:   #6fb7b0;
+    --shadow:  0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1a1815; --panel:#232019; --ink:#ece6da; --muted:#9d968a; --line:#37322a;
+  --risk:#e0788a; --calm:#6fb7b0; --track:#2e2a22; --grid:#322d25;
+  --z-bad:#cf7d7d; --z-poor:#d8ab6d; --z-fair:#d6c774; --z-good:#90bd8a; --z-exc:#6fb7b0;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body)}
+.wrap{max-width:680px;margin:0 auto;padding:18px 16px 22px}
+.frame{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:18px 18px 16px}
+h1{font-family:var(--font-display);font-weight:600;font-size:1.18rem;line-height:1.25;margin:0 0 2px}
+.sub{color:var(--muted);font-size:.86rem;margin:0 0 16px}
+.controls{display:grid;gap:14px;margin-bottom:8px}
+.ctrl{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:6px 12px}
+.ctrl label{font-size:.92rem}
+.ctrl .val{font-family:var(--font-mono);font-size:.92rem;color:var(--calm);white-space:nowrap}
+.ctrl input[type=range]{grid-column:1 / -1;width:100%;accent-color:var(--risk);height:22px}
+.readout{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0 4px}
+.stat{background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:9px 11px}
+.stat .k{font-size:.72rem;letter-spacing:.02em;text-transform:uppercase;color:var(--muted)}
+.stat .v{font-family:var(--font-mono);font-size:1.35rem;line-height:1.1;margin-top:2px}
+.stat .v small{font-size:.8rem;color:var(--muted)}
+.band{font-family:var(--font-display);font-weight:600}
+.scale{margin:16px 0 4px}
+.scale .bar{position:relative;height:30px;border-radius:6px;overflow:hidden;border:1px solid var(--line);display:flex}
+.scale .bar span{display:flex;align-items:center;justify-content:center;font-size:.66rem;color:#fff;opacity:.92;min-width:0;overflow:hidden}
+/* widths proportional to the true STI ranges (0–.30–.45–.60–.75–1.00) */
+.scale .z0{background:var(--z-bad);flex:30 0 0}.scale .z1{background:var(--z-poor);flex:15 0 0}
+.scale .z2{background:var(--z-fair);flex:15 0 0}.scale .z3{background:var(--z-good);flex:15 0 0}.scale .z4{background:var(--z-exc);flex:25 0 0}
+.scale .marker{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);transition:left .08s linear}
+.scale .marker::after{content:"";position:absolute;top:-5px;left:-4px;border:5px solid transparent;border-top-color:var(--ink)}
+.scale .thr{position:absolute;top:-4px;bottom:-4px;width:0;border-left:2px dashed var(--muted)}
+.scale .ticks{position:relative;height:14px;font-family:var(--font-mono);font-size:.64rem;color:var(--muted);margin-top:3px}
+.scale .ticks span{position:absolute;transform:translateX(-50%);top:0}
+.scale .ticks span:first-child{transform:none}
+.scale .ticks span:last-child{transform:translateX(-100%)}
+.chart{margin-top:14px}
+svg{display:block;width:100%;height:auto;font-family:var(--font-mono)}
+.compliance{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+.compliance h2{font-family:var(--font-display);font-size:.82rem;font-weight:600;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:6px 16px}
+.chk{display:flex;align-items:center;gap:8px;font-size:.86rem}
+.chk .dot{width:10px;height:10px;border-radius:50%;flex:none}
+.chk .ok{background:var(--z-good)}.chk .no{background:var(--risk)}
+.chk .lab{color:var(--muted)}.chk .lab b{color:var(--ink);font-family:var(--font-mono);font-weight:500}
+.note{font-size:.8rem;color:var(--muted);margin-top:14px;line-height:1.45}
+.note b{color:var(--ink);font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="frame">
+    <h1>What the child hears</h1>
+    <p class="sub">Speech intelligibility depends less on how loud a room is than on the margin between the teacher&rsquo;s voice and the background&nbsp;&mdash; and on how long the room rings. Move the controls.</p>
+
+    <div class="controls">
+      <div class="ctrl">
+        <label for="noise">Background noise level</label>
+        <span class="val" id="noise-v">45&nbsp;dB(A)</span>
+        <input id="noise" type="range" min="30" max="70" step="1" value="45">
+      </div>
+      <div class="ctrl">
+        <label for="rt">Reverberation time (RT<sub>60</sub>)</label>
+        <span class="val" id="rt-v">0.60&nbsp;s</span>
+        <input id="rt" type="range" min="0.3" max="1.5" step="0.05" value="0.6">
+      </div>
+      <div class="ctrl">
+        <label for="speech">Teacher&rsquo;s voice at the child</label>
+        <span class="val" id="speech-v">60&nbsp;dB(A)</span>
+        <input id="speech" type="range" min="50" max="72" step="1" value="60">
+      </div>
+    </div>
+
+    <div class="readout">
+      <div class="stat"><div class="k">Speech-to-noise</div><div class="v" id="snr">+15<small>&nbsp;dB</small></div></div>
+      <div class="stat"><div class="k">STI</div><div class="v" id="sti">0.67</div></div>
+      <div class="stat"><div class="k">Intelligibility</div><div class="v band" id="bandlab" style="font-size:1.05rem">Good</div></div>
+    </div>
+
+    <div class="scale">
+      <div class="bar" id="bar">
+        <span class="z0">Bad</span><span class="z1">Poor</span><span class="z2">Fair</span><span class="z3">Good</span><span class="z4">Excellent</span>
+        <div class="thr" id="thr" title="ANSI S12.60 classroom minimum, STI 0.60"></div>
+        <div class="marker" id="mark"></div>
+      </div>
+      <div class="ticks"><span style="left:0%">0.00</span><span style="left:30%">0.30</span><span style="left:45%">0.45</span><span style="left:60%">0.60</span><span style="left:75%">0.75</span><span style="left:100%">1.00</span></div>
+    </div>
+
+    <div class="chart">
+      <svg id="plot" viewBox="0 0 640 220" role="img" aria-label="STI against background noise level"></svg>
+    </div>
+
+    <div class="compliance">
+      <h2>Against the classroom standard (ANSI/ASA S12.60)</h2>
+      <div class="checks">
+        <div class="chk"><span class="dot" id="d-noise"></span><span class="lab">Background <b>&le; 35 dB(A)</b></span></div>
+        <div class="chk"><span class="dot" id="d-rt"></span><span class="lab">RT<sub>60</sub> <b>&le; 0.6 s</b></span></div>
+        <div class="chk"><span class="dot" id="d-snr"></span><span class="lab">Speech-to-noise <b>&ge; +15 dB</b></span></div>
+        <div class="chk"><span class="dot" id="d-sti"></span><span class="lab">STI <b>&ge; 0.60</b></span></div>
+      </div>
+    </div>
+
+    <p class="note"><b>Reading it.</b> The teacher speaking at a normal effort reaches a nearby child at roughly 60&nbsp;dB(A). Raise the background or lengthen the reverberation and the STI falls&nbsp;&mdash; a room can be perfectly quiet and still ring too long to be clearly understood. Children need a wider margin than adults: the standard sets a speech-to-noise ratio of at least +15&nbsp;dB for core learning spaces, alongside a background at or below 35&nbsp;dB(A) and a reverberation time at or below 0.6&nbsp;s.</p>
+  </div>
+</div>
+
+<script>
+/* ---- STI: simplified single-band MTF (IEC 60268-16) ---------------- */
+var Fm = [0.63,0.8,1.0,1.25,1.6,2.0,2.5,3.15,4.0,5.0,6.3,8.0,10.0,12.5];
+function computeSTI(T, snr){
+  var acc = 0;
+  for (var i=0;i<Fm.length;i++){
+    var F = Fm[i];
+    var rev = 1/Math.sqrt(1+Math.pow(2*Math.PI*F*T/13.8,2));
+    var noi = 1/(1+Math.pow(10,-snr/10));
+    var m = Math.min(rev*noi, 0.9999);
+    var x = 10*Math.log10(m/(1-m));
+    x = Math.max(-15, Math.min(15, x));
+    acc += x;
+  }
+  var xbar = acc/Fm.length;
+  return Math.max(0, Math.min(1, (xbar+15)/30));
+}
+function bandOf(s){ return s>=0.75?'Excellent':s>=0.60?'Good':s>=0.45?'Fair':s>=0.30?'Poor':'Bad'; }
+function bandColor(s){
+  var css = s>=0.75?'--z-exc':s>=0.60?'--z-good':s>=0.45?'--z-fair':s>=0.30?'--z-poor':'--z-bad';
+  return getComputedStyle(document.documentElement).getPropertyValue(css).trim() || 'var('+css+')';
+}
+
+/* ---- elements ------------------------------------------------------ */
+var elNoise=document.getElementById('noise'), elRT=document.getElementById('rt'), elSpeech=document.getElementById('speech');
+var vNoise=document.getElementById('noise-v'), vRT=document.getElementById('rt-v'), vSpeech=document.getElementById('speech-v');
+var oSNR=document.getElementById('snr'), oSTI=document.getElementById('sti'), oBand=document.getElementById('bandlab');
+var mark=document.getElementById('mark'), thr=document.getElementById('thr');
+var plot=document.getElementById('plot');
+
+/* ---- SVG chart: STI vs background level (RT, speech held) ---------- */
+var PX={l:44,r:14,t:12,b:30,w:640,h:220};
+function px(dB){ return PX.l + (dB-30)/(70-30)*(PX.w-PX.l-PX.r); }
+function py(sti){ return PX.t + (1-sti)*(PX.h-PX.t-PX.b); }
+function drawPlot(T, speech, curNoise, curSTI){
+  var g='';
+  // grid + y labels
+  var ys=[0,0.3,0.45,0.6,0.75,1.0];
+  for(var i=0;i<ys.length;i++){
+    var y=py(ys[i]);
+    g+='<line x1="'+PX.l+'" y1="'+y+'" x2="'+(PX.w-PX.r)+'" y2="'+y+'" stroke="var(--grid)" stroke-width="1"/>';
+    g+='<text x="'+(PX.l-6)+'" y="'+(y+3)+'" text-anchor="end" font-size="10" fill="var(--muted)">'+ys[i].toFixed(2)+'</text>';
+  }
+  // x labels
+  for(var dB=30;dB<=70;dB+=10){
+    g+='<text x="'+px(dB)+'" y="'+(PX.h-10)+'" text-anchor="middle" font-size="10" fill="var(--muted)">'+dB+'</text>';
+  }
+  g+='<text x="'+((PX.l+PX.w-PX.r)/2)+'" y="'+(PX.h+0)+'" text-anchor="middle" font-size="10" fill="var(--muted)">background level, dB(A)</text>';
+  // STI 0.60 threshold
+  g+='<line x1="'+PX.l+'" y1="'+py(0.6)+'" x2="'+(PX.w-PX.r)+'" y2="'+py(0.6)+'" stroke="var(--muted)" stroke-width="1.2" stroke-dasharray="4 4"/>';
+  // curve
+  var d='';
+  for(var b=30;b<=70;b+=1){
+    var s=computeSTI(T, speech-b);
+    d+=(b===30?'M':'L')+px(b).toFixed(1)+' '+py(s).toFixed(1)+' ';
+  }
+  g+='<path d="'+d+'" fill="none" stroke="var(--risk)" stroke-width="2.2"/>';
+  // current point
+  g+='<circle cx="'+px(curNoise).toFixed(1)+'" cy="'+py(curSTI).toFixed(1)+'" r="4.5" fill="var(--calm)" stroke="var(--panel)" stroke-width="1.5"/>';
+  plot.innerHTML=g;
+}
+
+/* ---- update -------------------------------------------------------- */
+function setDot(id, ok){
+  var d=document.getElementById(id);
+  d.className='dot '+(ok?'ok':'no');
+}
+function update(){
+  var noise=+elNoise.value, T=+elRT.value, speech=+elSpeech.value;
+  var snr=speech-noise;
+  var sti=computeSTI(T, snr);
+  vNoise.innerHTML=noise+'&nbsp;dB(A)';
+  vRT.innerHTML=T.toFixed(2)+'&nbsp;s';
+  vSpeech.innerHTML=speech+'&nbsp;dB(A)';
+  oSNR.innerHTML=(snr>=0?'+':'')+snr+'<small>&nbsp;dB</small>';
+  oSTI.textContent=sti.toFixed(2);
+  oBand.textContent=bandOf(sti);
+  oBand.style.color=bandColor(sti);
+  mark.style.left=(sti*100)+'%';
+  thr.style.left='60%';
+  setDot('d-noise', noise<=35);
+  setDot('d-rt', T<=0.6+1e-9);
+  setDot('d-snr', snr>=15);
+  setDot('d-sti', sti>=0.60);
+  drawPlot(T, speech, noise, sti);
+  fitFrame();
+}
+[elNoise,elRT,elSpeech].forEach(function(el){ el.addEventListener('input',update); });
+
+/* ---- theme sync (three-layer): OS pref | parent postMessage -------- */
+window.addEventListener('message',function(e){
+  var d=e.data||{};
+  if(d && d.type==='theme' && (d.theme==='light'||d.theme==='dark')){
+    document.documentElement.setAttribute('data-theme', d.theme);
+    update();
+  }
+});
+
+/* ---- self-resize --------------------------------------------------- */
+function fitFrame(){
+  var h=Math.ceil(document.querySelector('.wrap').getBoundingClientRect().height)+4;
+  if(window.parent && window.parent!==window){
+    window.parent.postMessage({type:'resize', frame:'ch08-classroom-intelligibility', height:h}, '*');
+  }
+}
+window.addEventListener('load', update);
+window.addEventListener('resize', fitFrame);
+update();
+</script>
+</body>
+</html>

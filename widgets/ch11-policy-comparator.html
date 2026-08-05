@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What each regime can see</title>
+<style>
+/* Noise and Risk · Ch. 11 widget — policy comparator. For a chosen source,
+   shows how each governance regime rates it, and which cannot see it at all.
+   Self-contained; project palette/fonts; theme-sync + self-resize. */
+:root{
+  --bg:#f7f4ee; --panel:#fffdf8; --ink:#23201c; --muted:#6b6459; --line:#d9d2c4;
+  --risk:#6f2331; --calm:#2c6e6a; --amber:#b8823f; --grey:#8a8172; --wash:#efe9dc;
+  --shadow:0 1px 2px rgba(0,0,0,.05),0 6px 18px rgba(0,0,0,.045);
+  --fd:"Fraunces",Georgia,serif; --fb:"Newsreader",Georgia,serif;
+  --fm:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#1a1815; --panel:#232019; --ink:#ece6da; --muted:#9d968a; --line:#37322a;
+  --risk:#e0788a; --calm:#6fb7b0; --amber:#d8ab6d; --grey:#9d968a; --wash:#2b2720;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.32);
+}}
+:root[data-theme="dark"]{
+  --bg:#1a1815; --panel:#232019; --ink:#ece6da; --muted:#9d968a; --line:#37322a;
+  --risk:#e0788a; --calm:#6fb7b0; --amber:#d8ab6d; --grey:#9d968a; --wash:#2b2720;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.32);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fb)}
+.wrap{max-width:700px;margin:0 auto;padding:18px 16px 22px}
+.frame{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:20px 20px 16px}
+h1{font-family:var(--fd);font-weight:600;font-size:1.16rem;margin:0 0 3px}
+.sub{color:var(--muted);font-size:.86rem;margin:0 0 14px}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.chip{font-family:var(--fm);font-size:.75rem;background:var(--wash);color:var(--ink);border:1px solid var(--line);
+  border-radius:20px;padding:5px 12px;cursor:pointer}
+.chip.on{background:var(--risk);color:#fff;border-color:var(--risk)}
+.srcinfo{background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:11px 13px;margin-bottom:14px}
+.srcinfo .nm{font-family:var(--fd);font-weight:600;font-size:1.02rem}
+.srcinfo .lv{font-family:var(--fm);color:var(--calm);font-size:.82rem;margin-left:6px}
+.srcinfo .ch{font-size:.86rem;color:var(--muted);margin-top:3px}
+.head{font-family:var(--fd);font-weight:600;font-size:.98rem;margin:4px 0 12px;padding:10px 12px;border-radius:8px;background:var(--wash);border-left:4px solid var(--risk)}
+.row{display:grid;grid-template-columns:132px 1fr;gap:12px;align-items:start;padding:11px 0;border-top:1px solid var(--line)}
+.row .rg{font-family:var(--fm);font-size:.78rem}
+.row .rg small{display:block;color:var(--muted);font-size:.68rem;margin-top:2px}
+.badge{display:inline-block;font-family:var(--fm);font-size:.68rem;padding:2px 8px;border-radius:5px;color:#fff;margin-bottom:4px}
+.b-ok{background:var(--calm)}.b-over{background:var(--amber)}.b-map{background:var(--grey)}
+.b-inv{background:var(--grey)}.b-gap{background:var(--grey)}.b-ex{background:var(--risk)}
+.b-flag{background:transparent;color:var(--risk);border:1px solid var(--risk)}
+.rz{font-size:.86rem;line-height:1.45}
+.rz b{font-family:var(--fm);font-weight:500}
+.ref{border-top:2px solid var(--line)}
+.note{font-size:.78rem;color:var(--muted);margin-top:14px;line-height:1.45}
+.note b{color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="frame">
+  <h1>What each regime can see</h1>
+  <p class="sub">Pick a noise source at a home&rsquo;s window at night, and read how the three governing instruments rate it &mdash; and whether they can register it at all. Levels are the sound at the nearest fa&ccedil;ade, in A-weighted decibels.</p>
+
+  <div class="chips" id="chips"></div>
+
+  <div class="srcinfo" id="srcinfo"></div>
+  <div class="head" id="head"></div>
+
+  <div id="rows"></div>
+
+  <p class="note"><b>How to read it.</b> The WHO values are health-based recommendations, not law. The European directive maps and plans but sets no limit to breach. Spain&rsquo;s binding decree works in A-weighted decibels too, but adds correction terms for a tonal or low-frequency character &mdash; the +K<sub>t</sub> and +K<sub>f</sub> &mdash; which is why it alone can catch a hum that sits, on the plain meter, below the limit. Assessed against the residential night quality objective of 55&nbsp;dB; a source-specific emitter limit can be stricter still.</p>
+</div></div>
+
+<script>
+var SRC=[
+ {id:'road', nm:'Busy road', lnight:52, kt:0, kf:0, who:45, char:'Broadband and steady \u2014 the classic mapped source.'},
+ {id:'air',  nm:'Night flights', lnight:44, kt:0, kf:0, who:40, char:'Intermittent overflights \u2014 per decibel, the most annoying transport source.'},
+ {id:'night',nm:'Nightlife terraces', lnight:50, kt:0, kf:0, who:null, char:'Voices and music, impulsive and concentrated in the centre.'},
+ {id:'heat', nm:'Heat pump on the party wall', lnight:46, kt:6, kf:2, who:null, char:'A steady tonal whine from the compressor \u2014 close, and low.'},
+ {id:'data', nm:'Data-centre hum', lnight:48, kt:6, kf:4, who:null, char:'A continuous low-frequency tone, day and night, never pausing.'},
+ {id:'wind', nm:'Wind turbine', lnight:40, kt:2, kf:2, who:null, char:'An amplitude-modulated swish with a low-frequency component.'},
+];
+var LIMIT=55; // residential night quality objective, RD 1367/2007
+var cur='data';
+
+function whoR(s){
+  if(s.who===null) return {b:'b-gap',lab:'No value',t:'The guidelines set <b>no value for this source</b> at all \u2014 it falls outside their categories.'};
+  if(s.lnight>s.who) return {b:'b-over',lab:'Above guideline',t:'At <b>'+s.lnight+' dB</b> it is above the <b>'+s.who+' dB</b> night guideline \u2014 but the guideline is advisory, not law.'};
+  return {b:'b-ok',lab:'Within guideline',t:'At <b>'+s.lnight+' dB</b> it sits within the <b>'+s.who+' dB</b> night guideline.'};
+}
+function endR(s){
+  if(s.lnight>=50) return {b:'b-map',lab:'Mapped, no limit',t:'At or above the <b>50 dB</b> night reporting threshold, so it is mapped \u2014 but the directive sets <b>no limit to breach</b>.'};
+  return {b:'b-inv',lab:'Below the radar',t:'At <b>'+s.lnight+' dB</b> it falls below the <b>50 dB</b> reporting threshold \u2014 not even mapped.'};
+}
+function rdR(s){
+  var a=s.lnight+s.kt+s.kf;
+  if(a>LIMIT) return {b:'b-ex',lab:'Binding breach',t:'Assessed at <b>'+a+' dB</b> ('+s.lnight+' + '+(s.kt+s.kf)+' for tone and low frequency) \u2014 <b>above the '+LIMIT+' dB limit</b>. The correction terms make the hum visible.',a:a};
+  var extra=s.kt+s.kf;
+  return {b:'b-ok',lab:'Compliant',t:'Assessed at <b>'+a+' dB</b>'+(extra? ' ('+s.lnight+' + '+extra+' for character)':'')+' \u2014 within the <b>'+LIMIT+' dB</b> limit'+(extra&&a>=LIMIT-2? ', by a hair':'')+'.',a:a};
+}
+function seeR(s){
+  var why=[];
+  if(s.kt>=4) why.push('a clear tone');
+  else if(s.kt>0) why.push('some tonality');
+  if(s.kf>=3) why.push('strong low-frequency content');
+  else if(s.kf>0) why.push('low-frequency content');
+  if(s.id==='night') why.push('its impulsive, intermittent character');
+  if(s.id==='wind') why.push('its amplitude modulation');
+  if(!why.length) why.push('its sustained level at the window');
+  return {b:'b-flag',lab:'Would register',t:'A metric attuned to how the sound is actually heard would register it, for '+why.join(' and ')+' \u2014 the very features the averaged number discards.'};
+}
+
+function render(){
+  var s=SRC.filter(function(x){return x.id===cur;})[0];
+  // chips
+  document.getElementById('chips').innerHTML=SRC.map(function(x){
+    return '<span class="chip'+(x.id===cur?' on':'')+'" data-id="'+x.id+'">'+x.nm+'</span>';}).join('');
+  document.querySelectorAll('.chip').forEach(function(c){c.addEventListener('click',function(){cur=c.getAttribute('data-id');render();});});
+  // source info
+  document.getElementById('srcinfo').innerHTML='<span class="nm">'+s.nm+'</span><span class="lv">'+s.lnight+' dB(A) at night'+
+    (s.kt||s.kf? ' \u00b7 +'+(s.kt+s.kf)+' for character':'')+'</span><div class="ch">'+s.char+'</div>';
+  // regimes
+  var rd=rdR(s), see=seeR(s);
+  var regimes=[
+    {n:'WHO ENG 2018', sub:'recommendation', r:whoR(s)},
+    {n:'END 2002/49/EC', sub:'mapping, no limit', r:endR(s)},
+    {n:'RD 1367/2007', sub:'Spain \u00b7 binding', r:rd},
+  ];
+  document.getElementById('rows').innerHTML=regimes.map(function(x){
+    return '<div class="row"><div class="rg">'+x.n+'<small>'+x.sub+'</small></div><div><span class="badge '+x.r.b+'">'+x.r.lab+'</span><div class="rz">'+x.r.t+'</div></div></div>';
+  }).join('')+'<div class="row ref"><div class="rg">A character-aware metric<small>what could see</small></div><div><span class="badge '+see.b+'">'+see.lab+'</span><div class="rz">'+see.t+'</div></div></div>';
+  // headline
+  var caught = rd.a>LIMIT;
+  var mappedOnly = s.lnight>=50;
+  var head;
+  if(caught) head='Only the correction terms catch it: invisible to the guidelines and to the directive, this source is a binding breach under the one instrument that can hear its tone.';
+  else if(s.who!==null && s.lnight>s.who) head='Above the health guideline, yet legally compliant \u2014 and '+(mappedOnly?'mapped without a limit to enforce.':'below the directive\u2019s reporting floor.');
+  else head='A real disturbance that every binding instrument rates as compliant \u2014 the failure that looks exactly like success.';
+  document.getElementById('head').textContent=head;
+  fit();
+}
+window.addEventListener('message',function(e){var d=e.data||{};
+  if(d&&d.type==='theme'&&(d.theme==='light'||d.theme==='dark')){document.documentElement.setAttribute('data-theme',d.theme);}});
+function fit(){var h=Math.ceil(document.querySelector('.wrap').getBoundingClientRect().height)+4;
+  if(window.parent&&window.parent!==window)window.parent.postMessage({type:'resize',frame:'ch11-policy-comparator',height:h},'*');}
+window.addEventListener('load',function(){render();fit();});
+window.addEventListener('resize',fit);
+render();
+</script>
+</body>
+</html>
