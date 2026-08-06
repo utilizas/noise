@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>1&nbsp; What counts as noise – Noise and Risk</title>
+<title>7&nbsp; The machine hum – Noise and Risk</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -50,8 +50,8 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./02-measuring.html" rel="next">
-<link href="./introduction.html" rel="prev">
+<link href="./08-indoor-personal.html" rel="next">
+<link href="./06-quiet-that-wasnt.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -108,7 +108,7 @@ div.csl-indent {
 
 <meta property="og:type" content="book">
 
-<meta property="og:title" content="1&nbsp; What counts as noise – Noise and Risk">
+<meta property="og:title" content="7&nbsp; The machine hum – Noise and Risk">
 
 <meta property="og:description" content="">
 
@@ -126,7 +126,7 @@ div.csl-indent {
 
 <meta name="twitter:card" content="summary_large_image">
 
-<meta name="twitter:title" content="1&nbsp; What counts as noise – Noise and Risk">
+<meta name="twitter:title" content="7&nbsp; The machine hum – Noise and Risk">
 
 <meta name="twitter:description" content="">
 
@@ -251,6 +251,35 @@ div.csl-indent {
 </script>
 
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -423,7 +452,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-what-counts.html">I. The object</a></li><li class="breadcrumb-item"><a href="./01-what-counts.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What counts as noise</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05-traffic.html">II. The sources</a></li><li class="breadcrumb-item"><a href="./07-machine-hum.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">The machine hum</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -471,16 +500,16 @@ div.csl-indent {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
  <span class="menu-text">I. The object</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./01-what-counts.html" class="sidebar-item-text sidebar-link active">
+  <a href="./01-what-counts.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What counts as noise</span></span></a>
   </div>
 </li>
@@ -506,13 +535,13 @@ div.csl-indent {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">II. The sources</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./05-traffic.html" class="sidebar-item-text sidebar-link">
@@ -527,7 +556,7 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-machine-hum.html" class="sidebar-item-text sidebar-link">
+  <a href="./07-machine-hum.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">The machine hum</span></span></a>
   </div>
 </li>
@@ -608,10 +637,11 @@ div.csl-indent {
     <h2 id="toc-title">On this page</h2>
    
   <ul class="collapse">
-  <li><a href="#unwanted-sound-and-why-the-definition-fails" id="toc-unwanted-sound-and-why-the-definition-fails" class="nav-link active" data-scroll-target="#unwanted-sound-and-why-the-definition-fails"><span class="header-section-number">1.1</span> Unwanted sound, and why the definition fails</a></li>
-  <li><a href="#the-soundscape-turn" id="toc-the-soundscape-turn" class="nav-link" data-scroll-target="#the-soundscape-turn"><span class="header-section-number">1.2</span> The soundscape turn</a></li>
-  <li><a href="#the-eight-attributes" id="toc-the-eight-attributes" class="nav-link" data-scroll-target="#the-eight-attributes"><span class="header-section-number">1.3</span> The eight attributes</a></li>
-  <li><a href="#what-a-definition-decides" id="toc-what-a-definition-decides" class="nav-link" data-scroll-target="#what-a-definition-decides"><span class="header-section-number">1.4</span> What a definition decides</a></li>
+  <li><a href="#the-247-drone" id="toc-the-247-drone" class="nav-link active" data-scroll-target="#the-247-drone"><span class="header-section-number">7.1</span> The 24/7 drone</a></li>
+  <li><a href="#the-infrasound-controversy" id="toc-the-infrasound-controversy" class="nav-link" data-scroll-target="#the-infrasound-controversy"><span class="header-section-number">7.2</span> The infrasound controversy</a></li>
+  <li><a href="#why-the-metre-cannot-hear-it" id="toc-why-the-metre-cannot-hear-it" class="nav-link" data-scroll-target="#why-the-metre-cannot-hear-it"><span class="header-section-number">7.3</span> Why the metre cannot hear it</a></li>
+  <li><a href="#distance-and-the-tonal-hum" id="toc-distance-and-the-tonal-hum" class="nav-link" data-scroll-target="#distance-and-the-tonal-hum"><span class="header-section-number">7.4</span> Distance and the tonal hum</a></li>
+  <li><a href="#the-energy-of-the-hum" id="toc-the-energy-of-the-hum" class="nav-link" data-scroll-target="#the-energy-of-the-hum"><span class="header-section-number">7.5</span> The energy of the hum</a></li>
   </ul>
 </nav>
     </div>
@@ -619,9 +649,9 @@ div.csl-indent {
 <main class="content" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-what-counts.html">I. The object</a></li><li class="breadcrumb-item"><a href="./01-what-counts.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What counts as noise</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05-traffic.html">II. The sources</a></li><li class="breadcrumb-item"><a href="./07-machine-hum.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">The machine hum</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-what-counts" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What counts as noise</span></span></h1>
+<h1 class="title"><span id="sec-machine-hum" class="quarto-section-identifier"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">The machine hum</span></span></h1>
 </div>
 
 
@@ -638,61 +668,96 @@ div.csl-indent {
 </header>
 
 
-<p>Ask what noise is and the intuitive answer arrives before the question has finished: noise is unwanted sound. The definition is serviceable enough, and it has organised environmental regulation for the better part of a century. But notice what it smuggles in. <em>Unwanted</em> is not a property of the air. It is a judgement made by a listener, in a place, at a time, and the same physical signal can cross the line between wanted and unwanted depending on who is listening and why. The train that is infrastructure to the commuter on the platform is an assault to the shift-worker trying to sleep beside the track. Nothing about the sound has changed; the person and the context have. The definition that seems to locate the problem in the sound has, on inspection, located it in the relation between the sound and the hearer.</p>
-<p>That relation is what the last two decades have turned into an object of study. For most of its history, noise control treated sound as a quantity emitted by a source and received at a point — something to be metred, capped and abated, with the listener present only as a threshold to be protected. The soundscape turn did something more radical than add nuance. It moved the object of study from the sound to the <em>experience</em> of the sound, and in doing so gave noise a vocabulary precise enough to be measured, mapped, and eventually designed. That move is the foundation the rest of this work is built on, and it is also, quietly, the first appearance of a theme that will run underneath everything that follows: what we choose to measure decides what we are able to see.</p>
-<section id="unwanted-sound-and-why-the-definition-fails" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="unwanted-sound-and-why-the-definition-fails"><span class="header-section-number">1.1</span> Unwanted sound, and why the definition fails</h2>
-<p>The classical account has an honourable pedigree and a real use. Defining noise as unwanted sound draws a bright line between acoustics and annoyance, leaving the physicist to measure the pressure variation and the regulator to decide how much of it a person should have to tolerate. It underwrites limit values, working-time exposure rules and the whole apparatus of noise abatement. Within its domain it works.</p>
-<p>The definition fails not by being wrong but by being incomplete, in a way that matters more the closer one looks. Three things escape it.</p>
-<p>First, the same sound is wanted and unwanted at once, depending on the listener. A church bell, a call to prayer, a children’s playground, a music venue — each is cherished by some of the people within earshot and resented by others, and no measurement at the property line can adjudicate between them because the disagreement is not about decibels. It is about meaning.</p>
-<p>Second, the definition cannot explain why sounds of <em>equal</em> level are not equally unwanted. A steady mechanical hum and the varied sound of a street market can register the same figure on a meter and be experienced as opposites — one draining, one enlivening. If noise were simply unwanted sound, and unwantedness tracked level, this could not happen. It happens constantly.</p>
-<p>Third, and most consequentially for this work, the definition takes the <em>source</em> as given and asks only how loud it is. Nothing in it can ask what a place should sound like — whether a sound belongs, whether its absence would be an improvement or a loss. It can subtract; it cannot compose. A framework that can only ever say <em>less</em> has already given up the more interesting question.</p>
-<p>The same element is missing from all three failures — the listener, the context, the meaning. To restore them is not to abandon acoustics but to recognise that noise lives in the meeting of a physical environment and a perceiving person. The soundscape framework is the attempt to make that meeting an object of rigorous study.</p>
+<p>The distributed transition has been audited; the concentrated one is next. That one reached a million separate doorsteps, an alerting system bolted to a silent car or a heat pump breathing on a party wall at a time. The digital transition arrives instead as a single large object that never switches off. A data centre does not roar. It hums: a steady tone compounded from cooling fans, chillers, transformers and the periodic exercising of standby generators, as present at three in the morning as at three in the afternoon, on every day of the year. People who live beside these buildings tend to describe a sound they feel as much as hear: a pressure in the room, a rumble that seems to rise through the floor instead of arriving through the window. They report that it is worst at night, once the traffic that masked it by day has thinned away. The operator’s instrument, set to the standard weighting and averaged across the day, frequently returns a figure comfortably inside the local limit. That gap, between an intrusion residents insist is severe and a number the regulation calls acceptable, recurs in every case that follows. It is not the signature of a single badly sited plant; it follows from what the standard metric was built to record and, more consequentially, from the part of the spectrum it was built to leave out. That is the same low band in which the 58 Hz tone of Chapter 2 disappeared from the reading without leaving the room.</p>
+<section id="the-247-drone" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="the-247-drone"><span class="header-section-number">7.1</span> The 24/7 drone</h2>
+<p>The acoustic problem begins with a difference in kind, not only degree. Road traffic, the dominant burden of Chapter 5, is intermittent and broadband: it rises and falls with the passing vehicle and spreads its energy across the audible range. The plant that cools a large data hall does neither. It runs continuously, and a substantial share of its output is concentrated into a few narrow frequency bands — blade-passing tones from banks of fans, harmonics from transformers, the drone of chillers. The ear resolves them as a definite pitch rather than a wash. Steady, tonal and low: taken together, the three properties describe a sound that human listeners find disproportionately hard to ignore. They also describe one that the built environment does little to hold back, since low frequencies pass through the walls and windows that would stop a higher-pitched noise <span class="citation" data-cites="leventhall2004">(<a href="references.html#ref-leventhall2004" role="doc-biblioref">Leventhall, 2004</a>)</span>. Constancy compounds the effect. A sound that never pauses offers the ear no respite and no contrast, and it removes the intervals of quiet against which a household organises rest. The absence of variation, which the averaged metric treats as benign, is what residents report as intolerable.</p>
+<p>At the property line, the numbers look modest. A 2024 review of Virginia’s data-centre corridor, where roughly four-fifths of the state’s capacity is concentrated in three northern counties, placed the sound reaching nearby homes in a band of about 40 to 59 dB(A) <span class="citation" data-cites="jlarc2024">(<a href="references.html#ref-jlarc2024" role="doc-biblioref">Joint Legislative Audit and Review Commission, 2024</a>)</span>. On paper that range reads like a quiet suburban street. The same review likened what reaches those homes to the low, continuous hum of air-conditioning plant <span class="citation" data-cites="jlarc2024">(<a href="references.html#ref-jlarc2024" role="doc-biblioref">Joint Legislative Audit and Review Commission, 2024</a>)</span>. The comparison registers both the character of the sound and its constancy, and marks it off from the intermittent noise the surrounding zoning had been framed to address. The lived account is harsher. In Prince William County a decades-old ordinance caps residential noise at 60 dB(A) by day and 55 by night, but exempts heating and cooling equipment. Residents beside a cluster of data centres recorded their own measurements well above those limits, averaging around 62 dB(A) with night-time peaks near 69, while the facilities remained, on the operator’s reading, within the rules <span class="citation" data-cites="pwtimes2024">(<a href="references.html#ref-pwtimes2024" role="doc-biblioref">Prince William Times, 2024</a>)</span>. The discrepancy is not mysterious once the character of the sound is admitted. A steady 62 dB(A) tone at three in the morning is a different creature from a 62 dB(A) figure produced by daytime traffic, and an ordinance written to catch parties and modified exhausts cannot tell the two apart <span class="citation" data-cites="jlarc2024">(<a href="references.html#ref-jlarc2024" role="doc-biblioref">Joint Legislative Audit and Review Commission, 2024</a>)</span>.</p>
+<p>The extreme cases make the mechanism legible. In Chandler, Arizona, close to a decade of complaints against the air-conditioning tone of a large campus produced first noise-reducing retrofits, then, in 2022, a zoning amendment requiring sound studies before any new facility, and finally, in 2025, a council vote to refuse a proposed data centre outright <span class="citation" data-cites="eesi2025">(<a href="references.html#ref-eesi2025" role="doc-biblioref">Environmental and Energy Study Institute, 2025</a>)</span>. The reversal was driven substantially by noise. Cryptocurrency mining, which packs tens of thousands of processors and their cooling fans into open-sided halls, supplies the loudest instances. Beside a 300-megawatt bitcoin operation in Granbury, Texas, residents recorded readings that ran into three figures, one household measuring 103 dB(A). The state threshold treats 85 dB(A) as the point of unreasonableness and caps the penalty at a five-hundred-dollar fine. The sound has been likened to a jet engine that never lifts off, and it carries for miles, waking sleepers who live well outside any plausible buffer zone <span class="citation" data-cites="chow2024">(<a href="references.html#ref-chow2024" role="doc-biblioref">Chow, 2024</a>)</span>. In the Bono community near Greenbrier, Arkansas, the fans of some seventeen thousand machines a few hundred feet from the nearest house pushed readings to 82 dB(A), around the clock. The state had just passed a law forbidding local governments from regulating such operations at all, a preemption its legislature partially reversed a year later, once the complaints had become impossible to set aside <span class="citation" data-cites="lenora2024">(<a href="references.html#ref-lenora2024" role="doc-biblioref">Lenora, 2024</a>)</span>. The bitcoin cases sit at the extreme, but they are the same object magnified: banks of fans cooling banks of processors, and no off switch.</p>
+<p>These are American cases because the American build-out came first and largest, but the concentrated transition has now reached Andalusia. In June 2026 the first stone was laid, in the Escúzar technology park south of Granada, of SP01: a campus built expressly for artificial-intelligence training and high-performance computing. Around 100 MW of gross grid capacity has been granted, roughly 70 MW of it destined for the servers themselves, ramping from a first phase of some 10 MW through an intermediate stage of around 25 MW toward full build-out by the end of the decade <span class="citation" data-cites="altinfra_sp01">(<a href="references.html#ref-altinfra_sp01" role="doc-biblioref">DataCenterDynamics, 2026</a>)</span>. Its acoustic signature is, for now, a matter of design and not yet of complaint. Two of its stated choices bear directly on it: the campus is to draw on renewable power, and to cool its densest racks with direct liquid rather than with air. Liquid cooling matters here for a specific and non-rhetorical reason. Moving heat in a closed loop of fluid displaces a large part of the fan bank whose blade-passing tones are the usual source of the drone. None of this promises a silent campus, and none of it makes the campus unwelcome. What it establishes is that the tonal, low-frequency character of the hum is set at the drawing board, in decisions about cooling and siting taken before the first server is powered. That character is therefore still open, in a way the metric applied afterwards is not.</p>
 </section>
-<section id="the-soundscape-turn" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="the-soundscape-turn"><span class="header-section-number">1.2</span> The soundscape turn</h2>
-<p>The word <em>soundscape</em> carries an older, evocative history — the acoustic-ecology tradition that taught a generation to hear the environment as a composition rather than a nuisance to be suppressed. But an evocative idea is not yet a measurable one, and for decades the term stayed idiosyncratic; everyone meant something slightly different by it, which is another way of saying that no one could build on anyone else’s work.</p>
-<p>The decisive move was to fix the definition. In 2014 the International Organization for Standardization published the first part of a three-part series that did exactly this. ISO 12913-1 defines a soundscape as the acoustic environment as perceived or experienced and understood by a person or people, in context <span class="citation" data-cites="iso12913-1">(<a href="references.html#ref-iso12913-1" role="doc-biblioref">International Organization for Standardization, 2014</a>)</span>. The phrasing is doing careful work, separating two things that ordinary language runs together. The <em>acoustic environment</em> is the physical phenomenon, the sound field, measurable in the usual way. The <em>soundscape</em>, by contrast, is a perceptual construct that exists only through a listener’s engagement with that environment. The acoustic environment is out there whether or not anyone hears it. The soundscape is not; it comes into being in the hearing.</p>
-<p>That distinction looks like a philosopher’s nicety and is in fact the hinge of the whole field. Once perception is written into the definition, context stops being an inconvenience to be controlled away and becomes part of the object. The standard is explicit that a soundscape assessment is <em>through</em> human perception of the acoustic environment, and it lists the factors that shape that perception: the listener’s attitude to the source and to whoever is producing the sound, their expectations and cultural background, their reason for being in the place, their sense of whether they can control their exposure, and the other senses feeding in alongside the ears. None of these appears on a sound-level meter. All of them determine whether a given acoustic environment is experienced as pleasant or as intolerable.</p>
-<p>The framework, in other words, does not soften the physics; it embeds the physics in the situation where sound is actually encountered. This is what allows later chapters to speak of <em>designing</em> a soundscape rather than only suppressing sound — a possibility taken up in full in the constructive turn of the final chapter. But it also sets up the more critical thread. If soundscape is perception-dependent, then any instrument that claims to measure it is making a claim about perception, and the choices built into that instrument — which frequencies it weights, which it discards — become claims about what is worth perceiving. The next chapter is about one such instrument and the choices hidden inside it.</p>
+<section id="the-infrasound-controversy" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="the-infrasound-controversy"><span class="header-section-number">7.2</span> The infrasound controversy</h2>
+<p>Below the audible drone lies a more contested claim. Infrasound is pressure fluctuation below about 20 Hz, at or beneath the threshold of conscious hearing; the claim is that these installations emit it, and that the inaudible component is itself a cause of ill health. The claim recurs wherever large rotating or pumping machinery sits near homes, and the evidence around it has a characteristic shape, one already met in Chapter 6’s account of wind farms. It divides, roughly, into three postures.</p>
+<p>The first minimises. A body of work, some of it produced with support from the industries whose installations are under scrutiny, concludes that measured infrasound levels near such sites fall below the threshold of perception and can therefore be dismissed as a source of symptoms <span class="citation" data-cites="berger2015">(<a href="references.html#ref-berger2015" role="doc-biblioref">Berger et al., 2015</a>)</span>. The reasoning is not empty. Perception thresholds at very low frequencies are real and steep. But the provenance warrants the caution due to any assessment funded by an interested party, and the conclusion tends to treat <em>below the average threshold of perception</em> as equivalent to <em>without effect</em>, which is a stronger claim than the data support.</p>
+<p>The second finds an effect and hedges it. Controlled exposure of volunteers to low-frequency and infrasonic tones has been reported to shift markers of autonomic function in directions consistent with a mild stress response <span class="citation" data-cites="chiu2021">(<a href="references.html#ref-chiu2021" role="doc-biblioref">Chiu et al., 2021</a>)</span>. The markers include heart-rate variability and the balance of sympathetic and parasympathetic activity. Such studies are suggestive, but they are typically small, brief and conducted under laboratory conditions that do not reproduce the years-long, sleep-interrupting exposure residents describe. A measurable change in a physiological marker over an hour is not the same as a demonstrated pathway to disease over a decade.</p>
+<p>The third is neutral, technical and the most useful of the three. A detailed measurement study of large wind turbines established that as rotating machines grow, the balance of their emitted spectrum shifts downward. The relative share of low-frequency energy rises, and even after A-weighting a substantial part of what remains sits at the bottom of the range: for several machines the loudest third-octave band fell at or below 250 Hz <span class="citation" data-cites="moller2011">(<a href="references.html#ref-moller2011" role="doc-biblioref">Møller &amp; Pedersen, 2011</a>)</span>. The finding concerned turbines, not data halls, but the physics is general and the parallel is exact: the larger and more powerful the source, the more its acoustic weight migrates into the band that ordinary assessment handles worst.</p>
+<p>The defensible position, on the present evidence, is that the complaints are real and the specific attribution to infrasound is not settled. People living beside these facilities are not imagining the sound. The readings confirm a persistent, tonal, low-frequency presence, and the reported symptoms of broken sleep, headache and difficulty concentrating are well-attested consequences of chronic low-frequency noise, whether or not any inaudible sub-20 Hz component contributes <span class="citation" data-cites="leventhall2004">(<a href="references.html#ref-leventhall2004" role="doc-biblioref">Leventhall, 2004</a>)</span>. What remains genuinely open is whether infrasound as such, rather than the audible low-frequency noise that accompanies it, does independent physiological harm. Holding those two questions apart is what keeps the argument honest. The evidence can carry the claim about audible low-frequency noise; it cannot yet carry the claim about infrasound, and the case against the metric depends on the first of these, not the second.</p>
 </section>
-<section id="the-eight-attributes" class="level2" data-number="1.3">
-<h2 data-number="1.3" class="anchored" data-anchor-id="the-eight-attributes"><span class="header-section-number">1.3</span> The eight attributes</h2>
-<p>A definition that stays qualitative changes nothing in practice. The real achievement of the soundscape programme was to make perception <em>quantitative</em> without flattening it — to find a small number of dimensions that capture how people actually experience acoustic environments, and a defined set of scales for measuring them.</p>
-<p>The empirical basis came from a study by Axelsson, Nilsson and Berglund, who had a hundred listeners rate fifty binaural recordings of urban outdoor environments on more than a hundred attribute scales, then reduced the results to their underlying structure <span class="citation" data-cites="axelsson2010">(<a href="references.html#ref-axelsson2010" role="doc-biblioref">Axelsson et al., 2010</a>)</span>. Three dimensions emerged, but two did almost all the work: a <em>pleasantness</em> dimension, accounting for roughly half the variance, and an <em>eventfulness</em> dimension accounting for close to a fifth. (A third, familiarity, explained little and is usually set aside.) The finding is more than a statistical convenience. It says that when people judge a soundscape, they are answering two largely independent questions — <em>is this pleasant or unpleasant?</em> and <em>is much happening here or little?</em> — and that most of the perceptual richness of everyday acoustic experience lives in the plane those two axes define.</p>
-<p>This is the point at which attribution has to be exact, because most summaries blur it. The two-dimensional pleasant–eventful structure is Axelsson and colleagues’ finding. The now-standard <em>eight</em> perceptual attributes are the operationalisation of that structure in the second part of the ISO series. In its Method A, ISO/TS 12913-2 sets out eight descriptors — pleasant, vibrant, eventful, chaotic, annoying, monotonous, uneventful and calm — rated on bipolar five-point scales, as the recommended way to collect soundscape data in the field <span class="citation" data-cites="iso12913-2">(<a href="references.html#ref-iso12913-2" role="doc-biblioref">International Organization for Standardization, 2018</a>)</span>. The eight are not eight independent qualities. They are eight equally spaced positions around a circle, the <em>circumplex</em>, whose two underlying axes are pleasantness and eventfulness. The third part of the series, ISO/TS 12913-3, then specifies the geometry that makes this usable. Neighbouring attributes sit forty-five degrees apart and opposites a hundred and eighty, and a set of ratings can be transformed into a single coordinate in the pleasant–eventful plane <span class="citation" data-cites="iso12913-3">(<a href="references.html#ref-iso12913-3" role="doc-biblioref">International Organization for Standardization, 2019</a>)</span>.</p>
-<p>Reading around the circle shows why the eight attributes are the <em>right</em> eight rather than an arbitrary list, and the structure turns out to be intuitive. A vibrant soundscape is one that is both pleasant and eventful — a lively square that people enjoy. Rotate towards pure eventfulness and then into unpleasantness and you reach the chaotic: eventful but not wanted, the noisy street corner. Continue to the monotonous, which is both unpleasant and uneventful — the draining drone with nothing in it. Round again to the calm, both pleasant and uneventful, the quiet park. Each of the eight names a compass point, and any real soundscape can be placed by where its ratings fall in the plane <span class="citation" data-cites="aletta2016">(<a href="references.html#ref-aletta2016" role="doc-biblioref">Aletta et al., 2016</a>)</span>. The standard preserves one nuance deliberately. In the environmental-noise tradition the pole opposite <em>pleasant</em> is labelled <em>annoying</em> rather than the more neutral <em>unpleasant</em>, keeping a bridge to the older language of annoyance research even as the framework moves beyond it.</p>
+<section id="why-the-metre-cannot-hear-it" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="why-the-metre-cannot-hear-it"><span class="header-section-number">7.3</span> Why the metre cannot hear it</h2>
+<p>The reason the operator’s number and the resident’s experience diverge is built into the number itself, and it can be stated without recourse to any disputed physiology. Two operations are applied to almost every regulatory measurement of environmental noise, and each, independently, discards the part of the signal in which the data-centre hum lives.</p>
+<p>The first is A-weighting. The standard sound-level reading, dB(A), is not a neutral record of acoustic energy; it is energy passed through a filter that mimics the reduced sensitivity of the human ear at low frequencies, and that filter rolls off steeply below a few hundred hertz <span class="citation" data-cites="iec61672">(<a href="references.html#ref-iec61672" role="doc-biblioref">International Electrotechnical Commission, 2013</a>)</span>. Transformer hum and the lower blade-passing tones sit at 50 or 60 Hz. A pure tone there is cut by the weighting curve by tens of decibels before it is ever compared with a limit. The effect was made visible in Chapter 2, where a 58 Hz tone dropped out of the A-weighted figure while remaining plainly present in the spectrum. The second operation is temporal averaging. The indicators that anchor most noise law, <span class="math inline">\(L_\text{den}\)</span> and its night-time counterpart, integrate sound energy across long periods. A perfectly steady source, which is the defining property of a data centre, is thereby smoothed into a single background value instead of being flagged as the relentless, unvarying presence that makes it unbearable. Weighted to discount the frequencies and averaged to discount the constancy, the metre is, in a precise sense, deaf to the two features that define the complaint.</p>
+<p>This is the point at which care matters most. The case here is not that infrasound has been proven to sicken people; that claim remains unsettled. The case is narrower and far more secure: the instrument used to certify these facilities as compliant is systematically blind to the band of the spectrum that generates the complaints. Whether infrasound sickens people is a contested question in physiology. That the filter and the averaging window discard the relevant band is a demonstrable property of both, and it holds regardless of how the physiology is eventually resolved. A steady 58 Hz tone can be, at once, the dominant feature of a resident’s night and nearly absent from the dB(A) reading that governs whether anything can be done about it. Even after A-weighting, spectra from large low-frequency sources keep their peak energy at the bottom of the range <span class="citation" data-cites="moller2011">(<a href="references.html#ref-moller2011" role="doc-biblioref">Møller &amp; Pedersen, 2011</a>)</span>. The weighting does not merely soften the low end; it can misplace where the sound’s energy actually lies.</p>
+<p>The corrective tools exist, which is itself telling. Assessment procedures written specifically for low-frequency complaints measure in narrow low-frequency bands and test them against dedicated criteria, not against a single A-weighted figure <span class="citation" data-cites="moorhouse2005">(<a href="references.html#ref-moorhouse2005" role="doc-biblioref">Moorhouse et al., 2005</a>)</span>. Procedures of that kind were developed for national environmental agencies because the ordinary metric was failing. And where a clearly audible tone is present, some schemes add a penalty of up to six decibels to the assessed level, on the reasoning that a pure tone annoys more than its bare energy would predict. The same logical correction appeared in Chapter 6, applied to the tonal and amplitude-modulated character of wind-turbine noise. The Spanish noise regulation sets exactly that six-decibel ceiling for an emergent tone, and identifies the tone on the unweighted third-octave spectrum rather than on the A-weighted figure that governs compliance <span class="citation" data-cites="rd1367_2007">(<a href="references.html#ref-rd1367_2007" role="doc-biblioref">BOE, 2007</a>)</span>.</p>
+<p>The existence of these corrections is an admission, encoded in the standards themselves, that the default metric under-reads tonal low-frequency noise. Yet it is the default metric, not the corrective procedure, that is written into most compliance regimes. The operator is judged by the instrument that cannot hear the sound, and the burden of demonstrating the sound falls on the residents, who must produce their own measurements to capture what the official method was built to pass over. In Prince William, the officials revising the county’s code said as much in plain terms: the low-frequency noise the data centres emit is not fully captured in A-weighted decibels <span class="citation" data-cites="pwtimes2024">(<a href="references.html#ref-pwtimes2024" role="doc-biblioref">Prince William Times, 2024</a>)</span>. When a measurement regime reliably yields compliant numbers for a sound that reliably yields complaints, the question of whom that arrangement serves answers itself.</p>
+</section>
+<section id="distance-and-the-tonal-hum" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="distance-and-the-tonal-hum"><span class="header-section-number">7.4</span> Distance and the tonal hum</h2>
+<p>Why the hum reaches homes that look, on a map, comfortably far from the plant is a question of how sound of different pitches survives the journey. Geometric divergence is indifferent to frequency — the wavefront spreads, and the same loss applies to a low tone and a high one alike. Atmospheric absorption is not indifferent. The air itself converts sound to heat, and it does so far more efficiently at high frequencies than at low. A crisp, high-pitched noise loses its edge within a few hundred metres; a deep tone loses almost nothing to the air and is checked only by spreading. Distance therefore acts as a filter, stripping away the treble and leaving the bass, so that the further a listener stands from a broadband industrial source, the more purely tonal and low its remaining sound becomes. This is why a data-centre or mining hum can be reported from a mile or more away as a rumble rather than a roar. It is often the households that moved out for quiet who are worst affected.</p>
+<p>Whether a hum survives a given separation depends on its frequency as much as on its level at source. That is what the model below computes, for any combination of the two. A low tone and a high one decay side by side, and the A-weighted figure parts company with the true sound-pressure level as the frequency drops — the same divergence between what is present and what is counted, now expressed in metres of separation rather than in a single reading at the fence.</p>
 <div class="widget-frame">
-<iframe src="widgets/ch01-soundscape-axes.html" height="650" loading="lazy" title="Place a sound on the pleasant–eventful axes">
+<iframe src="widgets/ch07-hum-attenuation.html" height="760" loading="lazy" title="Distance attenuation of a tonal hum">
 </iframe>
 </div>
 <div class="fig-source">
-<p>Source · perceptual axes and eight attributes after <span class="citation" data-cites="axelsson2010">Axelsson et al. (<a href="references.html#ref-axelsson2010" role="doc-biblioref">2010</a>)</span> and ISO/TS 12913-2:2018 <span class="citation" data-cites="iso12913-2">(<a href="references.html#ref-iso12913-2" role="doc-biblioref">International Organization for Standardization, 2018</a>)</span>; circumplex geometry per ISO/TS 12913-3:2019 <span class="citation" data-cites="iso12913-3">(<a href="references.html#ref-iso12913-3" role="doc-biblioref">International Organization for Standardization, 2019</a>)</span>. Accessed 2026-07-11.</p>
+<p>Source · geometric divergence with frequency-dependent atmospheric absorption computed after <span class="citation" data-cites="iso9613-1">International Organization for Standardization (<a href="references.html#ref-iso9613-1" role="doc-biblioref">1993</a>)</span> and <span class="citation" data-cites="iso9613-2">International Organization for Standardization (<a href="references.html#ref-iso9613-2" role="doc-biblioref">1996</a>)</span>; A-weighting after <span class="citation" data-cites="iec61672">International Electrotechnical Commission (<a href="references.html#ref-iec61672" role="doc-biblioref">2013</a>)</span>; representative property-line levels after <span class="citation" data-cites="jlarc2024">Joint Legislative Audit and Review Commission (<a href="references.html#ref-jlarc2024" role="doc-biblioref">2024</a>)</span>. Accessed 21 July 2026.</p>
 </div>
-<p>The simulator above makes one claim tangible. The <em>same</em> recorded sound occupies a definite position in a perceptual space, and that position — not its raw level — is what determines whether it is experienced as noise. Two sounds of identical loudness can sit at opposite ends of the pleasantness axis. That is the soundscape framework’s central empirical fact, and the one the decibel, on its own, cannot represent.</p>
 </section>
-<section id="what-a-definition-decides" class="level2" data-number="1.4">
-<h2 data-number="1.4" class="anchored" data-anchor-id="what-a-definition-decides"><span class="header-section-number">1.4</span> What a definition decides</h2>
-<p>The argument here is easily mistaken for a plea for subtlety — for remembering that noise is complicated and perception matters. It is meant as something more pointed. To define noise relationally, as the soundscape framework does, is already to have made a decision with consequences that run through the rest of this work, because a definition is not a neutral starting point. It sets the terms on which everything downstream will be measured, mapped and governed.</p>
-<p>Consider what follows from the two ways of defining the object. If noise is unwanted sound at a source, the natural instruments are a level meter and a limit value, the natural question is <em>how loud</em>, and the natural response is abatement. If noise is a soundscape — a perceived environment in context — the natural instruments include the perceptual scales just described, the natural question becomes <em>how is this place experienced</em>, and the natural response opens onto design as well as reduction. These are not two descriptions of one practice. They are two different practices, and they make different things visible.</p>
-<p>Much of what follows lives in the gap between them. The metric that governs European noise policy sits firmly on the first side of this divide — a single weighted number, source-oriented, blind by construction to much of what the soundscape framework was built to capture. That is not an oversight to be tidied up. It is the shape of a choice about what counts, and the sources changing our acoustic world fastest are precisely the ones that choice cannot see. The soundscape turn matters here not because it is more humane but because it is more honest about a fact the older definition obscured: that before we measure noise, we have already decided what noise is, and that decision does work no measurement can undo.</p>
+<section id="the-energy-of-the-hum" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="the-energy-of-the-hum"><span class="header-section-number">7.5</span> The energy of the hum</h2>
+<p>The hum is, in the end, the sound of electricity being turned into computation and heat. Fans spin because processors run hot; processors run hot because the calculation is vast and unremitting; and cooling, the single largest non-computing draw in most facilities, is the immediate source of the noise. The acoustic signature is thus a fairly direct readout of the energy appetite of artificial-intelligence infrastructure, traced elsewhere <span class="citation" data-cites="morenomunoz2026">(<a href="references.html#ref-morenomunoz2026" role="doc-biblioref">Moreno-Muñoz, 2026</a>)</span>. A campus sized in tens or hundreds of megawatts is, by that very sizing, committed to moving a proportionate quantity of waste heat, and the ordinary way to move it is to push air across metal at scale. The design choice on display at Escúzar, liquid cooling in place of air, is significant because it breaks that chain at the fan. It does not lighten the underlying load, since the heat still leaves the building and the energy still enters it. As AI-scale campuses grow denser, the quantity of heat to be shifted grows with them, and with it the pressure on whatever mechanism moves it.</p>
+<p>The concentrated transition is a double object, an energy story and an acoustic one told in the same breath. The sound does not stop at the property line. It passes through the walls that would stop a higher-pitched noise and settles into bedrooms and living rooms, where the same low-frequency physics meets sleep, attention and the private spaces least equipped to exclude it. These cases also share a pattern: a real intrusion, a compliant number, an ordinance built for a different kind of noise, and, in Arkansas, a law that briefly forbade the affected communities from regulating the source at all before a partial retreat. The regulatory architecture assembled to contain environmental noise leans on the very metric this source is built, whether by accident or by convenience, to slip past. The machine hum is the clearest case in these pages of a sound loud enough to drive people from their homes and quiet enough, by the measure that counts, to be officially inaudible.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
-<div id="ref-aletta2016" class="csl-entry" role="listitem">
-Aletta, F., Kang, J., &amp; Axelsson, Ö. (2016). Soundscape descriptors and a conceptual framework for developing predictive soundscape models. <em>Landscape and Urban Planning</em>, <em>149</em>, 65–74. <a href="https://doi.org/10.1016/j.landurbplan.2016.02.001">https://doi.org/10.1016/j.landurbplan.2016.02.001</a>
+<div id="ref-berger2015" class="csl-entry" role="listitem">
+Berger, R. G., Ashtiani, P., Ollson, C. A., Whitfield Aslund, M., McCallum, L. C., Leventhall, G., &amp; Knopper, L. D. (2015). Health-based audible noise guidelines account for infrasound and low-frequency noise produced by wind turbines. <em>Frontiers in Public Health</em>, <em>3</em>, 31. <a href="https://doi.org/10.3389/fpubh.2015.00031">https://doi.org/10.3389/fpubh.2015.00031</a>
 </div>
-<div id="ref-axelsson2010" class="csl-entry" role="listitem">
-Axelsson, Ö., Nilsson, M. E., &amp; Berglund, B. (2010). A principal components model of soundscape perception. <em>The Journal of the Acoustical Society of America</em>, <em>128</em>(5), 2836–2846. <a href="https://doi.org/10.1121/1.3493436">https://doi.org/10.1121/1.3493436</a>
+<div id="ref-rd1367_2007" class="csl-entry" role="listitem">
+BOE. (2007). <em>Real decreto 1367/2007, de 19 de octubre, por el que se desarrolla la ley 37/2003, de 17 de noviembre, del ruido, en lo referente a zonificación acústica, objetivos de calidad y emisiones acústicas</em>. Boletín Oficial del Estado núm. 254, de 23 de octubre de 2007. <a href="https://www.boe.es/eli/es/rd/2007/10/19/1367/con">https://www.boe.es/eli/es/rd/2007/10/19/1367/con</a>
 </div>
-<div id="ref-iso12913-1" class="csl-entry" role="listitem">
-International Organization for Standardization. (2014). <em>Acoustics — soundscape — part 1: Definition and conceptual framework</em> (ISO 12913-1:2014). International Organization for Standardization. <a href="https://www.iso.org/standard/52161.html">https://www.iso.org/standard/52161.html</a>
+<div id="ref-chiu2021" class="csl-entry" role="listitem">
+Chiu, C.-H., Lung, S.-C. C., Chen, N., Hwang, J.-S., &amp; Tsou, M.-C. M. (2021). Effects of low-frequency noise from wind turbines on heart rate variability in healthy individuals. <em>Scientific Reports</em>, <em>11</em>(1), 17817. <a href="https://doi.org/10.1038/s41598-021-97107-8">https://doi.org/10.1038/s41598-021-97107-8</a>
 </div>
-<div id="ref-iso12913-2" class="csl-entry" role="listitem">
-International Organization for Standardization. (2018). <em>Acoustics — soundscape — part 2: Data collection and reporting requirements</em> (ISO/TS 12913-2:2018). International Organization for Standardization. <a href="https://www.iso.org/standard/75267.html">https://www.iso.org/standard/75267.html</a>
+<div id="ref-chow2024" class="csl-entry" role="listitem">
+Chow, A. R. (2024). <em>A <span>Texas</span> town’s misery underscores the impact of bitcoin mines</em>. Time. <a href="https://time.com/6590155/bitcoin-mining-noise-texas/">https://time.com/6590155/bitcoin-mining-noise-texas/</a>
 </div>
-<div id="ref-iso12913-3" class="csl-entry" role="listitem">
-International Organization for Standardization. (2019). <em>Acoustics — soundscape — part 3: Data analysis</em> (ISO/TS 12913-3:2019). International Organization for Standardization. <a href="https://www.iso.org/standard/69864.html">https://www.iso.org/standard/69864.html</a>
+<div id="ref-altinfra_sp01" class="csl-entry" role="listitem">
+DataCenterDynamics. (2026). <em>Alto infrastructure breaks ground on 70<span>MW</span> <span>AI</span> campus in <span>Granada</span>, <span>Spain</span></em>. <a href="https://www.datacenterdynamics.com/en/news/alto-infrastructure-launches-a-70-mw-ai-campus-in-granada-with-a-potential-investment-of-3000-millones/">https://www.datacenterdynamics.com/en/news/alto-infrastructure-launches-a-70-mw-ai-campus-in-granada-with-a-potential-investment-of-3000-millones/</a>
+</div>
+<div id="ref-eesi2025" class="csl-entry" role="listitem">
+Environmental and Energy Study Institute. (2025). <em>Communities are raising noise pollution concerns about data centers</em>. EESI article. <a href="https://www.eesi.org/articles/view/communities-are-raising-noise-pollution-concernsabout-data-centers">https://www.eesi.org/articles/view/communities-are-raising-noise-pollution-concernsabout-data-centers</a>
+</div>
+<div id="ref-iec61672" class="csl-entry" role="listitem">
+International Electrotechnical Commission. (2013). <em>Electroacoustics — sound level meters — part 1: specifications</em> (IEC 61672-1:2013). International Electrotechnical Commission.
+</div>
+<div id="ref-iso9613-1" class="csl-entry" role="listitem">
+International Organization for Standardization. (1993). <em>Acoustics — attenuation of sound during propagation outdoors — part 1: Calculation of the absorption of sound by the atmosphere</em> (ISO 9613-1:1993). International Organization for Standardization. <a href="https://www.iso.org/standard/17426.html">https://www.iso.org/standard/17426.html</a>
+</div>
+<div id="ref-iso9613-2" class="csl-entry" role="listitem">
+International Organization for Standardization. (1996). <em>Acoustics — attenuation of sound during propagation outdoors — part 2: General method of calculation</em> (ISO 9613-2:1996). International Organization for Standardization. <a href="https://www.iso.org/standard/20649.html">https://www.iso.org/standard/20649.html</a>
+</div>
+<div id="ref-jlarc2024" class="csl-entry" role="listitem">
+Joint Legislative Audit and Review Commission. (2024). <em>Data centers in <span>Virginia</span></em> (Report No. 598). Joint Legislative Audit; Review Commission, Commonwealth of Virginia. <a href="https://jlarc.virginia.gov/landing-2024-data-centers-in-virginia.asp">https://jlarc.virginia.gov/landing-2024-data-centers-in-virginia.asp</a>
+</div>
+<div id="ref-lenora2024" class="csl-entry" role="listitem">
+Lenora, J. (2024). <em>New <span>Arkansas</span> laws regulate cryptocurrency mining</em>. Little Rock Public Radio. <a href="https://www.ualrpublicradio.org/local-regional-news/2024-05-13/new-arkansas-laws-regulate-cryptocurrency-mining">https://www.ualrpublicradio.org/local-regional-news/2024-05-13/new-arkansas-laws-regulate-cryptocurrency-mining</a>
+</div>
+<div id="ref-leventhall2004" class="csl-entry" role="listitem">
+Leventhall, H. G. (2004). Low frequency noise and annoyance. <em>Noise &amp; Health</em>, <em>6</em>(23), 59–72.
+</div>
+<div id="ref-moller2011" class="csl-entry" role="listitem">
+Møller, H., &amp; Pedersen, C. S. (2011). Low-frequency noise from large wind turbines. <em>The Journal of the Acoustical Society of America</em>, <em>129</em>(6), 3727–3744. <a href="https://doi.org/10.1121/1.3543957">https://doi.org/10.1121/1.3543957</a>
+</div>
+<div id="ref-moorhouse2005" class="csl-entry" role="listitem">
+Moorhouse, A. T., Waddington, D. C., &amp; Adams, M. D. (2005). <em>Procedure for the assessment of low frequency noise complaints</em> (Contract NANR45). University of Salford, for the Department for Environment, Food; Rural Affairs (Defra). <a href="https://salford-repository.worktribe.com/OutputFile/1502567">https://salford-repository.worktribe.com/OutputFile/1502567</a>
+</div>
+<div id="ref-morenomunoz2026" class="csl-entry" role="listitem">
+Moreno-Muñoz, M. (2026). <em>Consumo energético de los servicios de inteligencia artificial e impacto ambiental</em> (Version v1). Zenodo. <a href="https://doi.org/10.5281/zenodo.18977368">https://doi.org/10.5281/zenodo.18977368</a>
+</div>
+<div id="ref-pwtimes2024" class="csl-entry" role="listitem">
+Prince William Times. (2024). <em>Noise levels at <span>Prince William</span> data centers worry opponents of proposed <span>Warrenton</span> facility</em>. <a href="https://www.princewilliamtimes.com/noise-levels-at-prince-william-data-centers-worry-opponents-of-proposed-warrenton-facility/article_836f40eb-9a12-52cf-8227-8d5dbf7b1197.html">https://www.princewilliamtimes.com/noise-levels-at-prince-william-data-centers-worry-opponents-of-proposed-warrenton-facility/article_836f40eb-9a12-52cf-8227-8d5dbf7b1197.html</a>
 </div>
 </div>
 </section>
@@ -1118,13 +1183,13 @@ International Organization for Standardization. (2019). <em>Acoustics — sounds
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./introduction.html" class="pagination-link" aria-label="Introduction">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Introduction</span>
+      <a href="./06-quiet-that-wasnt.html" class="pagination-link" aria-label="The quiet that wasn't">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">The quiet that wasn’t</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./02-measuring.html" class="pagination-link" aria-label="Measuring the invisible">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Measuring the invisible</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./08-indoor-personal.html" class="pagination-link" aria-label="The indoor and the personal">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The indoor and the personal</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
