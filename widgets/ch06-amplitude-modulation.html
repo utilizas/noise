@@ -312,10 +312,19 @@
   $('mMod').addEventListener('click', function () { setMode(true); });
   $('mSteady').addEventListener('click', function () { setMode(false); });
 
+  /* Self-fit: match the parent iframe to the height of the content.
+     Measured on <body>, which is content-sized. The scroll height of the root
+     element is not: it never returns less than the frame's own viewport, so
+     each call would return the height set by the previous one and the frame
+     would ratchet upward. */
+  var lastH = 0;
   function fitFrame() {
-    var h = document.documentElement.scrollHeight;
-    try { if (window.frameElement) window.frameElement.style.height = (h + 8) + 'px'; } catch (e) {}
-    try { window.parent.postMessage({ type: 'fitFrame', height: h + 8 }, '*'); } catch (e) {}
+    var b = document.body;
+    var h = Math.ceil(Math.max(b.getBoundingClientRect().height, b.scrollHeight));
+    if (!h || Math.abs(h - lastH) < 2) return;
+    lastH = h;
+    try { if (window.frameElement) window.frameElement.style.height = h + 'px'; } catch (e) { /* cross-origin */ }
+    try { window.parent.postMessage({ type: 'fitFrame', height: h }, '*'); } catch (e) { /* no-op */ }
   }
   window.addEventListener('resize', fitFrame);
   if (window.matchMedia) matchMedia('(prefers-color-scheme: dark)')

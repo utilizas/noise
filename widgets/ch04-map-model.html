@@ -237,10 +237,22 @@ function draw(Lref,dSel,Lsel,below){
   document.getElementById('dsvg').innerHTML=g;
 }
 
-/* Self-fit: match the parent iframe to content height so no inner
-   scrollbar appears. Same-origin only; fails silently otherwise. */
+/* Self-fit: match the parent iframe to the height of the content.
+   Measures the body box, which is content-sized and therefore does not
+   depend on the height already assigned to the iframe. documentElement
+   .scrollHeight does depend on it — it never returns less than the frame's
+   own viewport — so measuring there makes every call return the height set
+   by the previous one, and the frame ratchets upwards. Same-origin only;
+   fails silently otherwise, leaving the iframe's height="" as fallback. */
 function fitFrame(){
-  try{ var f=window.frameElement; if(f){ f.style.height=(document.documentElement.scrollHeight+4)+'px'; } }catch(e){}
+  try{
+    var f = window.frameElement;
+    if(!f) return;
+    var h = Math.ceil(document.body.getBoundingClientRect().height);
+    if(!h) return;
+    if(Math.abs(parseFloat(f.style.height) - h) < 2) return;
+    f.style.height = h + 'px';
+  }catch(e){}
 }
 window.addEventListener('load', fitFrame);
 window.addEventListener('resize', fitFrame);
