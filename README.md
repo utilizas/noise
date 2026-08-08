@@ -108,20 +108,7 @@ This tree reflects the project's declared layout rather than a verified director
 
 The interactive text above is where the argument and its simulators actually run, and no one mirror is more authoritative than another as a place to *read* the work. For citation, use the fixed record on Zenodo, which assigns a persistent DOI and preserves a permanent snapshot independent of any single host remaining online. APA 7th‑edition citation:
 
-<div style="position:relative;">
-
-  <button onclick="navigator.clipboard.writeText(document.getElementById('cite-block').innerText)"
-          style="position:absolute; top:0.2rem; right:0.2rem; 
-                 background:none; border:none; cursor:pointer; 
-                 font-size:0.9rem; opacity:0.6;">
-    📋
-  </button>
-
-  <blockquote id="cite-block" style="margin-right:2rem;">
-    Moreno, Miguel (2026). <em>Noise and Risk: Exposure, inequality and the politics of silence</em> (Version 1.0) [Interactive HTML monograph]. Zenodo. https://doi.org/10.5281/zenodo.21836742
-  </blockquote>
-
-</div>
+> Moreno, Miguel (2026). *Noise and Risk: Exposure, inequality and the politics of silence* (Version 1.0) [Interactive HTML monograph]. Zenodo. <https://doi.org/10.5281/zenodo.21836742>
 
 ### BibTeX
 
