@@ -1008,7 +1008,7 @@ function copyCitation(btn) {
 </tr>
 </tbody>
 </table>
-<details class="minimal-callout" aria-label="Cover" style="border-left:2px solid rgba(0,0,0,0.08); padding-left:0.75rem;">
+<details class="minimal-callout" aria-label="Cover" style="border-left:2px solid rgba(128,128,128,0.25); padding-left:0.75rem;">
 <summary style="
       cursor:pointer;
       font-weight:600;
@@ -1019,10 +1019,34 @@ function copyCitation(btn) {
       color:inherit;">
 Cover
 </summary>
-<p style="margin-top:0.6rem;">
-<a href="assets/cover.png" target="_blank"> <img src="assets/cover.png" alt="Cover composed with Claude Sonnet 5 (Anthropic)" style="width:400px; float:left;"> </a>
-</p>
+<figure style="margin:0.6rem 0 0; text-align:left;" class="figure">
+<a href="#" class="cover-link" target="_blank"> <img id="cover-dark" src="assets/cover.png" alt="Cover of Noise and Risk (Version 1.0)" style="width:600px; max-width:100%; display:block;" class="figure-img"> <img id="cover-light" src="assets/cover-light.png" alt="Cover of Noise and Risk (Version 1.0)" style="width:600px; max-width:100%; display:none;" class="figure-img"> </a>
+<figcaption style="margin-top:0.6rem; font-size:0.85em; opacity:0.75;">
+Cover composed with Claude Sonnet 5 (Anthropic).
+</figcaption>
+</figure>
 </details>
+<script>
+(function () {
+  var d = document.getElementById('cover-dark');
+  var l = document.getElementById('cover-light');
+  var a = d.closest('a.cover-link');
+  function apply() {
+    var attr = document.documentElement.getAttribute('data-bs-theme') ||
+               document.body.getAttribute('data-bs-theme');
+    var dark = attr ? attr === 'dark'
+             : (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+    d.style.display = dark ? 'block' : 'none';
+    l.style.display = dark ? 'none' : 'block';
+    a.href = dark ? 'assets/cover.png' : 'assets/cover-light.png';
+  }
+  apply();
+  var mo = new MutationObserver(apply);
+  mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-bs-theme'] });
+  mo.observe(document.body, { attributes: true, attributeFilter: ['data-bs-theme'] });
+  if (window.matchMedia) matchMedia('(prefers-color-scheme: dark)').addEventListener('change', apply);
+})();
+</script>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
