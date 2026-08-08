@@ -20,7 +20,7 @@
 
 ## Author
 
-Miguel Moreno — Universidad de Granada (Spain)
+Miguel Moreno — University of Granada (Spain)
 
 ## Abstract
 
