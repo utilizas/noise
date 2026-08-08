@@ -931,9 +931,26 @@ window.Quarto = {
 <p>This work exists in two forms that serve different purposes, and citation should point to the one built for that purpose. The interactive text — where the argument and its fifteen simulators actually run — is deployed identically to a small number of mirrored addresses, kept in sync so that no one of them is more authoritative than the others as a place to <em>read</em> the work. For citation, a separate and fixed record is kept on Zenodo, a CERN-backed open-access archive that assigns each release a persistent DOI and preserves a permanent snapshot independent of any single host remaining online. The DOI, not any of the addresses below, is the correct target for scholarly citation.</p>
 <section id="suggested-citation-apa-7th" class="level3">
 <h3 class="anchored" data-anchor-id="suggested-citation-apa-7th">Suggested citation (APA 7th)</h3>
-<blockquote class="blockquote">
-<p>Moreno, Miguel (2026). <em>Noise and Risk: Exposure, inequality and the politics of silence</em> (Version 1.0) [Interactive HTML monograph]. Zenodo. https://doi.org/10.5281/zenodo.21836742</p>
+<div style="position:relative;">
+<button type="button" onclick="copyCitation(this)" aria-label="Copy citation" title="Copy citation" style="position:absolute; top:0.2rem; right:0.2rem;
+                 background:none; border:none; cursor:pointer;
+                 font-size:0.9rem; opacity:0.6; color:inherit; padding:0.2rem;"> <i class="fa-regular fa-copy" aria-hidden="true"></i> </button>
+<blockquote id="cite-apa" style="margin-right:2rem;" class="blockquote">
+Moreno, Miguel (2026). <em>Noise and Risk: Exposure, inequality and the politics of silence</em> (Version 1.0) [Interactive HTML monograph]. Zenodo. <a href="https://doi.org/10.5281/zenodo.21836742">https://doi.org/10.5281/zenodo.21836742</a>
 </blockquote>
+</div>
+<script>
+function copyCitation(btn) {
+  var block = btn.parentElement.querySelector('blockquote');
+  navigator.clipboard.writeText(block.innerText).then(function () {
+    var icon = btn.querySelector('i');
+    icon.className = 'fa-solid fa-check';
+    setTimeout(function () { icon.className = 'fa-regular fa-copy'; }, 1200);
+  }).catch(function () {
+    btn.title = 'Copy failed — select the text manually';
+  });
+}
+</script>
 </section>
 <section id="bibtex" class="level3">
 <h3 class="anchored" data-anchor-id="bibtex">BibTeX</h3>
@@ -949,9 +966,8 @@ window.Quarto = {
 </section>
 <section id="licence" class="level3">
 <h3 class="anchored" data-anchor-id="licence">Licence</h3>
-<p>The text is published under a <strong>Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International</strong> licence (CC BY-NC-SA 4.0) — the same terms already declared, with their roundels, in the book’s own title block. In brief: reuse and adaptation are permitted with attribution, for non-commercial purposes, and under the same licence for any derivative. The full legal text is at <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">creativecommons.org/licenses/by-nc-sa/4.0</a>.</p>
+<p>The text is published under a <strong>Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International</strong> licence (<code>CC BY-NC-SA 4.0</code>) — the same terms already declared, with their roundels, in the book’s own title block. In brief: reuse and adaptation are permitted with attribution, for non-commercial purposes, and under the same licence for any derivative. The full legal text is at <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">creativecommons.org/licenses/by-nc-sa/4.0</a>.</p>
 <p>The interactive layer is licensed separately, since Creative Commons terms are not designed for software. All fifteen simulators listed in the table above — every self-contained HTML/CSS/JavaScript widget inserted through the chapters, without exception — are released under the <strong>PolyForm Noncommercial License 1.0.0</strong> (SPDX identifier <code>PolyForm-Noncommercial-1.0.0</code>), full text at <a href="https://polyformproject.org/licenses/noncommercial/1.0.0">polyformproject.org/licenses/noncommercial/1.0.0</a>. This declaration governs every widget from the date of publication, including any that does not yet carry its own header comment to that effect.</p>
-<!-- The individual files should each carry `SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0` as a leading comment, and the full licence text should be kept as a standalone `LICENSE-CODE` file at the repository root, distinct from the `LICENSE` file covering the prose under CC BY-NC-SA. -->
 </section>
 <section id="reading-copies" class="level3">
 <h3 class="anchored" data-anchor-id="reading-copies">Reading copies</h3>
