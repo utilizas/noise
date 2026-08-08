@@ -11,7 +11,7 @@
 ---
 
 <p align="center">
-  <img src="assets/cover.png" width="240" alt="Cover of Noise and Risk: Exposure, Inequality and the Politics of Silence">
+  <img src="assets/cover.png" width="300" alt="Cover of Noise and Risk: Exposure, Inequality and the Politics of Silence">
   <br>
   <sub>Cover composed with Claude Sonnet 5 (Anthropic) — HTML/CSS/SVG typeset in the book's own typefaces and rendered via headless Chromium, not generative image synthesis.</sub>
 </p>
@@ -111,6 +111,17 @@ The interactive text above is where the argument and its simulators actually run
 ### APA 7th edition
 
 > Moreno, Miguel (2026). *Noise and Risk: Exposure, inequality and the politics of silence* (Version 1.0) [Interactive HTML monograph]. Zenodo. https://doi.org/10.5281/zenodo.21836742
+
+<div style="position:relative;">
+  <button onclick="navigator.clipboard.writeText(document.getElementById('cite').innerText)"
+          style="position:absolute; top:0.3rem; right:0.3rem; font-size:0.8rem;">
+    Copy
+  </button>
+
+  <pre id="cite" style="padding:0.75rem; border:1px solid #ddd; border-radius:4px;">
+Moreno, Miguel (2026). Noise and Risk: Exposure, inequality and the politics of silence (Version 1.0) [Interactive HTML monograph]. Zenodo. https://doi.org/10.5281/zenodo.21836742
+  </pre>
+</div>
 
 ### BibTeX
 
