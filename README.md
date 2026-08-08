@@ -113,14 +113,18 @@ The interactive text above is where the argument and its simulators actually run
 > Moreno, Miguel (2026). *Noise and Risk: Exposure, inequality and the politics of silence* (Version 1.0) [Interactive HTML monograph]. Zenodo. https://doi.org/10.5281/zenodo.21836742
 
 <div style="position:relative;">
-  <button onclick="navigator.clipboard.writeText(document.getElementById('cite').innerText)"
-          style="position:absolute; top:0.3rem; right:0.3rem; font-size:0.8rem;">
-    Copy
+
+  <button onclick="navigator.clipboard.writeText(document.getElementById('cite-block').innerText)"
+          style="position:absolute; top:0.2rem; right:0.2rem; 
+                 background:none; border:none; cursor:pointer; 
+                 font-size:0.9rem; opacity:0.6;">
+    📋
   </button>
 
-  <pre id="cite" style="padding:0.75rem; border:1px solid #ddd; border-radius:4px;">
-Moreno, Miguel (2026). Noise and Risk: Exposure, inequality and the politics of silence (Version 1.0) [Interactive HTML monograph]. Zenodo. https://doi.org/10.5281/zenodo.21836742
-  </pre>
+  <blockquote id="cite-block" style="margin-right:2rem;">
+    Moreno, Miguel (2026). <em>Noise and Risk: Exposure, inequality and the politics of silence</em> (Version 1.0) [Interactive HTML monograph]. Zenodo. https://doi.org/10.5281/zenodo.21836742
+  </blockquote>
+
 </div>
 
 ### BibTeX
