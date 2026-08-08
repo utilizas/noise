@@ -10,7 +10,7 @@
 
 ---
 
-<p align="center">
+<p align="left">
   <img src="assets/cover.png" width="500" alt="Cover of Noise and Risk: Exposure, Inequality and the Politics of Silence">
   <br>
   <sub>Cover composed with Claude Sonnet 5 (Anthropic). HTML/CSS/SVG typeset in the book's <br>
