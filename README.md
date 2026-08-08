@@ -54,17 +54,17 @@ Three parts, twelve chapters, front and back matter.
 3. The body under sound
 4. The maps
 
-**Part II · The sources** — a changing acoustic world
-5. Traffic, the old giant
-6. The quiet that wasn't
-7. The machine hum
-8. The indoor and the personal
+**Part II · The sources** — a changing acoustic world  
+5. Traffic, the old giant  
+6. The quiet that wasn't  
+7. The machine hum  
+8. The indoor and the personal  
 
-**Part III · The politics** — distribution, governance and design
-9. Sonic injustice
-10. The economics of quiet
-11. Governing sound
-12. Designing the soundscape
+**Part III · The politics** — distribution, governance and design  
+9. Sonic injustice  
+10. The economics of quiet  
+11. Governing sound  
+12. Designing the soundscape  
 
 **Apparatus** — preface, introduction, epilogue, appendix (methods and data provenance), glossary, and a fully sourced `references.bib`.
 
