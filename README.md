@@ -84,34 +84,9 @@ Each of the fifteen simulators is a self-contained HTML file with CSS and JavaSc
 
 ## Data and reproducibility
 
-The book is a Quarto project rendered to HTML only, with `execute: freeze` set so that computed outputs are cached and the rendered book is stable between builds. Source data behind each chapter's principal figure or simulator is downloaded with its access date recorded, cleaned in R using a tidyverse pipeline, and exported as flat JSON for the corresponding widget to consume. No figure appears without a cited source and access date; where a value is extrapolated beyond the range in which it was measured, the figure marks this rather than presenting it as a point measurement. The reference list is managed in a single `references.bib`, formatted to APA 7th edition, with a DOI recorded for every source that carries one.
+The book was built as a Quarto project and rendered to HTML only, with `execute: freeze` set so that computed outputs were cached and the rendered book stayed stable between builds. Source data behind each chapter's principal figure or simulator was downloaded with its access date recorded, cleaned in R using a tidyverse pipeline, and exported as flat JSON for the corresponding widget to consume. No figure appears without a cited source and access date; where a value is extrapolated beyond the range in which it was measured, the figure marks this rather than presenting it as a point measurement. The reference list was managed in a single `references.bib`, formatted to APA 7th edition, with a DOI recorded for every source that carries one.
 
-## Repository structure
-
-```
-noise/
-├── index.qmd                  # preface
-├── introduction.qmd
-├── 01-what-counts.qmd … 12-designing.qmd
-├── epilogue.qmd
-├── appendix.qmd                # methods, data provenance, AI declaration, citation
-├── glossary.qmd
-├── references.bib
-├── _quarto.yml
-├── widgets/                    # the fifteen self-contained simulators
-├── R/                          # data-cleaning scripts (raw → clean → JSON)
-├── data/
-│   ├── raw/                    # source data as downloaded, with access dates
-│   ├── clean/
-│   └── json/                   # widget-facing exports
-├── assets/
-│   └── _meta-tags.html         # OG / Twitter Card / Dublin Core / JSON-LD, theme bridge
-├── LICENSE                     # CC BY-NC-SA 4.0 — prose
-└── LICENSE-CODE                # PolyForm Noncommercial 1.0.0 — widgets
-```
-
-This tree reflects the project's declared layout rather than a verified directory listing; adjust paths above to match the repository if they have since diverged.
-
+This repository holds the rendered book — the same HTML, CSS and JavaScript served at the addresses above and archived on Zenodo — rather than the Quarto source project.
 
 ## Citation
 
