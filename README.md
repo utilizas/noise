@@ -48,19 +48,19 @@ None of these addresses is the correct target for citation. For that, see [Citat
 
 Three parts, twelve chapters, front and back matter.
 
-**Part I · The object** — what noise is, and how it is known
+**Part I · The object** — what noise is, and how it is known  
 1. What counts as noise
 2. Measuring the invisible
 3. The body under sound
 4. The maps
 
-**Part II · The sources** — a changing acoustic world  
+**Part II · The sources** — a changing acoustic world   
 5. Traffic, the old giant  
 6. The quiet that wasn't  
 7. The machine hum  
 8. The indoor and the personal  
 
-**Part III · The politics** — distribution, governance and design  
+**Part III · The politics** — distribution, governance and design   
 9. Sonic injustice  
 10. The economics of quiet  
 11. Governing sound  
