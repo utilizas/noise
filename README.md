@@ -48,23 +48,27 @@ None of these addresses is the correct target for citation. For that, see [Citat
 
 Three parts, twelve chapters, front and back matter.
 
-**Part I · The object** — what noise is, and how it is known  
-1. What counts as noise
-2. Measuring the invisible
-3. The body under sound
-4. The maps
-
-**Part II · The sources** — a changing acoustic world   
-  5. Traffic, the old giant  
-  6. The quiet that wasn't  
-  7. The machine hum  
-  8. The indoor and the personal  
-
-**Part III · The politics** — distribution, governance and design   
-  9. Sonic injustice  
-  10. The economics of quiet  
-  11. Governing sound  
-  12. Designing the soundscape  
+<p><strong>Part I · The object</strong> — what noise is, and how it is known</p>
+<ol>
+<li>What counts as noise</li>
+<li>Measuring the invisible</li>
+<li>The body under sound</li>
+<li>The maps</li>
+</ol>
+<p><strong>Part II · The sources</strong> — a changing acoustic world</p>
+<ol start="5">
+<li>Traffic, the old giant</li>
+<li>The quiet that wasn't</li>
+<li>The machine hum</li>
+<li>The indoor and the personal</li>
+</ol>
+<p><strong>Part III · The politics</strong> — distribution, governance and design</p>
+<ol start="9">
+<li>Sonic injustice</li>
+<li>The economics of quiet</li>
+<li>Governing sound</li>
+<li>Designing the soundscape</li>
+</ol>
 
 **Apparatus** — preface, introduction, epilogue, appendix (methods and data provenance), glossary, and a fully sourced `references.bib`.
 
