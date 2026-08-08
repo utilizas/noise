@@ -13,8 +13,8 @@
 <p align="center">
   <img src="assets/cover.png" width="500" alt="Cover of Noise and Risk: Exposure, Inequality and the Politics of Silence">
   <br>
-  <sub>Cover composed with Claude Sonnet 5 (Anthropic). HTML/CSS/SVG typeset in the book's own typefaces <br>
-    and rendered via headless Chromium, not generative image synthesis.</sub>
+  <sub>Cover composed with Claude Sonnet 5 (Anthropic). HTML/CSS/SVG typeset in the book's <br>
+    own typefaces and rendered via headless Chromium, not generative image synthesis.</sub>
 </p>
 
 **Noise and Risk** is an interactive HTML monograph built across twelve chapters in three parts, plus a full scholarly apparatus, and carries fifteen self-contained interactive simulators. Every simulator computes on the value the reader enters; none is a fixed animation.
