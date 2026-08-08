@@ -110,7 +110,7 @@ The interactive text above is where the argument and its simulators actually run
 
 ### APA 7th edition
 
-> Moreno, M. (2026). *Noise and risk: Exposure, inequality and the politics of silence* (Version 1.0) Zenodo. https://doi.org/10.5281/zenodo.21836742
+> Moreno, Miguel (2026). *Noise and Risk: Exposure, inequality and the politics of silence* (Version 1.0) [Interactive HTML monograph]. Zenodo. https://doi.org/10.5281/zenodo.21836742
 
 ### BibTeX
 
